@@ -1,6 +1,6 @@
 # Synthesis: Final Documentation Structure
 
-> Generated 2026-03-11. This is the canonical structure definition for the ICP developer docs restructuring. Every page listed here has a corresponding stub in `src/content/docs/`.
+> Generated 2026-03-11. This is the canonical structure definition for the ICP developer docs restructuring. Every page listed here has a corresponding stub in `docs/`.
 
 ## Design Principles
 

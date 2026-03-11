@@ -5,9 +5,7 @@ sidebar:
   order: 2
 doc_type: how-to
 level: intermediate
-features: [migration]
 icskills: [icp-cli]
-last_verified: 2026-03-11
 source_repo: dfinity/icp-cli
 source_ref: null
 ---

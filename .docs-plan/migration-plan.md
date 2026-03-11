@@ -25,7 +25,22 @@ These are non-content tasks needed to make the docs production-ready. All script
 | Priority | Task | Effort | Details |
 |----------|------|--------|---------|
 | P0 | Restore validation scripts | M | `scripts/validate-frontmatter.mjs`, `scripts/validate-no-dfx.sh`, `scripts/validate-no-mdx.sh` — update paths for new structure, add to `package.json` |
-| P0 | Restore sync scripts | M | `scripts/sync-motoko.sh`, `scripts/postprocess-motoko.mjs`, `scripts/sync-icp-cli-version.mjs` — update target paths |
+| P0 | Restore sync scripts | M | See details below |
+
+**Restore sync scripts — details:**
+
+Scripts to copy from `restructuring-attempt-1` branch:
+- `scripts/sync-motoko.sh` — pulls Motoko docs from `caffeinelabs/motoko`, flattens into `docs/languages/motoko/{fundamentals,icp-features,reference}/`
+- `scripts/postprocess-motoko.mjs` — injects frontmatter, rewrites internal links, strips JSX components
+- `scripts/sync-icp-cli-version.mjs` — syncs `docs/guides/tools/migrating-from-dfx.md` from `dfinity/icp-cli`
+
+Restoration checklist:
+1. Copy scripts from `restructuring-attempt-1`
+2. Update all target paths from `src/content/docs/` to `docs/`
+3. Update frontmatter injection to match current schema (no `features` or `last_verified` fields)
+4. Run sync and verify output files have correct frontmatter
+5. Run `npm run build` to confirm Astro picks up synced files
+6. Add sync commands to `package.json` scripts
 | P1 | Set up CI workflows | M | `.github/workflows/` — restore from attempt-1, update for new structure |
 | P1 | Restore build generators | M | `scripts/generate-llms-txt.mjs`, `scripts/generate-manifest.mjs` — update for new page paths |
 | P1 | Custom styling / theming | L | Design TBD — currently using Starlight defaults |

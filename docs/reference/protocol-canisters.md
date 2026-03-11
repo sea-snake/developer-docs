@@ -5,9 +5,7 @@ sidebar:
   order: 3
 doc_type: reference
 level: intermediate
-features: [protocol-canisters]
 icskills: [ckbtc, evm-rpc]
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

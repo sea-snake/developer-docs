@@ -5,9 +5,7 @@ sidebar:
   order: 4
 doc_type: explanation
 level: intermediate
-features: [chain-key-cryptography, threshold-signatures]
 icskills: []
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

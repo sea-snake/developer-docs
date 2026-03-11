@@ -5,9 +5,7 @@ sidebar:
   order: 3
 doc_type: how-to
 level: advanced
-features: [vetkeys, data-integrity, security]
 icskills: [canister-security, vetkd, certified-variables]
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

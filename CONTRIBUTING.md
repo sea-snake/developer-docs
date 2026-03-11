@@ -8,6 +8,8 @@ npm run dev      # Start dev server at localhost:4321
 npm run build    # Production build
 ```
 
+> **Important:** This file covers content format and contribution mechanics. For boundary rules — what always applies, what needs approval, and what is prohibited — see [AGENTS.md](AGENTS.md). Those rules apply to all contributors, not just AI agents.
+
 ## Content format
 
 All documentation is plain Markdown (`.md`). No `.mdx` files. No JSX components.
@@ -26,9 +28,7 @@ sidebar:
   order: 1                                    # Optional: controls sidebar ordering
 doc_type: how-to                              # Required: tutorial | how-to | reference | explanation
 level: intermediate                           # Required: beginner | intermediate | advanced
-features: [chain-key, threshold-ecdsa]        # Optional: ICP features covered
 icskills: [ckbtc, evm-rpc]                    # Optional: related icskills skill files
-last_verified: 2026-03-10                     # Required: last date content was verified
 source_repo: null                             # Set if synced from another repo
 source_ref: null                              # Git ref if synced
 ---
@@ -42,9 +42,7 @@ source_ref: null                              # Git ref if synced
 | `description` | Yes | string | Used in search, llms.txt, and meta tags |
 | `doc_type` | Yes | `tutorial`, `how-to`, `reference`, `explanation` | Diataxis classification |
 | `level` | Yes | `beginner`, `intermediate`, `advanced` | Target audience |
-| `features` | No | string array | ICP features: `chain-key`, `vetkeys`, `https-outcalls`, `randomness`, `timers`, `reverse-gas`, `chain-fusion`, `persistence` |
 | `icskills` | No | string array | Related skill files from github.com/dfinity/icskills |
-| `last_verified` | Yes | `YYYY-MM-DD` | Last date the content was verified as accurate |
 | `source_repo` | No | URL or null | If this file is synced from another repo |
 | `source_ref` | No | string or null | Git tag/commit if synced |
 | `sidebar.order` | No | number | Controls position in auto-generated sidebar |
@@ -107,6 +105,17 @@ Before submitting a PR, manually verify:
 4. **`npm run build`** — Site builds without errors
 
 > **Note:** Validation scripts and CI workflows are not yet set up on this branch. They are preserved on `restructuring-attempt-1` and will be restored when the docs are ready for production.
+
+## Draft completeness checklist
+
+Before marking a page as `draft` in `progress.md`, verify:
+
+1. Content brief from the stub is fully addressed
+2. All code examples are tested and copy-pasteable
+3. icp-cli commands verified against [CLI reference](https://dfinity.github.io/icp-cli/)
+4. Cross-links from `<!-- Cross-Links -->` converted to actual markdown links
+5. Source material HTML comments removed from the final content
+6. `npm run build` passes
 
 ## Progress tracking
 

@@ -5,9 +5,7 @@ sidebar:
   order: 5
 doc_type: reference
 level: intermediate
-features: [icrc-1, icrc-2, icrc-3, icrc-7, token-standards]
 icskills: [icrc-ledger, wallet-integration]
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

@@ -5,9 +5,7 @@ sidebar:
   order: 10
 doc_type: reference
 level: advanced
-features: [http-gateway]
 icskills: []
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

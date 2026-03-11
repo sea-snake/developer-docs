@@ -5,9 +5,7 @@ sidebar:
   order: 2
 doc_type: how-to
 level: intermediate
-features: [stable-structures, stable-memory]
 icskills: [stable-memory]
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

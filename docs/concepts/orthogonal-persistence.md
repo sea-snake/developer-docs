@@ -5,9 +5,7 @@ sidebar:
   order: 10
 doc_type: explanation
 level: intermediate
-features: [orthogonal-persistence, stable-memory]
 icskills: []
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

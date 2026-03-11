@@ -5,9 +5,7 @@ sidebar:
   order: 1
 doc_type: explanation
 level: beginner
-features: [subnets, consensus]
 icskills: []
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

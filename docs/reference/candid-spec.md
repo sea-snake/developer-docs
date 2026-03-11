@@ -5,9 +5,7 @@ sidebar:
   order: 11
 doc_type: reference
 level: intermediate
-features: [candid]
 icskills: []
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

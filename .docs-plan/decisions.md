@@ -87,3 +87,15 @@ Append new decisions at the bottom. Never modify existing entries.
 **Decision:** Keep the sidebar config with `autogenerate` directives for the three Motoko subdirectories. Do not create stub files — they would be overwritten by the sync. Only the hand-written `index.md` (overview) exists as a stub.
 **Rationale:** `autogenerate` picks up files automatically once the sync runs. The sync script flattens nested dirs, injects frontmatter, and rewrites links. Creating 60 stubs adds no value and creates merge noise.
 **Alternatives considered:** Create stubs for all 60 pages (would be overwritten), wait to configure sidebar until sync is restored (risks forgetting the structure)
+
+## 2026-03-11: Remove `features` frontmatter field
+**Context:** Every stub had a `features` array with free-form kebab-case tags (~50 unique values across 79 pages). Nothing consumed this field.
+**Decision:** Remove `features` from the frontmatter schema and all stub pages.
+**Rationale:** Directory structure already serves as taxonomy, `icskills` covers AI agent discovery, and cross-links cover related pages. For llms.txt generation, page titles + descriptions + directory paths are sufficient. No prominent developer docs site uses feature tags for taxonomy — they organize by intent (which Diataxis already handles). Re-add when a concrete consumer exists.
+**Alternatives considered:** Keep as-is (aspirational metadata), standardize with a canonical list (maintenance burden without a consumer)
+
+## 2026-03-11: Remove `last_verified` frontmatter field
+**Context:** Every stub had `last_verified: 2026-03-11`. No verification process existed.
+**Decision:** Remove `last_verified` from the frontmatter schema and all stub pages.
+**Rationale:** The date is meaningless on stub pages with no real content. Maintaining it adds overhead with no payoff — there's no periodic verification workflow. Re-add when a verification process is established.
+**Alternatives considered:** Keep as required (establishes habit but meaningless on stubs), make optional (still no process to enforce it)

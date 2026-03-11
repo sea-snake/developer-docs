@@ -5,9 +5,7 @@ sidebar:
   order: 9
 doc_type: reference
 level: advanced
-features: [ic-interface-spec]
 icskills: []
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

@@ -5,9 +5,7 @@ sidebar:
   order: 1
 doc_type: explanation
 level: beginner
-features: [motoko]
 icskills: []
-last_verified: 2026-03-11
 source_repo: caffeinelabs/motoko
 source_ref: null
 ---

@@ -5,9 +5,7 @@ sidebar:
   order: 9
 doc_type: explanation
 level: beginner
-features: [reverse-gas-model, cycles]
 icskills: []
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

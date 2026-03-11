@@ -111,6 +111,7 @@ When drafting a new docs page:
 
 1. Read the stub page — it contains content brief, source material, and cross-links
 2. Read source material from other repos (portal, icp-cli, examples). Stub references use shorthand like `Portal: building-apps/foo.mdx` or `icp-cli: guides/snapshots.md` — these are paths within the respective GitHub repos (see `.docs-plan/README.md` for the full list). Ask the user for the local clone path, or use `gh api` to fetch from GitHub if no local clone is available.
+   > **If source material is unavailable:** (1) try `gh api` to fetch from GitHub, (2) check if the content exists under a different path in the portal, (3) if truly unavailable, write from the content brief + icskills + your training knowledge, and add `<!-- Source unavailable: [path] — written from content brief -->` so future contributors know to verify.
 3. Read any related icskills skill file for accurate canister IDs and code patterns (`npx skills add dfinity/icskills`)
 4. Write the content:
    - Follow the content brief in the stub
@@ -121,7 +122,7 @@ When drafting a new docs page:
    - Code examples: <30 lines inline, >30 lines link to `dfinity/examples`
    - Link to external docs per linking rules below
 5. Update `.docs-plan/progress.md` (status: `draft`, add date)
-6. Submit for review by the relevant team (see CODEOWNERS)
+6. Submit for review by the relevant team (see `.github/CODEOWNERS` and CONTRIBUTING.md review ownership table)
 
 ## Content rules
 
@@ -173,9 +174,7 @@ sidebar:
   order: 1                                    # Optional
 doc_type: how-to                              # Required: tutorial | how-to | reference | explanation
 level: intermediate                           # Required: beginner | intermediate | advanced
-features: [chain-key, threshold-ecdsa]        # Optional: ICP features covered
 icskills: [ckbtc, evm-rpc]                    # Optional: related icskills
-last_verified: 2026-03-10                     # Required: last date content was verified
 source_repo: null                             # Set if synced from another repo
 source_ref: null                              # Git ref if synced
 ---
@@ -196,6 +195,8 @@ When reviewing portal tracking issues:
 - `npm run preview` — Preview production build
 
 > **Note:** Validation scripts (`validate`, `generate`, `sync`) were removed during the clean slate. They are preserved on `restructuring-attempt-1` and will be restored when the docs are ready for production.
+
+> **Tech stack note:** Starlight is pinned to 0.37.3 due to a Zod v4 compatibility issue (see `package.json` overrides). Do not upgrade Starlight or Astro without testing the build.
 
 ## Previous work
 

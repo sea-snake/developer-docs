@@ -5,9 +5,7 @@ sidebar:
   order: 2
 doc_type: how-to
 level: intermediate
-features: [pocket-ic]
 icskills: []
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

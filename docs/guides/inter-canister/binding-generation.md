@@ -5,9 +5,7 @@ sidebar:
   order: 3
 doc_type: how-to
 level: intermediate
-features: [binding-generation]
 icskills: [multi-canister]
-last_verified: 2026-03-11
 source_repo: null
 source_ref: null
 ---

@@ -15,8 +15,8 @@
     "astro": "^5.6.1",
     "sharp": "^0.34.2"
   },
+  "//overrides": "sitemap 3.7.1+ uses Zod v4 which conflicts with Starlight 0.37 — remove when upgrading Starlight",
   "overrides": {
-    "//": "sitemap 3.7.1+ uses Zod v4 which conflicts with Starlight 0.37 — remove when upgrading Starlight",
     "@astrojs/sitemap": "3.7.0"
   },
   "devDependencies": {

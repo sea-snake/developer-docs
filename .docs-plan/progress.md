@@ -1,6 +1,6 @@
 # Progress Tracker
 
-Two tables: **project-level** (infrastructure, research, tooling) and **content** (all 81 pages in priority order).
+Two tables: **project-level** (infrastructure, research, tooling) and **content** (all 82 content pages in priority order, plus 4 section index pages).
 
 Pick the highest row with status `stub` or `pending`. For execution details (dependencies, source material, effort), see `migration-plan.md`.
 
@@ -35,6 +35,7 @@ Pick the highest row with status `stub` or `pending`. For execution details (dep
 | done | CODEOWNERS updated | done | agent | 2026-03-11 | |
 | done | package.json cleaned | done | agent | 2026-03-11 | Broken scripts removed |
 | done | Design decisions recorded | done | agent | 2026-03-11 | 12 entries |
+| done | Section index pages created | done | agent | 2026-03-11 | guides/, concepts/, languages/, reference/ — landing page links updated |
 | P0 | Restore validation scripts | pending | | | From `restructuring-attempt-1`: frontmatter, no-dfx, no-mdx |
 | P0 | Restore sync scripts | pending | | | Motoko sync, icp-cli version sync |
 | P1 | Set up CI workflows | pending | | | From `restructuring-attempt-1` |

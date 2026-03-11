@@ -23,6 +23,9 @@ export default function remarkStripMdExtension() {
 
       // Strip .md extension, preserving anchors and query strings
       node.url = node.url.replace(/\.md(#|$|\?)/, "$1");
+
+      // Rewrite index links to directory root (index.md → ./, foo/index → foo/)
+      node.url = node.url.replace(/(^|\/)index(#|$|\?)/, "$1$2");
     });
   };
 }

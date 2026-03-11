@@ -36,16 +36,16 @@ Natively interact with Bitcoin, Ethereum, Solana, and other blockchains from ICP
 ### [Getting Started](getting-started/quickstart.md)
 Install tools, create your first project, deploy a canister, and choose your path forward.
 
-### [Guides](guides/backends/data-persistence.md)
+### [Guides](guides/index.md)
 Task-oriented how-to guides organized by development stage: backends, frontends, authentication, testing, production, chain fusion, DeFi, governance, and security.
 
-### [Concepts](concepts/network-overview.md)
+### [Concepts](concepts/index.md)
 Developer-focused explanations of ICP architecture, capabilities, and design decisions.
 
-### [Languages](languages/rust/index.md)
+### [Languages](languages/index.md)
 Language-specific guides for Rust and Motoko, including stable structures, testing, and CDK reference.
 
-### [Reference](reference/management-canister.md)
+### [Reference](reference/index.md)
 Specifications, canister IDs, token standards, cycle costs, execution errors, and glossary.
 
 ## AI-assisted development

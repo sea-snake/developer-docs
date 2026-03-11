@@ -9,7 +9,7 @@ icskills: [canister-security, vetkd, certified-variables]
 TODO: Write content for this page.
 
 <!-- Content Brief -->
-Protect data confidentiality and integrity in canisters. Cover VetKeys for on-chain encryption (encrypt data so only authorized users can decrypt), identity-based encryption (IBE) patterns, X.509 certificate handling, signature verification for external data, and certified variable patterns for data authenticity. Include the encrypted-notes example as a real-world reference.
+Protect data confidentiality and integrity in canisters. Cover VetKeys for onchain encryption (encrypt data so only authorized users can decrypt), identity-based encryption (IBE) patterns, X.509 certificate handling, signature verification for external data, and certified variable patterns for data authenticity. Include the encrypted-notes example as a real-world reference.
 
 <!-- Source Material -->
 - Portal: building-apps/authentication/independently-verifying-ic-signatures.mdx

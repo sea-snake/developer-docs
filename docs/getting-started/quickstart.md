@@ -20,7 +20,7 @@ Walk the developer through installing icp-cli, scaffolding a project with `icp n
 
 <!-- Cross-Links -->
 - getting-started/project-structure -- next step after quickstart
-- getting-started/agentic-development -- AI-assisted alternative
+- ../guides/tools/agentic-development -- AI-assisted development (moved to guides/tools/)
 - getting-started/what-next -- routing page after completion
 - concepts/canisters -- what is a canister?
 - icp-cli docs: https://dfinity.github.io/icp-cli/

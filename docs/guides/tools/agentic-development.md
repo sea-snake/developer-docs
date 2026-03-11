@@ -2,21 +2,20 @@
 title: "Agentic Development"
 description: "Use AI agents with icskills to build ICP applications faster"
 sidebar:
-  order: 3
+  order: 1
 icskills: [icp-cli, internet-identity, https-outcalls, asset-canister, stable-memory, multi-canister, cycles-management, canister-security, certified-variables, ckbtc, evm-rpc, icrc-ledger, sns-launch, vetkd, wallet-integration, ic-dashboard]
 ---
 
 TODO: Write content for this page.
 
 <!-- Content Brief -->
-Introduce AI-assisted ICP development. Show how to install icskills (`npx skills add dfinity/icskills`), configure your AI agent (Claude Code, Cursor, GitHub Copilot), and use skills for code generation. Walk through building an LLM chatbot canister as a practical example. Explain what skills provide (canister IDs, code patterns, API knowledge) and how they complement the docs.
+Guide for setting up AI-assisted ICP development. Cover: (1) What icskills are and what they provide (canister IDs, tested code patterns, API knowledge, common pitfalls), (2) Installing icskills (`npx skills add dfinity/icskills`), (3) Configuring AI agents (Claude Code, Cursor, GitHub Copilot) to use skills, (4) How skills complement the docs — skills provide implementation patterns, docs provide concepts and architecture.
 
 <!-- Source Material -->
 - icskills: README, all 17 published skills at https://skills.internetcomputer.org
-- Examples: llm_chatbot (Rust), llm_chatbot (Motoko)
 - JS SDK: @icp-sdk/core for agent setup
 
 <!-- Cross-Links -->
-- getting-started/quickstart -- prerequisite
-- guides/tools/overview -- tooling ecosystem
+- ../../getting-started/quickstart -- prerequisite
+- overview -- tooling ecosystem (same section)
 - icskills: https://skills.internetcomputer.org

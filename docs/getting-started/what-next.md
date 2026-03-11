@@ -2,7 +2,7 @@
 title: "What Next?"
 description: "Choose your development path based on what you want to build"
 sidebar:
-  order: 4
+  order: 3
 icskills: []
 ---
 
@@ -16,9 +16,10 @@ Critical routing page that sends developers to the right section based on their 
 - All guides/ section entry pages
 
 <!-- Cross-Links -->
-- guides/backends/data-persistence -- backend path entry
-- guides/frontends/asset-canister -- frontend path entry
-- guides/chain-fusion/bitcoin -- chain fusion path entry
-- guides/defi/token-ledgers -- DeFi path entry
-- guides/governance/launching -- governance path entry
-- concepts/ -- for developers who want to understand before building
+- ../guides/backends/data-persistence -- backend path entry
+- ../guides/frontends/asset-canister -- frontend path entry
+- ../guides/chain-fusion/bitcoin -- chain fusion path entry
+- ../guides/defi/token-ledgers -- DeFi path entry
+- ../guides/governance/launching -- governance path entry
+- ../guides/tools/agentic-development -- AI-assisted development with icskills
+- ../concepts/ -- for developers who want to understand before building

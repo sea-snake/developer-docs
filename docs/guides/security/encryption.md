@@ -1,13 +1,13 @@
 ---
 title: "Encryption with VetKeys"
-description: "Encrypt and decrypt data on ICP using VetKeys for on-chain privacy, key management, and identity-based encryption"
+description: "Encrypt and decrypt data on ICP using VetKeys for onchain privacy, key management, and identity-based encryption"
 icskills: [vetkd]
 ---
 
 TODO: Write content for this page.
 
 <!-- Content Brief -->
-How to encrypt data on ICP using VetKeys. Cover the end-to-end flow: setting up a canister with VetKeys, encrypting data client-side with a transport key, storing encrypted data on-chain, and decrypting with derived keys. Include patterns for: encrypted on-chain storage (e.g. encrypted-notes), distributed key management (DKMS), identity-based encryption (IBE), and timelock encryption. Show both backend (Rust/Motoko canister code) and frontend (JS decryption) sides. Reference the encrypted-notes and vetkd examples as real-world implementations.
+How to encrypt data on ICP using VetKeys. Cover the end-to-end flow: setting up a canister with VetKeys, encrypting data client-side with a transport key, storing encrypted data onchain, and decrypting with derived keys. Include patterns for: encrypted onchain storage (e.g. encrypted-notes), distributed key management (DKMS), identity-based encryption (IBE), and timelock encryption. Show both backend (Rust/Motoko canister code) and frontend (JS decryption) sides. Reference the encrypted-notes and vetkd examples as real-world implementations.
 
 <!-- Source Material -->
 - Portal: building-apps/network-features/vetkeys/ (9 files: intro, API, BLS-signatures, DKMS, encrypted-storage, IBE, timelock, VRF, demos)

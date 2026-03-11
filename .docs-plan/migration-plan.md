@@ -51,7 +51,7 @@ Restoration checklist:
 
 These pages form the critical path for any developer building on ICP. Ship these first.
 
-### Sprint 1: Foundation (8 pages)
+### Sprint 1: Foundation (7 pages)
 
 The absolute minimum for a functional docs site. A developer can go from zero to deployed canister.
 
@@ -60,11 +60,10 @@ The absolute minimum for a functional docs site. A developer can go from zero to
 | 1 | `index.md` | M | None | Portal home.mdx | original |
 | 2 | `getting-started/quickstart.md` | L | index.md | Portal quickstart, icp-cli quickstart, installation guide, hello-world template | sync, rewrite |
 | 3 | `getting-started/project-structure.md` | M | quickstart | icp-cli project-model, recipes, binding-generation | sync |
-| 4 | `getting-started/agentic-development.md` | M | quickstart | icskills README, all 17 skills, llm_chatbot examples | original |
-| 5 | `getting-started/what-next.md` | S | All guides stubs | Developer journey analysis | original |
-| 6 | `concepts/canisters.md` | M | None | Portal essentials/canisters.mdx, message-execution.mdx | rewrite |
-| 7 | `concepts/network-overview.md` | M | None | Portal essentials/network-overview.mdx | rewrite |
-| 8 | `concepts/app-architecture.md` | M | canisters, network-overview | Portal app-architecture.mdx, application-architectures.mdx | rewrite |
+| 4 | `getting-started/what-next.md` | S | All guides stubs | Developer journey analysis | original |
+| 5 | `concepts/canisters.md` | M | None | Portal essentials/canisters.mdx, message-execution.mdx | rewrite |
+| 6 | `concepts/network-overview.md` | M | None | Portal essentials/network-overview.mdx | rewrite |
+| 7 | `concepts/app-architecture.md` | M | canisters, network-overview | Portal app-architecture.mdx, application-architectures.mdx | rewrite |
 
 ### Sprint 2: Core Backend Development (10 pages)
 
@@ -123,10 +122,11 @@ A developer can integrate with Bitcoin/Ethereum and work with tokens.
 
 These pages fill out the docs site with important secondary content.
 
-### Sprint 5: Backend and Canister Guides (8 pages)
+### Sprint 5: Backend and Canister Guides (9 pages)
 
 | # | Page | Effort | Dependencies | Source Material | Skills |
 |---|------|--------|-------------|-----------------|--------|
+| 38b | `guides/backends/onchain-ai.md` | M | concepts/canisters | Forum post (LLM canister intro), docs.rs/ic-llm, mops.one/llm; examples: llm_chatbot (Rust/Motoko) | original |
 | 39 | `guides/backends/randomness.md` | M | concepts/canisters | Portal randomness.mdx | rewrite |
 | 40 | `guides/backends/certified-variables.md` | M | concepts/security | Portal advanced-calls.mdx (certified vars); icskills: certified-variables | rewrite |
 | 41 | `guides/canisters/logs.md` | M | lifecycle | Portal logs.mdx, backtraces.mdx, access-logs.mdx | rewrite |
@@ -136,7 +136,7 @@ These pages fill out the docs site with important secondary content.
 | 45 | `guides/frontends/certification.md` | M | asset-canister, certified-variables | Portal asset-security.mdx | rewrite |
 | 46 | `guides/authentication/wallet-integration.md` | M | internet-identity | Portal integrate-misc-wallets.mdx; icskills: wallet-integration | rewrite |
 
-### Sprint 6: Inter-Canister, Production, Security (9 pages)
+### Sprint 6: Inter-Canister, Production, Security, Tools (10 pages)
 
 | # | Page | Effort | Dependencies | Source Material | Skills |
 |---|------|--------|-------------|-----------------|--------|
@@ -148,6 +148,7 @@ These pages fill out the docs site with important secondary content.
 | 52 | `guides/security/encryption.md` | L | concepts/vetkeys | Portal vetkeys/ (9 files: intro, API, BLS, DKMS, encrypted-storage, IBE, timelock, VRF, demos); icskills: vetkd; examples: vetkd, vetkeys, encrypted-notes-dapp-vetkd, filevault | rewrite |
 | 53 | `guides/authentication/verifiable-credentials.md` | M | internet-identity | Portal verifiable-credentials/ (4 files: overview, how-it-works, issuer, relying-party); VC spec: github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md | rewrite |
 | 54 | `guides/tools/overview.md` | M | None | Portal dev-tools-overview.mdx, cdks/index.mdx | rewrite |
+| 54b | `guides/tools/agentic-development.md` | M | quickstart | icskills README, all 17 skills | original |
 | 55 | `guides/defi/chain-key-tokens.md` | M | token-ledgers, bitcoin, ethereum | Portal chain-key-tokens files; icskills: ckbtc | rewrite |
 
 ### Sprint 7: Governance, Concepts, Languages (8 pages)
@@ -208,10 +209,10 @@ These pages cover niche or advanced topics. Ship after P0 and P1 are complete.
 
 | Phase | Pages | S | M | L | XL | Estimated Total Hours |
 |-------|-------|---|---|---|----|-----------------------|
-| P0 (Sprint 1-4) | 38 | 3 | 19 | 10 | 3 | ~120 hours |
-| P1 (Sprint 5-8) | 31 | 3 | 20 | 4 | 0 | ~85 hours |
+| P0 (Sprint 1-4) | 37 | 3 | 18 | 10 | 3 | ~117 hours |
+| P1 (Sprint 5-8) | 33 | 3 | 22 | 4 | 0 | ~91 hours |
 | P2 (Sprint 9-10) | 11 | 2 | 6 | 3 | 0 | ~30 hours |
-| **Total** | **81** | **8** | **45** | **17** | **3** | **~235 hours** |
+| **Total** | **82** | **8** | **46** | **17** | **3** | **~238 hours** |
 
 ---
 
@@ -221,8 +222,8 @@ These pages cover niche or advanced topics. Ship after P0 and P1 are complete.
 index.md
   └── getting-started/quickstart.md
         └── getting-started/project-structure.md
-        └── getting-started/agentic-development.md
         └── getting-started/what-next.md
+        └── guides/tools/agentic-development.md
 
 concepts/canisters.md
   └── concepts/network-overview.md

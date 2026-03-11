@@ -141,3 +141,45 @@ Append new decisions at the bottom. Never modify existing entries.
 **Decision:** Reorder guides sidebar to: Canisters → Backends → Inter-Canister → Frontends → Authentication → Testing → Security → Production → Chain Fusion → DeFi → Governance → Tools. Reorder concepts to: network-overview → app-architecture → canisters → reverse-gas-model → orthogonal-persistence → https-outcalls → onchain-randomness → timers → chain-key-cryptography → chain-fusion → vetkeys → security → governance. Reference section unchanged.
 **Rationale:** Guides follow the developer journey: build → connect → present → secure → ship → extend. Concepts follow: fundamentals (1-5) → capabilities (6-8) → cryptography & cross-chain (9-11) → governance & security (12-13). Reference pages are browsed by name, not sequentially — order matters less.
 **Alternatives considered:** Keep alphabetical (no narrative flow), group by sprint priority (confusing for readers)
+
+## 2026-03-11: Move agentic-development from getting-started/ to guides/tools/
+**Context:** `getting-started/agentic-development.md` was bundling icskills setup + LLM chatbot example. Getting-started should be a fast 3-page onboarding flow. Agentic development is a tooling choice, not a prerequisite.
+**Decision:** Move `getting-started/agentic-development.md` → `guides/tools/agentic-development.md`. Getting-started becomes: quickstart → project-structure → what-next. The agentic development page focuses on icskills setup and AI agent configuration, referencing LLM chatbot examples from `dfinity/examples` as a demo rather than a walkthrough. `what-next.md` links to it as a "power up your workflow" option.
+**Rationale:** Getting-started should be lean and zero-decision. AI-assisted development is a workflow enhancement that belongs with other tooling guides. The page's primary audience (developers who already know they want AI-assisted development) will find it in guides/tools/.
+**Alternatives considered:** Keep in getting-started (adds friction to onboarding), split into two pages (overcomplicates), defer entirely (loses valuable content)
+
+## 2026-03-11: Code examples — prefer linking to dfinity/examples
+**Context:** Many guide pages need code examples in both Rust and Motoko. Inline examples are harder to maintain and can't be tested.
+**Decision:** Avoid inline code when possible — link to `dfinity/examples` repo. Only include inline examples (both Rust + Motoko) when the `technical-documentation` skill determines they are essential for the page to be useful (e.g., short patterns that lose context when linked externally).
+**Rationale:** Examples repo has CI, tests, and versioning. Inline code rots. Linking keeps docs focused on explanation and workflow.
+**Alternatives considered:** Always inline both languages (maintenance burden, doubles code), Rust-only with Motoko links (inconsistent)
+
+## 2026-03-11: Content writing pacing — batch per sprint
+**Context:** Need a review strategy for 81 pages of content.
+**Decision:** Write all pages in a sprint as a batch, then review together. After each sprint, do a cross-reference verification pass: verify all internal links resolve, anchors exist, and cross-links are bidirectional.
+**Rationale:** Batching allows cross-referencing between pages in the same sprint. Per-page review is too slow. Post-sprint verification catches broken links early.
+**Alternatives considered:** One page at a time with review (too slow), no verification pass (broken links accumulate)
+
+## 2026-03-11: Add onchain AI guide in guides/backends/
+**Context:** The LLM canister (`w36hm-eqaaa-aaaal-qr76a-cai`) is an on-chain service for calling large language models from canister code. Previously, the llm_chatbot examples were referenced in the agentic-development page, but they don't belong there — agentic-development is about developer tooling (icskills), while the LLM canister is a backend capability.
+**Decision:** Create `guides/backends/onchain-ai.md` for the LLM canister guide. Remove llm_chatbot references from `guides/tools/agentic-development.md`. The LLM canister is a backend pattern (like HTTPS outcalls or timers) — you call it from canister code using `ic-llm` (Rust) or `llm` (Motoko). P1, Sprint 5. Total pages: 81 → 82.
+**Rationale:** Developer intent is "how do I use AI from my canister" → `guides/backends/`. It's analogous to HTTPS outcalls but for decentralized inference. Separating it from agentic-development keeps both pages focused: tools page = developer workflow, backends page = canister capabilities.
+**Alternatives considered:** Under guides/tools/ (not a developer tool, it's a canister API), as a section in https-outcalls (different enough for own page — no HTTP, no API keys, different API)
+
+## 2026-03-11: Use "onchain" not "on-chain"
+**Context:** Inconsistent usage of "on-chain" vs "onchain" across docs stubs and planning artifacts.
+**Decision:** Always use "onchain" (no hyphen) in all docs content. Normalized all existing occurrences in `docs/`. Planning artifacts in `.docs-plan/` left as-is (not published).
+**Rationale:** Consistent terminology. "Onchain" is the prevailing convention in ICP ecosystem.
+**Alternatives considered:** "on-chain" (hyphenated, less common in ICP context)
+
+## 2026-03-11: Rename LLM canister guide to "Onchain AI"
+**Context:** `guides/backends/llm-canister.md` sounded like a reference page, not a how-to guide.
+**Decision:** Rename to `guides/backends/onchain-ai.md` with title "Onchain AI". The guide covers the developer task ("how do I add AI to my canister"). The LLM canister ID and API details belong in `reference/application-canisters.md` as a reference entry.
+**Rationale:** Guide names should reflect developer intent, not infrastructure names. "Onchain AI" matches the search query a developer would have.
+**Alternatives considered:** "LLM Integration" (less evocative), "AI from Canisters" (awkward)
+
+## 2026-03-11: Content writing before infrastructure restoration
+**Context:** P0 infrastructure tasks (validation scripts, sync scripts) are pending alongside P0 content.
+**Decision:** Start content writing before restoring validation/sync scripts. Infra is not blocking content work.
+**Rationale:** Validation scripts catch issues but don't prevent writing. Content is the primary deliverable. Scripts will be restored when capacity allows.
+**Alternatives considered:** Infra first (delays content), in parallel (splits focus)

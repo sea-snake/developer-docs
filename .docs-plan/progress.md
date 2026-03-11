@@ -54,11 +54,10 @@ Pages are listed in execution order from `migration-plan.md`. Work top-to-bottom
 | 1 | index.md | done | agent | 2026-03-11 |
 | 2 | getting-started/quickstart.md | stub | | |
 | 3 | getting-started/project-structure.md | stub | | |
-| 4 | getting-started/agentic-development.md | stub | | |
-| 5 | getting-started/what-next.md | stub | | |
-| 6 | concepts/canisters.md | stub | | |
-| 7 | concepts/network-overview.md | stub | | |
-| 8 | concepts/app-architecture.md | stub | | |
+| 4 | getting-started/what-next.md | stub | | |
+| 5 | concepts/canisters.md | stub | | |
+| 6 | concepts/network-overview.md | stub | | |
+| 7 | concepts/app-architecture.md | stub | | |
 
 ### P0 — Sprint 2: Core Backend Development
 
@@ -109,6 +108,7 @@ Pages are listed in execution order from `migration-plan.md`. Work top-to-bottom
 
 | # | Page | Status | Agent/Author | Date |
 |---|------|--------|-------------|------|
+| 38b | guides/backends/onchain-ai.md | stub | | |
 | 39 | guides/backends/randomness.md | stub | | |
 | 40 | guides/backends/certified-variables.md | stub | | |
 | 41 | guides/canisters/logs.md | stub | | |
@@ -130,6 +130,7 @@ Pages are listed in execution order from `migration-plan.md`. Work top-to-bottom
 | 52 | guides/security/encryption.md | stub | | |
 | 53 | guides/authentication/verifiable-credentials.md | stub | | |
 | 54 | guides/tools/overview.md | stub | | |
+| 54b | guides/tools/agentic-development.md | stub | | |
 | 55 | guides/defi/chain-key-tokens.md | stub | | |
 
 ### P1 — Sprint 7: Governance, Concepts, Languages

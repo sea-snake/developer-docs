@@ -9,7 +9,7 @@ icskills: []
 TODO: Write content for this page.
 
 <!-- Content Brief -->
-Integrate popular frontend frameworks with ICP. Cover Vite plugin setup for React/Svelte/Vue, agent configuration with @icp-sdk/core, auth setup with @icp-sdk/auth, and hosting configuration. Also cover game engines (Unity WebGL, Godot HTML5) for on-chain games. Show framework-specific starter templates.
+Integrate popular frontend frameworks with ICP. Cover Vite plugin setup for React/Svelte/Vue, agent configuration with @icp-sdk/core, auth setup with @icp-sdk/auth, and hosting configuration. Also cover game engines (Unity WebGL, Godot HTML5) for onchain games. Show framework-specific starter templates.
 
 <!-- Source Material -->
 - Portal: building-apps/frontends/existing-frontend.mdx

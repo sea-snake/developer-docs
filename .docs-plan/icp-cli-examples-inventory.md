@@ -253,8 +253,8 @@ canisters:
 | motoko/superheroes | Motoko | CRUD with relationships | guides/backends/data-persistence | Link |
 | motoko/flying_ninja | Motoko | Game example | (none — showcase only) | Link from getting-started/what-next |
 | rust/flying_ninja | Rust | Game example | (none — showcase only) | Link from getting-started/what-next |
-| motoko/llm_chatbot | Motoko | LLM chatbot | getting-started/agentic-development | Link |
-| rust/llm_chatbot | Rust | LLM chatbot | getting-started/agentic-development | Link |
+| motoko/llm_chatbot | Motoko | LLM chatbot | guides/backends/onchain-ai | Link |
+| rust/llm_chatbot | Rust | LLM chatbot | guides/backends/onchain-ai | Link |
 | motoko/ic-pos | Motoko | Point-of-sale app | guides/defi/token-ledgers | Link |
 | motoko/nft-creator | Motoko | NFT creation | guides/defi/token-ledgers | Link |
 | motoko/filevault | Motoko | Encrypted file storage | guides/security/data-integrity | Link |

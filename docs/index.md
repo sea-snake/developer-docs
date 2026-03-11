@@ -26,7 +26,7 @@ Canister memory survives across executions and upgrades. No databases, no serial
 Users never pay gas. Canisters pay for their own compute, storage, and bandwidth using **cycles**. [Learn more](concepts/reverse-gas-model.md)
 
 ### Web-native smart contracts
-Canisters serve HTTP responses directly. Host full web applications -- frontend and backend -- entirely on-chain. [Learn more](concepts/app-architecture.md)
+Canisters serve HTTP responses directly. Host full web applications -- frontend and backend -- entirely onchain. [Learn more](concepts/app-architecture.md)
 
 ### Chain Fusion
 Natively interact with Bitcoin, Ethereum, Solana, and other blockchains from ICP canisters. [Learn more](concepts/chain-fusion.md)
@@ -56,7 +56,7 @@ ICP has first-class support for AI-assisted development. Install [icskills](http
 npx skills add dfinity/icskills
 ```
 
-[Set up agentic development](getting-started/agentic-development.md)
+[Set up agentic development](guides/tools/agentic-development.md)
 
 ## External resources
 

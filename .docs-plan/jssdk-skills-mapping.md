@@ -65,7 +65,7 @@
 | JS SDK Project | Docs Pages (should link to js.icp.build) | Where in page |
 |---------------|----------------------------------------|---------------|
 | **Core** (`@icp-sdk/core`) | `getting-started/quickstart` | "Install dependencies" section; link to https://js.icp.build/core |
-| | `getting-started/agentic-development` | Agent setup section; link to Core docs for HttpAgent |
+| | `guides/tools/agentic-development` | Agent setup section; link to Core docs for HttpAgent |
 | | `guides/frontends/frameworks` | JS framework integration; Core is the base dependency |
 | | `guides/frontends/certification` | Client-side certificate verification uses Core |
 | | `guides/inter-canister/candid` | Agent/actor creation from JS side |

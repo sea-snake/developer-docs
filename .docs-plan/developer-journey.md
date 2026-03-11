@@ -26,7 +26,7 @@
 |------|-------------|---------------|----------|
 | Install icp-cli, scaffold project | getting-started/quickstart.md | [icp-cli docs](https://dfinity.github.io/icp-cli/) | — |
 | Understand project files | getting-started/project-structure.md | icp-cli docs (project structure) | — |
-| AI-assisted development | getting-started/agentic-development.md | [icskills](https://skills.internetcomputer.org) | All 17 skills |
+| AI-assisted development | guides/tools/agentic-development.md | [icskills](https://skills.internetcomputer.org) | All 17 skills |
 | Choose next steps | getting-started/what-next.md | — | — |
 
 **Templates used:** `hello-world` (default), potentially `bitcoin-starter` for chain-fusion interest.
@@ -328,7 +328,6 @@ Two refinements to the current proposal:
 getting-started/
   quickstart.md
   project-structure.md
-  agentic-development.md
   what-next.md
 
 guides/

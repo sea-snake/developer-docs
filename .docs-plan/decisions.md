@@ -1,0 +1,89 @@
+# Design Decisions Log
+
+Append new decisions at the bottom. Never modify existing entries.
+
+---
+
+## 2026-03-11: Diataxis framework with 5 top-level sections
+**Context:** Need a clear information architecture for the new developer docs
+**Decision:** Use Diataxis with 5 sections: Getting Started (tutorials), Guides (how-to), Concepts (explanations), Languages (synced + hand-written), Reference (information)
+**Rationale:** Diataxis is proven, maps cleanly to developer intent ("how do I" vs "what is" vs "exact params"). Languages gets its own section due to volume (52+ synced Motoko pages).
+**Alternatives considered:** 10-section structure (too many groups), single guides section (too flat), capabilities as top-level (not a Diataxis quadrant)
+
+## 2026-03-11: No separate capabilities section
+**Context:** IC capabilities (chain-key, VetKeys, HTTPS outcalls, timers, randomness) are the platform's biggest differentiators
+**Decision:** Keep capabilities in concepts/ (explanation) with companion how-to guides in guides/backends/ (task-oriented)
+**Rationale:** A "capabilities" section is marketing-oriented, not Diataxis-aligned. Developers find content by intent: "what is chain-key" → concepts/, "how to make HTTPS outcalls" → guides/backends/
+**Alternatives considered:** Top-level capabilities section (violates Diataxis), capabilities under guides only (loses explanatory depth)
+
+## 2026-03-11: New guides/backends/ section
+**Context:** Biggest gap in existing docs — no task-oriented guides for ICP backend patterns
+**Decision:** Create guides/backends/ with pages for: data-persistence, https-outcalls, timers, randomness, certified-variables, large-wasm, parallel-calls
+**Rationale:** Every canister developer needs these. Currently only concept explanations exist, not "how to do it" guides with code.
+**Alternatives considered:** Put under guides/canisters/ (too crowded, mixing management with development patterns)
+
+## 2026-03-11: New guides/production/ section
+**Context:** No home for "going to mainnet" topics like subnet selection, cycles management, canister discovery
+**Decision:** Create guides/production/ for topics that bridge local development to production deployment
+**Rationale:** These don't fit under canisters/ (which is about management) or tools/ (which is about CLI). They're about production readiness.
+**Alternatives considered:** Under guides/canisters/ (conflates management with deployment), separate "deployment" section (too narrow)
+
+## 2026-03-11: Clean slate approach
+**Context:** Existing 124 pages were written for v3.1 structure which we're reconsidering
+**Decision:** Wipe src/content/docs/ and create uniform stubs for ALL pages. Remove CI workflows. Keep minimal Astro infrastructure.
+**Rationale:** Uniform stubs are better than a mix of full content (possibly misaligned) and empty pages. Previous work preserved on `restructuring-attempt-1` branch.
+**Alternatives considered:** Keep existing content + add stubs for new pages only (inconsistent, may not align with new structure)
+
+## 2026-03-11: .docs-plan/ as coordination directory
+**Context:** Need durable artifacts that future agents can discover and use
+**Decision:** All analysis, decisions, and progress tracking in `.docs-plan/` (committed to repo, not gitignored)
+**Rationale:** Files in the repo survive across clones, CI, and agent sessions. Hidden directory keeps it out of the docs site.
+**Alternatives considered:** .analysis/ (less descriptive), planning/ (visible, clutters root), .meta/ (too generic)
+
+## 2026-03-11: AGENTS.md as canonical agent policy
+**Context:** AGENTS.md was just a stub alias to CLAUDE.md
+**Decision:** AGENTS.md becomes the canonical cross-agent instruction file with explicit Always/Ask first/Never boundaries. CLAUDE.md remains primary for Claude Code (auto-loaded).
+**Rationale:** Per agents.md spec, AGENTS.md should be substantive for all agent platforms (Codex, Cursor, etc.), not just Claude.
+**Alternatives considered:** Keep CLAUDE.md as sole source (excludes non-Claude agents)
+
+## 2026-03-11: Code examples — inline vs link to examples repo
+**Context:** Need a consistent strategy for code in docs
+**Decision:** Inline code for snippets under ~30 lines. Link to dfinity/examples repo for anything larger.
+**Rationale:** Short snippets aid reading flow. Long examples are better maintained in a dedicated repo with tests.
+**Alternatives considered:** Always inline (maintenance burden), always link (poor reading experience)
+
+## 2026-03-11: icp-cli content — link, don't duplicate
+**Context:** icp-cli has its own comprehensive docs at dfinity.github.io/icp-cli/
+**Decision:** Link to icp-cli docs. Inline icp-cli commands in guides where they aid reading flow. Don't duplicate guides.
+**Rationale:** Single source of truth. The migration guide is the only exception (synced).
+**Alternatives considered:** Sync more content (maintenance burden), duplicate quickstart (violates single-source principle)
+
+## 2026-03-11: Remove DOCS_RESTRUCTURING_PROPOSAL.md
+**Context:** v3.1 proposal has stale paths and structure that doesn't match the new analysis
+**Decision:** Remove from restructuring-attempt-2 branch. .docs-plan/synthesis.md is the new source of truth.
+**Rationale:** Having two competing "truth" documents confuses agents. Original preserved on restructuring-attempt-1.
+**Alternatives considered:** Update in place (synthesis.md is more detailed and structured for agent consumption)
+
+## 2026-03-11: CLAUDE.md symlinks to AGENTS.md
+**Context:** Having both CLAUDE.md and AGENTS.md with overlapping but different content creates maintenance risk and confusion
+**Decision:** Consolidate all agent/contributor instructions into AGENTS.md. CLAUDE.md is a symlink (`CLAUDE.md → AGENTS.md`).
+**Rationale:** Single source of truth. AGENTS.md is the cross-agent standard (works for Claude, Codex, Cursor, etc.). The symlink ensures Claude Code auto-loads the same content. If the file grows too large, create referenced sub-files rather than splitting the primary instruction file.
+**Alternatives considered:** Keep both files in sync (drift risk), AGENTS.md symlinks to CLAUDE.md (AGENTS.md is the more universal name)
+
+## 2026-03-11: docs/ is the canonical content directory
+**Context:** Astro/Starlight expects content at `src/content/docs/`, but `docs/` at root is the natural location for documentation
+**Decision:** Real files live in `docs/` (project root). `src/content/docs/` is a symlink pointing to `../../docs`. All agent instructions and documentation reference `docs/` as the canonical path.
+**Rationale:** `docs/` is shorter, more discoverable, and the standard convention. Astro follows the symlink transparently — builds work unchanged. Agents and contributors use `docs/` exclusively; the symlink is an implementation detail.
+**Alternatives considered:** Keep files in `src/content/docs/` with symlink the other way (forces agents to use long paths), no symlink (agents must always navigate three levels deep)
+
+## 2026-03-11: Clean up stale CODEOWNERS, package.json, CONTRIBUTING.md
+**Context:** After restructuring, several files referenced old paths or deleted scripts
+**Decision:** Updated CODEOWNERS paths to new structure, removed 10 broken scripts from package.json (validate, generate, sync), fixed stale references in CONTRIBUTING.md.
+**Rationale:** Stale references confuse both agents and CI. Scripts will be restored from `restructuring-attempt-1` when docs are production-ready.
+**Alternatives considered:** Leave as-is with TODO comments (agents would try to run broken commands)
+
+## 2026-03-11: Motoko sidebar pre-configured, no stubs for synced content
+**Context:** Motoko docs (~60 files across fundamentals/, icp-features/, reference/) are synced from `caffeinelabs/motoko` via a sync script on `restructuring-attempt-1`
+**Decision:** Keep the sidebar config with `autogenerate` directives for the three Motoko subdirectories. Do not create stub files — they would be overwritten by the sync. Only the hand-written `index.md` (overview) exists as a stub.
+**Rationale:** `autogenerate` picks up files automatically once the sync runs. The sync script flattens nested dirs, injects frontmatter, and rewrites links. Creating 60 stubs adds no value and creates merge noise.
+**Alternatives considered:** Create stubs for all 60 pages (would be overwritten), wait to configure sidebar until sync is restored (risks forgetting the structure)

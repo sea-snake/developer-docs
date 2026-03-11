@@ -1,0 +1,28 @@
+---
+title: "Motoko"
+description: "A language designed for the Internet Computer with built-in actor model and orthogonal persistence"
+sidebar:
+  order: 1
+doc_type: explanation
+level: beginner
+features: [motoko]
+icskills: []
+last_verified: 2026-03-11
+source_repo: caffeinelabs/motoko
+source_ref: null
+---
+
+TODO: Write content for this page. This is the landing page for the Motoko section. Actual Motoko documentation pages are synced from the caffeinelabs/motoko repository.
+
+<!-- Content Brief -->
+Landing page for Motoko documentation. Brief overview of Motoko as a language designed specifically for ICP: actor model, orthogonal persistence, async/await for inter-canister calls, and strong typing. Link to synced sections (Fundamentals, ICP Features, Reference) and external resources (mops.one for core and base libraries).
+
+<!-- Source Material -->
+- Synced from caffeinelabs/motoko (52+ pages in fundamentals/, icp-features/, reference/)
+- Motoko core library: https://mops.one/core/docs
+- Motoko base library: https://mops.one/base/docs
+
+<!-- Cross-Links -->
+- getting-started/quickstart -- Motoko quickstart path
+- guides/backends/data-persistence -- Motoko persistence patterns
+- languages/rust/index -- alternative language

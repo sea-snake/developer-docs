@@ -3,8 +3,6 @@ title: "Agentic Development"
 description: "Use AI agents with icskills to build ICP applications faster"
 sidebar:
   order: 3
-doc_type: tutorial
-level: beginner
 icskills: [icp-cli, internet-identity, https-outcalls, asset-canister, stable-memory, multi-canister, cycles-management, canister-security, certified-variables, ckbtc, evm-rpc, icrc-ledger, sns-launch, vetkd, wallet-integration, ic-dashboard]
 ---
 

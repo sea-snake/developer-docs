@@ -3,8 +3,6 @@ title: "Custom Domains"
 description: "Point a custom domain to your ICP-hosted frontend with DNS and boundary node configuration"
 sidebar:
   order: 2
-doc_type: how-to
-level: intermediate
 icskills: [asset-canister]
 ---
 

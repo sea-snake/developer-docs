@@ -3,8 +3,6 @@ title: "Reproducible Builds"
 description: "Verify that deployed canister Wasm matches the source code using deterministic builds"
 sidebar:
   order: 6
-doc_type: how-to
-level: advanced
 icskills: []
 ---
 

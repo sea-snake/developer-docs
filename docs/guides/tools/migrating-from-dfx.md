@@ -3,8 +3,6 @@ title: "Migrating from dfx"
 description: "Migrate your project from dfx to icp-cli with command mappings and config conversion"
 sidebar:
   order: 2
-doc_type: how-to
-level: intermediate
 icskills: [icp-cli]
 ---
 

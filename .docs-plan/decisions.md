@@ -105,3 +105,9 @@ Append new decisions at the bottom. Never modify existing entries.
 **Decision:** Remove both fields from the frontmatter schema and all stub pages. Synced content protection is enforced by path-based rules in AGENTS.md ("Never edit synced files") and CONTRIBUTING.md ("Synced content" section) — not by frontmatter metadata.
 **Rationale:** Having `source_repo: null` on 77 non-synced pages is noise. The sync script can inject a comment (`<!-- Synced from repo — do not edit -->`) if file-level marking is needed. Path-based rules are the actual enforcement mechanism.
 **Alternatives considered:** Keep on synced pages only (still redundant with path rules), keep as optional (agents would still see null values in schema examples)
+
+## 2026-03-11: Remove `doc_type` and `level` frontmatter fields
+**Context:** Every stub had `doc_type` (tutorial/how-to/reference/explanation) and `level` (beginner/intermediate/advanced). Neither field had a consumer.
+**Decision:** Remove both fields from the frontmatter schema and all stub pages. Directory structure already implies Diataxis type: `getting-started/` = tutorial, `guides/` = how-to, `concepts/` = explanation, `reference/` = reference. Page content conveys difficulty level.
+**Rationale:** Same principle as previous removals — no consumer means no value. The Diataxis directory structure IS the type classification. Maintaining redundant metadata on 79 pages adds noise. Re-add if a filtering UI, badge display, or llms.txt grouping requires it.
+**Alternatives considered:** Keep doc_type only (still redundant with directories), keep level for future filtering (no filtering UI planned)

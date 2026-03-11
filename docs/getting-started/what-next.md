@@ -3,8 +3,6 @@ title: "What Next?"
 description: "Choose your development path based on what you want to build"
 sidebar:
   order: 4
-doc_type: tutorial
-level: beginner
 icskills: []
 ---
 

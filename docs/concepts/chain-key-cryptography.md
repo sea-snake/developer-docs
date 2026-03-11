@@ -3,8 +3,6 @@ title: "Chain-Key Cryptography"
 description: "Threshold signatures that enable cross-chain integration, fast finality, and chain evolution"
 sidebar:
   order: 4
-doc_type: explanation
-level: intermediate
 icskills: []
 ---
 

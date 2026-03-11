@@ -3,8 +3,6 @@ title: "Canister Lifecycle"
 description: "Create, install, upgrade, and delete canisters with icp-cli"
 sidebar:
   order: 1
-doc_type: how-to
-level: intermediate
 icskills: [cycles-management, stable-memory]
 ---
 

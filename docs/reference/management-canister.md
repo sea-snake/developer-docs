@@ -3,8 +3,6 @@ title: "Management Canister"
 description: "API reference for the IC management canister (aaaaa-aa): canister lifecycle, signing, randomness, and more"
 sidebar:
   order: 1
-doc_type: reference
-level: intermediate
 icskills: []
 ---
 

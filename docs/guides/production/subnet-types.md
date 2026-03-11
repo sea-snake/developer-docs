@@ -3,8 +3,6 @@ title: "Subnet Types"
 description: "Choose the right subnet for your canister deployment based on requirements"
 sidebar:
   order: 1
-doc_type: how-to
-level: intermediate
 icskills: []
 ---
 

@@ -3,8 +3,6 @@ title: "Application Canisters"
 description: "Asset canister, SNS canisters, and other notable application-layer canisters"
 sidebar:
   order: 4
-doc_type: reference
-level: intermediate
 icskills: [asset-canister, sns-launch]
 ---
 

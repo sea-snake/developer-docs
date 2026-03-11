@@ -3,8 +3,6 @@ title: "Frontend Frameworks"
 description: "Integrate React, Svelte, Vue, Unity, and other frameworks with ICP canisters"
 sidebar:
   order: 4
-doc_type: how-to
-level: intermediate
 icskills: []
 ---
 

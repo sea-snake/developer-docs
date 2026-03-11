@@ -3,8 +3,6 @@ title: "Launching an SNS"
 description: "Decentralize your dapp with an SNS: token economics, governance setup, and NNS proposal"
 sidebar:
   order: 1
-doc_type: how-to
-level: advanced
 icskills: [sns-launch]
 ---
 

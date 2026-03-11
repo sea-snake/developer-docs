@@ -3,8 +3,6 @@ title: "Cycles Management"
 description: "Acquire cycles, manage canister budgets, and deploy to mainnet"
 sidebar:
   order: 2
-doc_type: how-to
-level: intermediate
 icskills: [cycles-management]
 ---
 

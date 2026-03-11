@@ -3,8 +3,6 @@ title: "Inter-Canister Calls"
 description: "Call functions on other canisters using canister discovery and the IC messaging system"
 sidebar:
   order: 1
-doc_type: how-to
-level: intermediate
 icskills: [multi-canister]
 ---
 

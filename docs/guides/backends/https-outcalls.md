@@ -3,8 +3,6 @@ title: "HTTPS Outcalls"
 description: "Make HTTP requests from canisters to external web APIs"
 sidebar:
   order: 2
-doc_type: how-to
-level: intermediate
 icskills: [https-outcalls]
 ---
 

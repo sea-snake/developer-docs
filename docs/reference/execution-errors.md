@@ -3,8 +3,6 @@ title: "Execution Errors"
 description: "Common canister execution errors with explanations and fixes"
 sidebar:
   order: 8
-doc_type: reference
-level: intermediate
 icskills: []
 ---
 

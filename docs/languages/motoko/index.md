@@ -3,8 +3,6 @@ title: "Motoko"
 description: "A language designed for the Internet Computer with built-in actor model and orthogonal persistence"
 sidebar:
   order: 1
-doc_type: explanation
-level: beginner
 icskills: []
 ---
 

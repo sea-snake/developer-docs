@@ -3,8 +3,6 @@ title: "On-Chain Randomness"
 description: "How ICP generates unpredictable random numbers using threshold VRF"
 sidebar:
   order: 7
-doc_type: explanation
-level: intermediate
 icskills: []
 ---
 

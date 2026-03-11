@@ -3,8 +3,6 @@ title: "ICP Developer Docs"
 description: "Build full-stack web applications, DeFi protocols, and cross-chain integrations on the Internet Computer"
 sidebar:
   order: 0
-doc_type: tutorial
-level: beginner
 icskills: []
 ---
 

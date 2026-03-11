@@ -3,8 +3,6 @@ title: "Glossary"
 description: "Definitions of ICP-specific terms: canister, cycle, principal, subnet, and more"
 sidebar:
   order: 13
-doc_type: reference
-level: beginner
 icskills: []
 ---
 

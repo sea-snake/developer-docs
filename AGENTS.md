@@ -171,9 +171,7 @@ When available, use these skills during docs work:
 title: "Page Title"                           # Required
 description: "One-line description"           # Required
 sidebar:
-  order: 1                                    # Optional
-doc_type: how-to                              # Required: tutorial | how-to | reference | explanation
-level: intermediate                           # Required: beginner | intermediate | advanced
+  order: 1                                    # Optional: only where reading order matters
 icskills: [ckbtc, evm-rpc]                    # Optional: related icskills
 ---
 ```

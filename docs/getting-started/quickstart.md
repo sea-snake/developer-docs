@@ -3,8 +3,6 @@ title: "Quickstart"
 description: "Install icp-cli, create a project, and deploy your first canister in under 10 minutes"
 sidebar:
   order: 1
-doc_type: tutorial
-level: beginner
 icskills: [icp-cli]
 ---
 

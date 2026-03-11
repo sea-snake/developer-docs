@@ -3,8 +3,6 @@ title: "Security Model"
 description: "The IC security model: canister isolation, trust boundaries, and the threat model for dapp developers"
 sidebar:
   order: 13
-doc_type: explanation
-level: intermediate
 icskills: [canister-security]
 ---
 

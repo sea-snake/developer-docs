@@ -3,8 +3,6 @@ title: "Token Standards"
 description: "ICRC-1 fungible tokens, ICRC-2 approval, ICRC-3 transaction log, and ICRC-7 NFTs"
 sidebar:
   order: 5
-doc_type: reference
-level: intermediate
 icskills: [icrc-ledger, wallet-integration]
 ---
 

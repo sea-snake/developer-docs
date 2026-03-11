@@ -3,8 +3,6 @@ title: "Candid Interface"
 description: "Define and use Candid interfaces for type-safe canister communication"
 sidebar:
   order: 2
-doc_type: how-to
-level: intermediate
 icskills: []
 ---
 

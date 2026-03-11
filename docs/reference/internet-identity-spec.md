@@ -3,8 +3,6 @@ title: "Internet Identity Specification"
 description: "Internet Identity protocol: delegation chains, passkey management, and canister signatures"
 sidebar:
   order: 12
-doc_type: reference
-level: advanced
 icskills: [internet-identity]
 ---
 

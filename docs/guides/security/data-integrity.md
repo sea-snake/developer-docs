@@ -3,8 +3,6 @@ title: "Data Integrity"
 description: "Protect data with VetKeys encryption, certified variables, and signature verification"
 sidebar:
   order: 3
-doc_type: how-to
-level: advanced
 icskills: [canister-security, vetkd, certified-variables]
 ---
 

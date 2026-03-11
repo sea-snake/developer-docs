@@ -3,8 +3,6 @@ title: "Ethereum Integration"
 description: "Interact with Ethereum and EVM chains from ICP canisters via the EVM RPC canister"
 sidebar:
   order: 2
-doc_type: how-to
-level: advanced
 icskills: [evm-rpc]
 ---
 

@@ -3,8 +3,6 @@ title: "Bitcoin Integration"
 description: "Send and receive BTC directly from ICP canisters using chain-key signatures"
 sidebar:
   order: 1
-doc_type: how-to
-level: advanced
 icskills: [ckbtc]
 ---
 

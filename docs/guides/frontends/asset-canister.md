@@ -3,8 +3,6 @@ title: "Asset Canister"
 description: "Deploy and serve frontend assets from an ICP canister"
 sidebar:
   order: 1
-doc_type: how-to
-level: intermediate
 icskills: [asset-canister]
 ---
 

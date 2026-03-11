@@ -3,8 +3,6 @@ title: "Developer Tools"
 description: "Overview of the ICP developer toolchain: icp-cli, CDKs, icp.ninja, and more"
 sidebar:
   order: 1
-doc_type: how-to
-level: beginner
 icskills: [icp-cli]
 ---
 

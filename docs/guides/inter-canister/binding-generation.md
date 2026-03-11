@@ -3,8 +3,6 @@ title: "Binding Generation"
 description: "Generate type-safe JS/TS and Rust bindings from Candid interface files"
 sidebar:
   order: 3
-doc_type: how-to
-level: intermediate
 icskills: [multi-canister]
 ---
 

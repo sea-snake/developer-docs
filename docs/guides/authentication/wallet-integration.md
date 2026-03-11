@@ -3,8 +3,6 @@ title: "Wallet Integration"
 description: "Connect ICRC signer-standard wallets like OISY, Plug, and NFID"
 sidebar:
   order: 2
-doc_type: how-to
-level: advanced
 icskills: [wallet-integration]
 ---
 

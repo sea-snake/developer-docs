@@ -3,8 +3,6 @@ title: "Access Management"
 description: "Control who can call your canister with guards, caller checks, and controller management"
 sidebar:
   order: 1
-doc_type: how-to
-level: intermediate
 icskills: [canister-security]
 ---
 

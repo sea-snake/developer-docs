@@ -3,8 +3,6 @@ title: "Parallel Calls"
 description: "Execute multiple inter-canister calls concurrently for better performance"
 sidebar:
   order: 7
-doc_type: how-to
-level: advanced
 icskills: [multi-canister]
 ---
 

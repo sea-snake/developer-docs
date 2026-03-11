@@ -25,9 +25,7 @@ Every `.md` file in `docs/` must have this frontmatter:
 title: "Page Title"                           # Required
 description: "One-line description"           # Required
 sidebar:
-  order: 1                                    # Optional: controls sidebar ordering
-doc_type: how-to                              # Required: tutorial | how-to | reference | explanation
-level: intermediate                           # Required: beginner | intermediate | advanced
+  order: 1                                    # Optional: only where reading order matters
 icskills: [ckbtc, evm-rpc]                    # Optional: related icskills skill files
 ---
 ```
@@ -38,10 +36,8 @@ icskills: [ckbtc, evm-rpc]                    # Optional: related icskills skill
 |-------|----------|--------|-------|
 | `title` | Yes | string | Page title |
 | `description` | Yes | string | Used in search, llms.txt, and meta tags |
-| `doc_type` | Yes | `tutorial`, `how-to`, `reference`, `explanation` | Diataxis classification |
-| `level` | Yes | `beginner`, `intermediate`, `advanced` | Target audience |
 | `icskills` | No | string array | Related skill files from github.com/dfinity/icskills |
-| `sidebar.order` | No | number | Controls position in auto-generated sidebar |
+| `sidebar.order` | No | number | Controls position within auto-generated sidebar sections. Only set where reading order matters (e.g., getting-started tutorials). Omit to use alphabetical order. |
 
 ## Writing guidelines
 

@@ -3,8 +3,6 @@ title: "Canister Logs"
 description: "Debug and monitor canisters using the logging API and query statistics"
 sidebar:
   order: 3
-doc_type: how-to
-level: intermediate
 icskills: []
 ---
 

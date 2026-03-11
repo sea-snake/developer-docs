@@ -3,8 +3,6 @@ title: "Canister Optimization"
 description: "Reduce Wasm size and improve canister performance with ic-wasm, SIMD, and memory tuning"
 sidebar:
   order: 4
-doc_type: how-to
-level: advanced
 icskills: []
 ---
 

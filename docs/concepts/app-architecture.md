@@ -3,8 +3,6 @@ title: "Application Architecture"
 description: "How ICP applications are structured: canisters, frontends, and inter-canister communication"
 sidebar:
   order: 2
-doc_type: explanation
-level: beginner
 icskills: []
 ---
 

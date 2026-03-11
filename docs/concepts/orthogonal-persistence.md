@@ -3,8 +3,6 @@ title: "Orthogonal Persistence"
 description: "How canister memory survives across executions and upgrades without databases"
 sidebar:
   order: 10
-doc_type: explanation
-level: intermediate
 icskills: []
 ---
 

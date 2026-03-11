@@ -3,8 +3,6 @@ title: "Certified Variables"
 description: "Return verifiable query responses using Merkle trees and certified data"
 sidebar:
   order: 5
-doc_type: how-to
-level: advanced
 icskills: [certified-variables]
 ---
 

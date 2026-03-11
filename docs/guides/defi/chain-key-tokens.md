@@ -3,8 +3,6 @@ title: "Chain-Key Tokens"
 description: "Work with ckBTC, ckETH, and other chain-key token representations"
 sidebar:
   order: 2
-doc_type: how-to
-level: advanced
 icskills: [ckbtc]
 ---
 

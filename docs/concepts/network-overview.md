@@ -3,8 +3,6 @@ title: "Network Overview"
 description: "How the Internet Computer works: subnets, nodes, consensus, and boundary nodes"
 sidebar:
   order: 1
-doc_type: explanation
-level: beginner
 icskills: []
 ---
 

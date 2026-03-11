@@ -3,8 +3,6 @@ title: "Managing an SNS"
 description: "Operate a live SNS: proposals, cycles, asset updates, and neuron management"
 sidebar:
   order: 2
-doc_type: how-to
-level: advanced
 icskills: [sns-launch]
 ---
 

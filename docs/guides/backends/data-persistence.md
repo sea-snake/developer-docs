@@ -3,8 +3,6 @@ title: "Data Persistence"
 description: "Store and retrieve data in canisters using stable structures, persistent actors, and upgrade hooks"
 sidebar:
   order: 1
-doc_type: how-to
-level: intermediate
 icskills: [stable-memory]
 ---
 

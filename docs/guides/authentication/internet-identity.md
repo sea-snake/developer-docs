@@ -3,8 +3,6 @@ title: "Internet Identity"
 description: "Integrate passkey-based authentication with Internet Identity"
 sidebar:
   order: 1
-doc_type: how-to
-level: intermediate
 icskills: [internet-identity]
 ---
 

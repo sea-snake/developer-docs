@@ -3,8 +3,6 @@ title: "Testing SNS Governance"
 description: "Test your SNS locally with PocketIC and on mainnet with testflight"
 sidebar:
   order: 3
-doc_type: how-to
-level: advanced
 icskills: [sns-launch]
 ---
 

@@ -3,8 +3,6 @@ title: "Canister Discovery"
 description: "Make your canister findable on the IC dashboard and through metadata APIs"
 sidebar:
   order: 3
-doc_type: how-to
-level: intermediate
 icskills: [ic-dashboard]
 ---
 

@@ -3,8 +3,6 @@ title: "Dogecoin Integration"
 description: "Send and receive DOGE from ICP canisters"
 sidebar:
   order: 4
-doc_type: how-to
-level: advanced
 icskills: []
 ---
 

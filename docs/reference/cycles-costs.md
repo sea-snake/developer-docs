@@ -3,8 +3,6 @@ title: "Cycles Costs"
 description: "Exact cycle costs for compute, storage, HTTPS outcalls, signing, and canister operations"
 sidebar:
   order: 6
-doc_type: reference
-level: intermediate
 icskills: []
 ---
 

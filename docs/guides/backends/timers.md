@@ -3,8 +3,6 @@ title: "Timers"
 description: "Schedule one-shot and periodic tasks in your canister"
 sidebar:
   order: 3
-doc_type: how-to
-level: intermediate
 icskills: []
 ---
 

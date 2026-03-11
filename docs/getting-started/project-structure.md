@@ -3,8 +3,6 @@ title: "Project Structure"
 description: "Understand icp.yaml, recipes, binding generation, and the .icp/ directory"
 sidebar:
   order: 2
-doc_type: tutorial
-level: beginner
 icskills: [icp-cli]
 ---
 

@@ -3,8 +3,6 @@ title: "Rust CDK"
 description: "Build ICP canisters with Rust using the ic-cdk canister development kit"
 sidebar:
   order: 1
-doc_type: explanation
-level: intermediate
 icskills: []
 ---
 

@@ -3,8 +3,6 @@ title: "Canisters"
 description: "Smart contracts that run WebAssembly, hold state, serve HTTP, and pay for their own compute"
 sidebar:
   order: 3
-doc_type: explanation
-level: beginner
 icskills: []
 ---
 

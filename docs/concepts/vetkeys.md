@@ -6,8 +6,6 @@ sidebar:
 doc_type: explanation
 level: advanced
 icskills: [vetkd]
-source_repo: null
-source_ref: null
 ---
 
 TODO: Write content for this page.

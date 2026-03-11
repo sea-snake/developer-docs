@@ -6,8 +6,6 @@ sidebar:
 doc_type: how-to
 level: advanced
 icskills: [canister-security, multi-canister]
-source_repo: null
-source_ref: null
 ---
 
 TODO: Write content for this page.

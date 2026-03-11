@@ -29,8 +29,6 @@ sidebar:
 doc_type: how-to                              # Required: tutorial | how-to | reference | explanation
 level: intermediate                           # Required: beginner | intermediate | advanced
 icskills: [ckbtc, evm-rpc]                    # Optional: related icskills skill files
-source_repo: null                             # Set if synced from another repo
-source_ref: null                              # Git ref if synced
 ---
 ```
 
@@ -43,8 +41,6 @@ source_ref: null                              # Git ref if synced
 | `doc_type` | Yes | `tutorial`, `how-to`, `reference`, `explanation` | Diataxis classification |
 | `level` | Yes | `beginner`, `intermediate`, `advanced` | Target audience |
 | `icskills` | No | string array | Related skill files from github.com/dfinity/icskills |
-| `source_repo` | No | URL or null | If this file is synced from another repo |
-| `source_ref` | No | string or null | Git tag/commit if synced |
 | `sidebar.order` | No | number | Controls position in auto-generated sidebar |
 
 ## Writing guidelines
@@ -73,7 +69,7 @@ source_ref: null                              # Git ref if synced
 
 ## Synced content
 
-Files with `source_repo` in frontmatter are auto-synced from other repositories.
+Some files are auto-synced from other repositories.
 **Do not edit these files directly.** Changes must go to the source repo.
 
 Currently synced:

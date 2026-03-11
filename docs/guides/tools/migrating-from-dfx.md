@@ -6,8 +6,6 @@ sidebar:
 doc_type: how-to
 level: intermediate
 icskills: [icp-cli]
-source_repo: dfinity/icp-cli
-source_ref: null
 ---
 
 TODO: This page is auto-synced from the icp-cli repository. Do not edit directly.

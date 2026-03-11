@@ -6,8 +6,6 @@ sidebar:
 doc_type: tutorial
 level: beginner
 icskills: [icp-cli, internet-identity, https-outcalls, asset-canister, stable-memory, multi-canister, cycles-management, canister-security, certified-variables, ckbtc, evm-rpc, icrc-ledger, sns-launch, vetkd, wallet-integration, ic-dashboard]
-source_repo: null
-source_ref: null
 ---
 
 TODO: Write content for this page.

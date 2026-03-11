@@ -6,8 +6,6 @@ sidebar:
 doc_type: reference
 level: intermediate
 icskills: [icrc-ledger, wallet-integration]
-source_repo: null
-source_ref: null
 ---
 
 TODO: Write content for this page.

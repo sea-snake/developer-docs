@@ -6,8 +6,6 @@ sidebar:
 doc_type: how-to
 level: advanced
 icskills: [canister-security, vetkd, certified-variables]
-source_repo: null
-source_ref: null
 ---
 
 TODO: Write content for this page.

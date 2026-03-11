@@ -128,7 +128,7 @@ When drafting a new docs page:
 
 - **NEVER reference `dfx`** — it is deprecated. Use icp-cli instead.
 - All docs must have complete frontmatter (see CONTRIBUTING.md for schema)
-- Synced content has `source_repo` in frontmatter — edits must go to source repo
+- Synced content must not be edited directly — edits must go to the source repo
 - All code examples must be self-contained and copy-pasteable
 - Code examples: <30 lines inline, >30 lines link to `dfinity/examples`
 - No `.mdx` files. No JSX. Plain markdown only.
@@ -175,8 +175,6 @@ sidebar:
 doc_type: how-to                              # Required: tutorial | how-to | reference | explanation
 level: intermediate                           # Required: beginner | intermediate | advanced
 icskills: [ckbtc, evm-rpc]                    # Optional: related icskills
-source_repo: null                             # Set if synced from another repo
-source_ref: null                              # Git ref if synced
 ---
 ```
 

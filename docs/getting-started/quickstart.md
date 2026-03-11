@@ -6,8 +6,6 @@ sidebar:
 doc_type: tutorial
 level: beginner
 icskills: [icp-cli]
-source_repo: null
-source_ref: null
 ---
 
 TODO: Write content for this page.

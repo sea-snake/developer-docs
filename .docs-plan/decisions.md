@@ -99,3 +99,9 @@ Append new decisions at the bottom. Never modify existing entries.
 **Decision:** Remove `last_verified` from the frontmatter schema and all stub pages.
 **Rationale:** The date is meaningless on stub pages with no real content. Maintaining it adds overhead with no payoff — there's no periodic verification workflow. Re-add when a verification process is established.
 **Alternatives considered:** Keep as required (establishes habit but meaningless on stubs), make optional (still no process to enforce it)
+
+## 2026-03-11: Remove `source_repo` and `source_ref` frontmatter fields
+**Context:** Every stub had `source_repo: null` and `source_ref: null`. Only 2 pages (Motoko index, migrating-from-dfx) would ever use non-null values.
+**Decision:** Remove both fields from the frontmatter schema and all stub pages. Synced content protection is enforced by path-based rules in AGENTS.md ("Never edit synced files") and CONTRIBUTING.md ("Synced content" section) — not by frontmatter metadata.
+**Rationale:** Having `source_repo: null` on 77 non-synced pages is noise. The sync script can inject a comment (`<!-- Synced from repo — do not edit -->`) if file-level marking is needed. Path-based rules are the actual enforcement mechanism.
+**Alternatives considered:** Keep on synced pages only (still redundant with path rules), keep as optional (agents would still see null values in schema examples)

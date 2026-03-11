@@ -6,8 +6,6 @@ sidebar:
 doc_type: tutorial
 level: beginner
 icskills: []
-source_repo: null
-source_ref: null
 ---
 
 # Build on the Internet Computer

@@ -6,8 +6,6 @@ sidebar:
 doc_type: reference
 level: intermediate
 icskills: [asset-canister, sns-launch]
-source_repo: null
-source_ref: null
 ---
 
 TODO: Write content for this page.

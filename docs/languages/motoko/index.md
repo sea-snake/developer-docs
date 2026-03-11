@@ -6,8 +6,6 @@ sidebar:
 doc_type: explanation
 level: beginner
 icskills: []
-source_repo: caffeinelabs/motoko
-source_ref: null
 ---
 
 TODO: Write content for this page. This is the landing page for the Motoko section. Actual Motoko documentation pages are synced from the caffeinelabs/motoko repository.

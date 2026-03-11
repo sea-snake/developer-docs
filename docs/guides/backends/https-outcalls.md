@@ -6,8 +6,6 @@ sidebar:
 doc_type: how-to
 level: intermediate
 icskills: [https-outcalls]
-source_repo: null
-source_ref: null
 ---
 
 TODO: Write content for this page.

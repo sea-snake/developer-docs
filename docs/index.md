@@ -12,40 +12,40 @@ The Internet Computer (ICP) is a blockchain that runs at web speed, serves web c
 
 ## Get started in under 10 minutes
 
-[Start the quickstart](/getting-started/quickstart/) to install icp-cli, create a project, and deploy your first canister.
+[Start the quickstart](getting-started/quickstart.md) to install icp-cli, create a project, and deploy your first canister.
 
 ## What makes ICP different
 
 ### Chain-key cryptography
-Canisters can sign transactions for Bitcoin, Ethereum, and other chains using threshold signatures -- no bridges or oracles required. [Learn more](/concepts/chain-key-cryptography/)
+Canisters can sign transactions for Bitcoin, Ethereum, and other chains using threshold signatures -- no bridges or oracles required. [Learn more](concepts/chain-key-cryptography.md)
 
 ### Orthogonal persistence
-Canister memory survives across executions and upgrades. No databases, no serialization -- just use variables. [Learn more](/concepts/orthogonal-persistence/)
+Canister memory survives across executions and upgrades. No databases, no serialization -- just use variables. [Learn more](concepts/orthogonal-persistence.md)
 
 ### Reverse gas model
-Users never pay gas. Canisters pay for their own compute, storage, and bandwidth using **cycles**. [Learn more](/concepts/reverse-gas-model/)
+Users never pay gas. Canisters pay for their own compute, storage, and bandwidth using **cycles**. [Learn more](concepts/reverse-gas-model.md)
 
 ### Web-native smart contracts
-Canisters serve HTTP responses directly. Host full web applications -- frontend and backend -- entirely on-chain. [Learn more](/concepts/app-architecture/)
+Canisters serve HTTP responses directly. Host full web applications -- frontend and backend -- entirely on-chain. [Learn more](concepts/app-architecture.md)
 
 ### Chain Fusion
-Natively interact with Bitcoin, Ethereum, Solana, and other blockchains from ICP canisters. [Learn more](/concepts/chain-fusion/)
+Natively interact with Bitcoin, Ethereum, Solana, and other blockchains from ICP canisters. [Learn more](concepts/chain-fusion.md)
 
 ## Documentation sections
 
-### [Getting Started](/getting-started/quickstart/)
+### [Getting Started](getting-started/quickstart.md)
 Install tools, create your first project, deploy a canister, and choose your path forward.
 
-### [Guides](/guides/backends/data-persistence/)
+### [Guides](guides/backends/data-persistence.md)
 Task-oriented how-to guides organized by development stage: backends, frontends, authentication, testing, production, chain fusion, DeFi, governance, and security.
 
-### [Concepts](/concepts/network-overview/)
+### [Concepts](concepts/network-overview.md)
 Developer-focused explanations of ICP architecture, capabilities, and design decisions.
 
-### [Languages](/languages/rust/)
+### [Languages](languages/rust/index.md)
 Language-specific guides for Rust and Motoko, including stable structures, testing, and CDK reference.
 
-### [Reference](/reference/management-canister/)
+### [Reference](reference/management-canister.md)
 Specifications, canister IDs, token standards, cycle costs, execution errors, and glossary.
 
 ## AI-assisted development
@@ -56,7 +56,7 @@ ICP has first-class support for AI-assisted development. Install [icskills](http
 npx skills add dfinity/icskills
 ```
 
-[Set up agentic development](/getting-started/agentic-development/)
+[Set up agentic development](getting-started/agentic-development.md)
 
 ## External resources
 

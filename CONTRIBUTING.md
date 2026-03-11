@@ -48,6 +48,7 @@ icskills: [ckbtc, evm-rpc]                    # Optional: related icskills skill
 - Link to external docs for tool-specific details (see AGENTS.md linking rules)
 - Link to icskills skill files where they provide implementation details
 - Use standard markdown features (code blocks, tables, links, headings)
+- Use relative paths with `.md` extension for internal links (e.g., `[Quickstart](../getting-started/quickstart.md)`) — works on both the Astro site and GitHub
 
 ### Don't
 - Reference `dfx` — it is deprecated. CI will reject it.

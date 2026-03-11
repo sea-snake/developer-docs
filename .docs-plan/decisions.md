@@ -117,3 +117,9 @@ Append new decisions at the bottom. Never modify existing entries.
 **Decision:** Images live in `src/assets/images/`, organized by docs section (concepts/, guides/canisters/, etc.). Carry over portal images case-by-case during content writing — not bulk-imported upfront. Keep the existing hand-drawn visual style for consistency. Use descriptive kebab-case filenames.
 **Rationale:** `src/assets/` enables Astro image optimization (Sharp). Section-based organization mirrors the docs structure. Case-by-case approach avoids importing images for pages that may not need them or may need different visuals.
 **Alternatives considered:** `public/images/` (no optimization), co-located images next to .md files (clutters docs/), bulk import all portal images (wasteful, many won't be used)
+
+## 2026-03-11: Use relative paths with `.md` extension for internal links
+**Context:** Landing page links like `/getting-started/quickstart/` worked on the Astro site but broke on GitHub (files live at `docs/getting-started/quickstart.md`).
+**Decision:** All internal links must use relative paths with `.md` extension (e.g., `[Quickstart](getting-started/quickstart.md)`). Never use absolute URL paths.
+**Rationale:** Relative paths with `.md` work on GitHub natively. A remark plugin (`plugins/remark-strip-md-extension.mjs`) strips `.md` extensions at build time for Astro/Starlight. This ensures docs are readable and navigable wherever they're viewed — no pre-build scripts or temp directories needed.
+**Alternatives considered:** Absolute paths (break on GitHub), paths without extension (break on GitHub), pre-build sed script like icp-cli repo (fragile, adds build complexity)

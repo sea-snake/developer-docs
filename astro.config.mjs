@@ -3,12 +3,13 @@ import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
 import remarkIcpCliVersion from "./plugins/remark-icp-cli-version.mjs";
 import remarkExternalLinks from "./plugins/remark-external-links.mjs";
+import remarkStripMdExtension from "./plugins/remark-strip-md-extension.mjs";
 
 // https://astro.build/config
 export default defineConfig({
   site: "https://docs.internetcomputer.org",
   markdown: {
-    remarkPlugins: [remarkExternalLinks, remarkIcpCliVersion],
+    remarkPlugins: [remarkExternalLinks, remarkStripMdExtension, remarkIcpCliVersion],
   },
   integrations: [
     starlight({

@@ -120,7 +120,7 @@ Before submitting a PR, manually verify:
 3. **Valid frontmatter** — required fields present, valid values
 4. **`npm run build`** — Site builds without errors
 
-> **Note:** Validation scripts and CI workflows are not yet set up on this branch. They are preserved on `restructuring-attempt-1` and will be restored when the docs are ready for production.
+> **Note:** Validation scripts are not yet set up on this branch. They are preserved on `restructuring-attempt-1` and will be restored when the docs are ready for production. CI deployment to the IC asset canister runs on every push to `main` (see `.github/workflows/deploy-ic.yml`).
 
 ## Draft completeness checklist
 

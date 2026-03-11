@@ -231,3 +231,9 @@ Append new decisions at the bottom. Never modify existing entries.
 **Decision:** Keep Languages index visible in sidebar as "Overview" (`sidebar.order: 0`). Add explicit slug entry in `astro.config.mjs`. Expand content to list community CDKs: TypeScript (Azle), Python (Kybra), C++ (icpp-pro), MoonBit (moonbit-ic-cdk) in a table with repository links.
 **Rationale:** Developers choosing a language need a single page comparing all options. This page serves that purpose — unlike the Concepts/Reference indexes which just list their children. Community CDKs are important for adoption even though we don't write dedicated docs for them.
 **Alternatives considered:** Separate "Community CDKs" page (too thin), list in each language's section (scattered, hard to compare)
+
+## 2026-03-11: CI deployment to IC asset canister
+**Context:** Docs needed automated deployment to the Internet Computer for live preview.
+**Decision:** Deploy to asset canister `2akpg-uqaaa-aaaal-qv5ha-cai` on every push to `main` via GitHub Actions + icp-cli. Custom domain: `beta-docs.internetcomputer.org`. Asset canister configured with `.ic-assets.json5` (no raw access, standard security headers, immutable caching for hashed `_astro/` assets). Canister ID stored in `.icp/data/mappings/ic.ids.json` (committed). Deployer identity imported from `DFX_IDENTITY_DESIGN_TEAM` secret in `IC mainnet` GitHub environment.
+**Rationale:** Matches the pattern used by icskills repo. icp-cli is the standard deployment tool. Raw access disabled for security (all responses cryptographically verified). Hashed assets cached immutably, HTML pages revalidated on every request.
+**Alternatives considered:** Deploy via dfx (deprecated), manual deployment (error-prone, not repeatable)

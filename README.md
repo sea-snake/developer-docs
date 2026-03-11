@@ -2,6 +2,8 @@
 
 > **Work in progress.** This is a complete rewrite of the ICP developer documentation. All pages are currently stubs with content briefs — actual content is being written following the plan in `.docs-plan/`. The existing production docs live at [internetcomputer.org/docs](https://internetcomputer.org/docs) (source: [dfinity/portal](https://github.com/dfinity/portal)).
 
+**Live preview:** [beta-docs.internetcomputer.org](https://beta-docs.internetcomputer.org) — deployed automatically on every push to `main`.
+
 Developer documentation for the [Internet Computer](https://internetcomputer.org), built with [Astro](https://astro.build) + [Starlight](https://starlight.astro.build).
 
 ## Quick start

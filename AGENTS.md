@@ -23,7 +23,7 @@ For research artifacts (portal triage, Learn Hub mapping, examples inventory), s
 ## Always (do these without asking)
 
 - Read `.docs-plan/decisions.md` before proposing structural changes
-- Use relevant icskills when writing feature pages (`npx skills add dfinity/icskills`)
+- **Load the relevant icskill before any ICP-related work** — not just content writing. This includes CI workflows, `icp.yaml` config, deployment setup, and any task involving icp-cli commands or configuration. Load the skill first, then do the work.
 - Use the `technical-documentation` skill when drafting or reviewing docs (if available)
 - Use icp-cli commands in all CLI examples — never `dfx`
 - Write plain `.md` files only — never `.mdx` or JSX
@@ -59,6 +59,8 @@ For research artifacts (portal triage, Learn Hub mapping, examples inventory), s
 - `docs/languages/motoko/` — Auto-synced from `caffeinelabs/motoko` (do not edit directly)
 - `docs/guides/tools/migrating-from-dfx.md` — Synced from `dfinity/icp-cli` (do not edit directly)
 - `.docs-plan/` — Analysis artifacts, decisions, and progress tracking (see `.docs-plan/README.md`)
+- `icp.yaml` — icp-cli project config (asset canister recipe)
+- `.icp/data/` — Canister ID mappings (committed to git). `.icp/cache/` is gitignored.
 
 ## Project structure
 

@@ -22,5 +22,8 @@ public/docs-manifest.json
 .env
 .env.production
 
+# icp-cli (cache is ephemeral; .icp/data/ must be committed)
+.icp/cache/
+
 # macOS-specific files
 .DS_Store

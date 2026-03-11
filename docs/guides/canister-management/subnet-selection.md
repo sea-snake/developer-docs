@@ -1,8 +1,8 @@
 ---
-title: "Subnet Types"
+title: "Subnet Selection"
 description: "Choose the right subnet for your canister deployment based on requirements"
 sidebar:
-  order: 1
+  order: 8
 icskills: []
 ---
 
@@ -17,5 +17,5 @@ Choose the right subnet for deployment. Cover application vs system subnets, Eur
 
 <!-- Cross-Links -->
 - concepts/network-overview -- subnet architecture
-- guides/production/cycles-management -- cost implications
+- guides/canister-management/cycles-management -- cost implications
 - reference/subnet-types -- full subnet type reference

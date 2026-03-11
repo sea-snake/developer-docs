@@ -9,7 +9,7 @@ icskills: [cycles-management]
 TODO: Write content for this page.
 
 <!-- Content Brief -->
-Configure all canister settings: controllers (who can manage the canister), memory allocation, compute allocation, freezing threshold, log visibility, and Wasm memory limit. Show how to set these via icp-cli and programmatically. Cover environment-specific settings using icp.yaml environments.
+Configure all canister settings: controllers (who can manage the canister), memory allocation, compute allocation, freezing threshold, log visibility, Wasm memory limit, and canister metadata (name, description, git commit for dashboard visibility). Show how to set these via icp-cli and programmatically. Cover environment-specific settings using icp.yaml environments.
 
 <!-- Source Material -->
 - Portal: building-apps/canister-management/control.mdx, settings.mdx
@@ -17,7 +17,7 @@ Configure all canister settings: controllers (who can manage the canister), memo
 - icskills: cycles-management
 
 <!-- Cross-Links -->
-- guides/canisters/lifecycle -- settings are part of canister management
-- guides/production/cycles-management -- freezing threshold and cost implications
+- guides/canister-management/lifecycle -- settings are part of canister management
+- guides/canister-management/cycles-management -- freezing threshold and cost implications
 - reference/cycles-costs -- cost of compute/memory allocation
 - icp-cli docs: https://dfinity.github.io/icp-cli/

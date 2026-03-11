@@ -19,6 +19,6 @@ Guide developers through storing data in canisters. Cover stable structures (Sta
 
 <!-- Cross-Links -->
 - concepts/orthogonal-persistence -- conceptual background
-- guides/canisters/lifecycle -- upgrade hooks
+- guides/canister-management/lifecycle -- upgrade hooks
 - languages/rust/stable-structures -- Rust-specific deep dive
 - languages/motoko/ -- Motoko persistence patterns

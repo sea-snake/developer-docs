@@ -19,4 +19,4 @@ Explain the Internet Computer network architecture from a developer perspective.
 - concepts/canisters -- what runs on the network
 - concepts/app-architecture -- how apps use the network
 - reference/subnet-types -- subnet type details
-- guides/production/subnet-types -- choosing a subnet
+- guides/canister-management/subnet-selection -- choosing a subnet

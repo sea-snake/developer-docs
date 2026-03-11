@@ -17,5 +17,5 @@ Reference table of all IC subnet types. List application subnets, system subnets
 - Learn Hub: [Subnet Creation](https://learn.internetcomputer.org/hc/en-us/articles/34209955782420)
 
 <!-- Cross-Links -->
-- guides/production/subnet-types -- how-to choose a subnet
+- guides/canister-management/subnet-selection -- how-to choose a subnet
 - reference/cycles-costs -- base costs before multipliers

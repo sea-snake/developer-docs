@@ -16,6 +16,6 @@ Reduce Wasm binary size and improve canister performance. Cover ic-wasm for stri
 - Examples: low_wasm_memory (both), performance_counters (Rust), simd (Rust), face-recognition (Rust), image-classification (Rust)
 
 <!-- Cross-Links -->
-- guides/backends/large-wasm -- when optimization is not enough
+- guides/canister-management/large-wasm -- when optimization is not enough
 - reference/cycles-costs -- smaller Wasm = fewer cycles
-- guides/canisters/lifecycle -- optimized builds in recipes
+- guides/canister-management/lifecycle -- optimized builds in recipes

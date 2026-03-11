@@ -15,6 +15,6 @@ Reference for common canister execution errors. List trap codes (unreachable, me
 - Portal: building-apps/canister-management/trapping.mdx, resource-limits.mdx
 
 <!-- Cross-Links -->
-- guides/canisters/lifecycle -- lifecycle-related errors
-- guides/canisters/optimization -- reducing resource usage
+- guides/canister-management/lifecycle -- lifecycle-related errors
+- guides/canister-management/optimization -- reducing resource usage
 - reference/cycles-costs -- resource limits

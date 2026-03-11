@@ -2,7 +2,7 @@
 title: "Large Wasm Modules"
 description: "Deploy canisters that exceed the 2MB Wasm limit using chunk store and compression"
 sidebar:
-  order: 6
+  order: 9
 icskills: []
 ---
 
@@ -17,6 +17,6 @@ Deploy canisters with Wasm modules larger than the 2MB limit. Cover the Wasm chu
 - icp-cli: --wasm-chunk-store flag
 
 <!-- Cross-Links -->
-- guides/canisters/optimization -- reducing Wasm size to avoid this entirely
+- guides/canister-management/optimization -- reducing Wasm size to avoid this entirely
 - reference/execution-errors -- Wasm size errors
-- guides/canisters/lifecycle -- deployment with chunk store
+- guides/canister-management/lifecycle -- deployment with chunk store

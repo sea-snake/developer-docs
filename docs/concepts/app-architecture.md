@@ -18,5 +18,5 @@ Explain how ICP applications are structured. Cover the canister-as-backend model
 <!-- Cross-Links -->
 - concepts/canisters -- canister details
 - guides/frontends/asset-canister -- frontend deployment
-- guides/inter-canister/calls -- canister-to-canister communication
+- guides/canister-calls/onchain-calls -- canister-to-canister communication
 - concepts/network-overview -- network layer

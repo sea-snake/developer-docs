@@ -2,7 +2,7 @@
 title: "Concepts"
 description: "Developer-focused explanations of ICP architecture, capabilities, and design decisions"
 sidebar:
-  order: 0
+  hidden: true
 icskills: []
 ---
 

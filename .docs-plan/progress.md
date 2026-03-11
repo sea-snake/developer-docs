@@ -67,8 +67,8 @@ Pages are listed in execution order from `migration-plan.md`. Work top-to-bottom
 | 9 | guides/backends/data-persistence.md | stub | | |
 | 10 | guides/backends/https-outcalls.md | stub | | |
 | 11 | guides/backends/timers.md | stub | | |
-| 12 | guides/inter-canister/calls.md | stub | | |
-| 13 | guides/inter-canister/candid.md | stub | | |
+| 12 | guides/canister-calls/onchain-calls.md | stub | | |
+| 13 | guides/canister-calls/candid.md | stub | | |
 | 14 | concepts/https-outcalls.md | stub | | |
 | 15 | concepts/reverse-gas-model.md | stub | | |
 | 16 | concepts/orthogonal-persistence.md | stub | | |
@@ -81,12 +81,12 @@ Pages are listed in execution order from `migration-plan.md`. Work top-to-bottom
 |---|------|--------|-------------|------|
 | 19 | guides/frontends/asset-canister.md | stub | | |
 | 20 | guides/authentication/internet-identity.md | stub | | |
-| 21 | guides/canisters/lifecycle.md | stub | | |
-| 22 | guides/canisters/settings.md | stub | | |
-| 23 | guides/canisters/reproducible-builds.md | stub | | |
+| 21 | guides/canister-management/lifecycle.md | stub | | |
+| 22 | guides/canister-management/settings.md | stub | | |
+| 23 | guides/canister-management/reproducible-builds.md | stub | | |
 | 24 | guides/testing/strategies.md | stub | | |
 | 25 | guides/testing/pocket-ic.md | stub | | |
-| 26 | guides/production/cycles-management.md | stub | | |
+| 26 | guides/canister-management/cycles-management.md | stub | | |
 | 27 | guides/security/access-management.md | stub | | |
 | 28 | guides/security/canister-upgrades.md | stub | | |
 | 29 | concepts/security.md | stub | | |
@@ -112,19 +112,20 @@ Pages are listed in execution order from `migration-plan.md`. Work top-to-bottom
 | 38b | guides/backends/onchain-ai.md | stub | | |
 | 39 | guides/backends/randomness.md | stub | | |
 | 40 | guides/backends/certified-variables.md | stub | | |
-| 41 | guides/canisters/logs.md | stub | | |
-| 42 | guides/canisters/optimization.md | stub | | |
-| 43 | guides/canisters/snapshots.md | stub | | |
+| 41 | guides/canister-management/logs.md | stub | | |
+| 42 | guides/canister-management/optimization.md | stub | | |
+| 43 | guides/canister-management/snapshots.md | stub | | |
 | 44 | guides/frontends/custom-domains.md | stub | | |
 | 45 | guides/frontends/certification.md | stub | | |
 | 46 | guides/authentication/wallet-integration.md | stub | | |
 
-### P1 — Sprint 6: Inter-Canister, Production, Security
+### P1 — Sprint 6: Canister Calls, Production, Security
 
 | # | Page | Status | Agent/Author | Date |
 |---|------|--------|-------------|------|
-| 47 | guides/inter-canister/binding-generation.md | stub | | |
-| 48 | guides/production/subnet-types.md | stub | | |
+| 47 | guides/canister-calls/binding-generation.md | stub | | |
+| 47b | guides/canister-calls/offchain-calls.md | stub | | |
+| 48 | guides/canister-management/subnet-selection.md | stub | | |
 | 49 | guides/security/data-integrity.md | stub | | |
 | 50 | guides/security/dos-prevention.md | stub | | |
 | 51 | guides/security/inter-canister-calls.md | stub | | |
@@ -163,13 +164,12 @@ Pages are listed in execution order from `migration-plan.md`. Work top-to-bottom
 
 | # | Page | Status | Agent/Author | Date |
 |---|------|--------|-------------|------|
-| 71 | guides/backends/large-wasm.md | stub | | |
-| 72 | guides/backends/parallel-calls.md | stub | | |
+| 71 | guides/canister-management/large-wasm.md | stub | | |
+| 72 | guides/canister-calls/parallel-calls.md | stub | | |
 | 73 | guides/frontends/frameworks.md | stub | | |
 | 74 | guides/chain-fusion/solana.md | stub | | |
 | 75 | guides/chain-fusion/dogecoin.md | stub | | |
 | 76 | guides/defi/rosetta.md | stub | | |
-| 77 | guides/production/canister-discovery.md | stub | | |
 
 ### P2 — Sprint 10: Remaining Reference and Languages
 

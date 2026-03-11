@@ -66,18 +66,17 @@ For research artifacts (portal triage, Learn Hub mapping, examples inventory), s
 docs/                       # All documentation (.md only) — src/content/docs/ symlinks here
 ├── index.md                # Landing page
 ├── getting-started/        # Tutorials (4 pages)
-├── guides/                 # How-to guides (46 pages across 12 subsections)
+├── guides/                 # How-to guides (48 pages across 11 subsections)
 │   ├── backends/           # Backend development patterns
-│   ├── canisters/          # Canister management
+│   ├── canister-calls/      # Candid interfaces, bindings, onchain and offchain calls
 │   ├── frontends/          # Frontend development
 │   ├── authentication/     # Auth integration
-│   ├── inter-canister/     # Cross-canister communication
 │   ├── testing/            # Testing strategies
-│   ├── production/         # Going to mainnet
+│   ├── canister-management/ # Lifecycle, settings, cycles, optimization, deployment
+│   ├── security/           # Security best practices
 │   ├── chain-fusion/       # Cross-chain integration
 │   ├── defi/               # Token and DeFi guides
 │   ├── governance/         # SNS and DAO guides
-│   ├── security/           # Security best practices
 │   └── tools/              # Developer tools
 ├── concepts/               # Explanations (13 pages)
 ├── languages/              # Language-specific (Motoko synced, Rust hand-written)

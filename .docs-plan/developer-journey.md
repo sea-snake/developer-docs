@@ -48,7 +48,7 @@
 | Scheduled tasks | guides/backends/timers.md | — | `icp-timers` |
 | Randomness | guides/backends/randomness.md | — | `icp-randomness` |
 | Certified responses | guides/backends/certified-variables.md | — | `icp-certified-variables` |
-| Calling other canisters | guides/inter-canister/calls.md, guides/inter-canister/candid.md | — | `icp-inter-canister-calls` |
+| Calling other canisters | guides/canister-calls/onchain-calls.md, guides/canister-calls/candid.md | — | `icp-inter-canister-calls` |
 | Language reference | languages/motoko/ or languages/rust/ | [Motoko core](https://mops.one/core/docs), [Rust CDK](https://docs.rs/ic-cdk/latest/ic_cdk/) | — |
 
 **Key insight:** This is where developers spend 80% of their time. Every guide must have copy-pasteable code for both Rust and Motoko. Link to the relevant icskill at the top of each guide so AI agents can assist.
@@ -61,6 +61,7 @@
 
 | Need | Docs page(s) | External docs | icskills |
 |------|-------------|---------------|----------|
+| Calling canisters from apps | guides/canister-calls/offchain-calls.md | [JS SDK](https://js.icp.build), [Rust agent](https://docs.rs/ic-agent) | — |
 | Asset canister setup | guides/frontends/asset-canister.md | icp-cli docs | `icp-asset-canister` |
 | Framework integration | guides/frontends/frameworks.md | [JS SDK](https://js.icp.build) | — |
 | Custom domains | guides/frontends/custom-domains.md | — | — |
@@ -82,7 +83,7 @@
 |------|-------------|---------------|----------|
 | Testing approaches | guides/testing/strategies.md | — | — |
 | PocketIC integration tests | guides/testing/pocket-ic.md | — | `icp-pocket-ic-testing` |
-| Canister logs (debugging) | guides/canisters/logs.md | icp-cli docs | — |
+| Canister logs (debugging) | guides/canister-management/logs.md | icp-cli docs | — |
 
 **Key insight:** Testing is often skipped by developers in a rush. The strategies page should make a strong case for why testing matters on ICP (upgrades are irreversible, cycles cost money). PocketIC is the primary testing tool and needs thorough coverage.
 
@@ -94,11 +95,11 @@
 
 | Need | Docs page(s) | External docs | icskills |
 |------|-------------|---------------|----------|
-| Cycles acquisition + management | guides/production/cycles-management.md | icp-cli docs | `icp-cycles-management` |
-| Subnet selection | guides/production/subnet-types.md | — | — |
-| Canister settings for prod | guides/canisters/settings.md | icp-cli docs | — |
-| Reproducible builds | guides/canisters/reproducible-builds.md | — | — |
-| Canister lifecycle (install, upgrade) | guides/canisters/lifecycle.md | icp-cli docs | `icp-canister-lifecycle` |
+| Cycles acquisition + management | guides/canister-management/cycles-management.md | icp-cli docs | `icp-cycles-management` |
+| Subnet selection | guides/canister-management/subnet-selection.md | — | — |
+| Canister settings for prod | guides/canister-management/settings.md | icp-cli docs | — |
+| Reproducible builds | guides/canister-management/reproducible-builds.md | — | — |
+| Canister lifecycle (install, upgrade) | guides/canister-management/lifecycle.md | icp-cli docs | `icp-canister-lifecycle` |
 
 **Key insight:** This is the highest-anxiety stage. Developers worry about costs, irreversible mistakes, and configuration errors. The cycles-management page is the single most important page here -- it must answer "how much will this cost me?" directly.
 
@@ -111,10 +112,9 @@
 | Need | Docs page(s) | External docs | icskills |
 |------|-------------|---------------|----------|
 | Security hardening | guides/security/ (all 5 pages) | — | `icp-canister-security` |
-| Wasm optimization | guides/canisters/optimization.md | — | — |
-| Canister snapshots / backup | guides/canisters/snapshots.md | — | — |
-| Discoverability | guides/production/canister-discovery.md | — | — |
-| Monitoring via logs | guides/canisters/logs.md | icp-cli docs | — |
+| Wasm optimization | guides/canister-management/optimization.md | — | — |
+| Canister snapshots / backup | guides/canister-management/snapshots.md | — | — |
+| Monitoring via logs | guides/canister-management/logs.md | icp-cli docs | — |
 
 **Key insight:** Security guides should be written as checklists, not essays. A developer going to production wants "did I forget anything?" not "here is the theory of access control."
 
@@ -146,11 +146,11 @@ The guides/ sub-groups should follow the natural development sequence. A develop
 ```
 guides/
   backends/          # 1. Write your canister logic
-  inter-canister/    # 2. Call other canisters
+  canister-calls/    # 2. Call other canisters
   frontends/         # 3. Build a UI
   authentication/    # 4. Add user login
   testing/           # 5. Test before deploying
-  canisters/         # 6. Configure and manage canisters
+  canister-management/  # 6. Configure and manage canisters
   production/        # 7. Deploy and operate on mainnet
   security/          # 8. Harden for production
   chain-fusion/      # 9. Integrate with other chains
@@ -185,10 +185,10 @@ Reference           # Specs, costs, errors (lookup when needed)
 getting-started/          (4 tutorials)
 guides/
   backends/               (7 how-to)
-  canisters/              (6 how-to)
+  canister-management/    (6 how-to)
   frontends/              (4 how-to)
   authentication/         (2 how-to)
-  inter-canister/         (3 how-to)
+  canister-calls/(3 how-to)
   testing/                (2 how-to)
   production/             (3 how-to)
   chain-fusion/           (4 how-to)
@@ -211,7 +211,6 @@ reference/                (13 reference pages)
 **Cons:**
 - 12 sub-groups in guides/ is a lot to scan in the sidebar
 - Concept/guide pairs are separated (e.g., concepts/chain-fusion.md vs guides/chain-fusion/bitcoin.md) -- developer must navigate between sections
-- "canisters/" as a sub-group name is ambiguous (management? development?)
 - "backends/" may not be immediately clear to ICP newcomers
 
 **Journey fit:** Good for stages 2-7 (linear journey). Weaker for stage 1 (discovery) and stage 8 (advanced) where developers browse by topic rather than task sequence.
@@ -224,7 +223,7 @@ reference/                (13 reference pages)
 getting-started/          (4 tutorials)
 build/
   backends/               (7 how-to)
-  inter-canister/         (3 how-to)
+  canister-calls/(3 how-to)
   frontends/              (4 how-to)
   authentication/         (2 how-to)
   testing/                (2 how-to)
@@ -265,11 +264,11 @@ tools/                    (2 pages, promoted to top-level)
 getting-started/          (4 tutorials)
 guides/
   backends/               (7 how-to)
-  inter-canister/         (3 how-to)
+  canister-calls/(3 how-to)
   frontends/              (4 how-to)
   authentication/         (2 how-to)
   testing/                (2 how-to)
-  canisters/              (6 how-to)
+  canister-management/    (6 how-to)
   production/             (3 how-to)
   security/               (5 how-to)
 capabilities/
@@ -318,7 +317,7 @@ reference/                (13 reference pages)
 
 Two refinements to the current proposal:
 
-1. **Rename `guides/canisters/` to `guides/canister-management/`** to disambiguate from "canister development" (which is what backends/ covers). This makes the distinction clear: backends/ = writing canister code, canister-management/ = configuring, upgrading, and operating canisters.
+1. **Rename `guides/canister-management/` to `guides/canister-management/`** to disambiguate from "canister development" (which is what backends/ covers). This makes the distinction clear: backends/ = writing canister code, canister-management/ = configuring, upgrading, and operating canisters.
 
 2. **Add a `guides/tools/` entry for `dev-environments.md`** (or similar) to cover Gitpod, GitHub Codespaces, and local dev setup beyond the quickstart. This fills a gap for developers who want to set up CI or team environments.
 
@@ -337,12 +336,11 @@ guides/
     timers.md
     randomness.md
     certified-variables.md
-    large-wasm.md
-    parallel-calls.md
-  inter-canister/             # Call other canisters
-    calls.md
+  canister-calls/             # Call other canisters
+    onchain-calls.md
     candid.md
     binding-generation.md
+    parallel-calls.md
   frontends/                  # Build a UI
     asset-canister.md
     custom-domains.md
@@ -359,10 +357,11 @@ guides/
     settings.md
     logs.md
     optimization.md
+    large-wasm.md
     snapshots.md
     reproducible-builds.md
   production/                 # Deploy and operate
-    subnet-types.md
+    subnet-selection.md
     cycles-management.md
     canister-discovery.md
   security/                   # Harden for production
@@ -417,7 +416,7 @@ reference/
   application-canisters.md
   token-standards.md
   cycles-costs.md
-  subnet-types.md
+  subnet-selection.md
   execution-errors.md
   ic-interface-spec.md
   http-gateway-spec.md
@@ -439,7 +438,7 @@ reference/
 - getting-started/what-next.md -> routes to guides/backends/
 - Works through relevant backend guides
 - Skips frontends/ and authentication/ entirely
-- Goes to guides/testing/ -> guides/canister-management/ -> guides/production/
+- Goes to guides/testing/ -> guides/canister-management/ -> guides/canister-management/
 
 **Does the structure work?** Yes. Frontends and authentication are clearly separate sub-groups that backend-only developers can skip without confusion. The sidebar ordering places backends/ first, so the developer sees their content immediately.
 
@@ -456,7 +455,7 @@ reference/
 - getting-started/quickstart.md
 - guides/chain-fusion/ethereum.md (their primary interest)
 - guides/backends/ (ICP-specific patterns)
-- guides/production/cycles-management.md (cycles vs gas)
+- guides/canister-management/cycles-management.md (cycles vs gas)
 
 **Does the structure work?** Mostly. The concepts section handles the "what's different" question well. The chain-fusion section is discoverable in the sidebar.
 
@@ -487,9 +486,9 @@ reference/
 - guides/defi/token-ledgers.md (core of their work)
 - guides/defi/chain-key-tokens.md
 - guides/chain-fusion/bitcoin.md or ethereum.md (for cross-chain tokens)
-- guides/inter-canister/calls.md (ledger interaction is inter-canister)
+- guides/canister-calls/onchain-calls.md (ledger interaction is inter-canister)
 - guides/security/ (financial applications need all security guides)
-- guides/production/cycles-management.md
+- guides/canister-management/cycles-management.md
 
 **Does the structure work?** Yes. The DeFi developer has a clear home in guides/defi/ and naturally branches into chain-fusion/ and security/. The separation of these three sub-groups works well because DeFi developers need all three but in different proportions depending on their specific project.
 
@@ -500,8 +499,8 @@ reference/
 **Journey:** Has working local project -> Deployment -> Production -> Security
 
 **Navigation path:**
-- guides/production/cycles-management.md (first question: "how much does this cost?")
-- guides/production/subnet-types.md (where to deploy)
+- guides/canister-management/cycles-management.md (first question: "how much does this cost?")
+- guides/canister-management/subnet-selection.md (where to deploy)
 - guides/canister-management/settings.md (production settings: controllers, memory limits)
 - guides/canister-management/reproducible-builds.md (verify your build)
 - guides/canister-management/lifecycle.md (install vs upgrade)
@@ -510,7 +509,7 @@ reference/
 
 **Does the structure work?** Yes, but the path crosses three sub-groups (production/, canister-management/, security/). This is acceptable because each sub-group has a distinct concern, and the pages should cross-link.
 
-**Gap to address:** Consider a "Production checklist" callout in guides/production/cycles-management.md (the likely entry point) that links to the 5-6 pages a first-time deployer must read. This acts as a mini-journey within the guides section without requiring a separate "deployment tutorial" (which would overlap with the how-to guides).
+**Gap to address:** Consider a "Production checklist" callout in guides/canister-management/cycles-management.md (the likely entry point) that links to the 5-6 pages a first-time deployer must read. This acts as a mini-journey within the guides section without requiring a separate "deployment tutorial" (which would overlap with the how-to guides).
 
 ---
 

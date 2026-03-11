@@ -17,5 +17,5 @@ Protect canisters from denial-of-service attacks. Cover rate limiting patterns (
 
 <!-- Cross-Links -->
 - concepts/security -- threat model
-- guides/canisters/settings -- freezing threshold as DoS protection
+- guides/canister-management/settings -- freezing threshold as DoS protection
 - reference/cycles-costs -- resource limits

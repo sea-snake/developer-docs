@@ -16,6 +16,6 @@ Comprehensive cost reference for ICP operations. Include cost tables for: comput
 - Reference: subnet-types for pricing tier multipliers
 
 <!-- Cross-Links -->
-- guides/production/cycles-management -- managing costs
+- guides/canister-management/cycles-management -- managing costs
 - concepts/reverse-gas-model -- why costs work this way
 - reference/subnet-types -- cost multipliers per subnet

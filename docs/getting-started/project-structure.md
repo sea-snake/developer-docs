@@ -19,6 +19,6 @@ Explain the output of `icp new`: icp.yaml configuration file, the .icp/ director
 
 <!-- Cross-Links -->
 - getting-started/quickstart -- prerequisite
-- guides/inter-canister/binding-generation -- deep dive on bindgen
+- guides/canister-calls/binding-generation -- deep dive on bindgen
 - guides/frontends/asset-canister -- frontend recipe details
 - icp-cli docs: https://dfinity.github.io/icp-cli/

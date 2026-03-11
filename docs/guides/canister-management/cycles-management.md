@@ -2,7 +2,7 @@
 title: "Cycles Management"
 description: "Acquire cycles, manage canister budgets, and deploy to mainnet"
 sidebar:
-  order: 2
+  order: 7
 icskills: [cycles-management]
 ---
 
@@ -21,7 +21,7 @@ The essential guide for going to mainnet. Cover ICP-to-cycles conversion via the
 
 <!-- Cross-Links -->
 - concepts/reverse-gas-model -- why canisters pay cycles
-- guides/canisters/settings -- freezing threshold, allocation
+- guides/canister-management/settings -- freezing threshold, allocation
 - reference/cycles-costs -- exact cost tables
-- guides/canisters/lifecycle -- deploy workflow
+- guides/canister-management/lifecycle -- deploy workflow
 - icp-cli docs: https://dfinity.github.io/icp-cli/

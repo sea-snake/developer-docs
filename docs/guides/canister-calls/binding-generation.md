@@ -2,7 +2,7 @@
 title: "Binding Generation"
 description: "Generate type-safe JS/TS and Rust bindings from Candid interface files"
 sidebar:
-  order: 3
+  order: 2
 icskills: [multi-canister]
 ---
 
@@ -18,6 +18,6 @@ Generate type-safe bindings from Candid files for JS/TS (@icp-sdk/bindgen), Rust
 - Template: hello-world (shows Vite plugin)
 
 <!-- Cross-Links -->
-- guides/inter-canister/candid -- Candid as input
+- guides/canister-calls/candid -- Candid as input
 - getting-started/project-structure -- bindgen in project setup
 - icp-cli docs: https://dfinity.github.io/icp-cli/

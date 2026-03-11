@@ -14,21 +14,21 @@ Compiled 2026-03-11. Sources: icp-cli/docs (33 files), icp-cli-recipes (4 recipe
 | `telemetry.md` | (none) | link only — reference from tools/overview |
 | **Concepts** | | |
 | `concepts/project-model.md` | getting-started/project-structure | sync candidate — icp.yaml structure, .icp/ directory, canister discovery |
-| `concepts/build-deploy-sync.md` | guides/canisters/lifecycle | link — deploy lifecycle is core canister lifecycle content |
-| `concepts/environments.md` | guides/production/cycles-management, guides/canisters/settings | link — environments are key for multi-env deployments |
+| `concepts/build-deploy-sync.md` | guides/canister-management/lifecycle | link — deploy lifecycle is core canister lifecycle content |
+| `concepts/environments.md` | guides/canister-management/cycles-management, guides/canister-management/settings | link — environments are key for multi-env deployments |
 | `concepts/recipes.md` | getting-started/project-structure, guides/tools/overview | link — recipes are a core icp-cli concept |
-| `concepts/canister-discovery.md` | guides/inter-canister/calls, guides/frontends/asset-canister | sync candidate — canister env vars, frontend-to-backend wiring |
-| `concepts/binding-generation.md` | guides/inter-canister/binding-generation | sync candidate — this is exactly the binding generation topic |
+| `concepts/canister-discovery.md` | guides/canister-calls/onchain-calls, guides/frontends/asset-canister | sync candidate — canister env vars, frontend-to-backend wiring |
+| `concepts/binding-generation.md` | guides/canister-calls/binding-generation | sync candidate — this is exactly the binding generation topic |
 | **Guides** | | |
 | `guides/installation.md` | getting-started/quickstart | sync candidate — install steps must be in our quickstart |
 | `guides/local-development.md` | getting-started/quickstart, guides/frontends/asset-canister | link — dev workflow, frontend dev server setup |
-| `guides/deploying-to-mainnet.md` | guides/production/cycles-management | sync candidate — identity, ICP, cycles, deploy workflow |
-| `guides/deploying-to-specific-subnets.md` | guides/production/subnet-types | sync candidate — subnet selection, colocation |
-| `guides/canister-snapshots.md` | guides/canisters/snapshots | sync candidate — this IS the snapshots guide |
-| `guides/canister-migration.md` | guides/canisters/lifecycle | link — advanced canister migration |
-| `guides/managing-environments.md` | guides/production/cycles-management | link — multi-env setup |
+| `guides/deploying-to-mainnet.md` | guides/canister-management/cycles-management | sync candidate — identity, ICP, cycles, deploy workflow |
+| `guides/deploying-to-specific-subnets.md` | guides/canister-management/subnet-selection | sync candidate — subnet selection, colocation |
+| `guides/canister-snapshots.md` | guides/canister-management/snapshots | sync candidate — this IS the snapshots guide |
+| `guides/canister-migration.md` | guides/canister-management/lifecycle | link — advanced canister migration |
+| `guides/managing-environments.md` | guides/canister-management/cycles-management | link — multi-env setup |
 | `guides/managing-identities.md` | guides/authentication/wallet-integration | link — identity management reference |
-| `guides/tokens-and-cycles.md` | guides/production/cycles-management, guides/defi/token-ledgers | link — ICP/cycles/ICRC-1 token commands |
+| `guides/tokens-and-cycles.md` | guides/canister-management/cycles-management, guides/defi/token-ledgers | link — ICP/cycles/ICRC-1 token commands |
 | `guides/containerized-networks.md` | guides/testing/strategies | link — Docker-based test networks |
 | `guides/using-recipes.md` | getting-started/project-structure | link — how to configure build recipes |
 | `guides/creating-recipes.md` | (none) | link only — advanced topic for recipe authors |
@@ -36,8 +36,8 @@ Compiled 2026-03-11. Sources: icp-cli/docs (33 files), icp-cli-recipes (4 recipe
 | **Reference** | | |
 | `reference/cli.md` | guides/tools/overview | link — always link to https://dfinity.github.io/icp-cli/ |
 | `reference/configuration.md` | getting-started/project-structure | link — icp.yaml schema reference |
-| `reference/canister-settings.md` | guides/canisters/settings | link — all canister settings |
-| `reference/environment-variables.md` | guides/inter-canister/calls, guides/frontends/asset-canister | link — env vars for build and runtime |
+| `reference/canister-settings.md` | guides/canister-management/settings | link — all canister settings |
+| `reference/environment-variables.md` | guides/canister-calls/onchain-calls, guides/frontends/asset-canister | link — env vars for build and runtime |
 | **Migration** | | |
 | `migration/from-dfx.md` | guides/tools/migrating-from-dfx | sync — already auto-synced from icp-cli repo |
 
@@ -50,7 +50,7 @@ Compiled 2026-03-11. Sources: icp-cli/docs (33 files), icp-cli-recipes (4 recipe
 | `@dfinity/rust` | v3.1.0 | getting-started/quickstart, getting-started/project-structure | Inline icp.yaml snippet showing recipe config; link to recipe README for params |
 | `@dfinity/motoko` | v4.0.0 | getting-started/quickstart, getting-started/project-structure | Inline icp.yaml snippet showing recipe config; link to recipe README for params |
 | `@dfinity/asset-canister` | v2.1.0 | guides/frontends/asset-canister, getting-started/project-structure | Inline icp.yaml snippet; explain build/dir/version params; link to recipe README |
-| `@dfinity/prebuilt` | v2.0.0 | guides/canisters/lifecycle, guides/canisters/reproducible-builds | Inline icp.yaml snippet for deploying pre-built WASM; mention sha256 verification |
+| `@dfinity/prebuilt` | v2.0.0 | guides/canister-management/lifecycle, guides/canister-management/reproducible-builds | Inline icp.yaml snippet for deploying pre-built WASM; mention sha256 verification |
 
 ### Recipe icp.yaml Snippets to Inline
 
@@ -105,11 +105,11 @@ canisters:
 
 | Template | Subfolder | Developer Docs Pages | Context |
 |---|---|---|---|
-| hello-world | `hello-world` | getting-started/quickstart, guides/frontends/asset-canister, guides/inter-canister/binding-generation | Default template for `icp new`. Full-stack: Motoko/Rust backend + React frontend. Shows canister discovery via ic_env cookie, @icp-sdk/bindgen Vite plugin. |
+| hello-world | `hello-world` | getting-started/quickstart, guides/frontends/asset-canister, guides/canister-calls/binding-generation | Default template for `icp new`. Full-stack: Motoko/Rust backend + React frontend. Shows canister discovery via ic_env cookie, @icp-sdk/bindgen Vite plugin. |
 | motoko | `motoko` | getting-started/quickstart | Backend-only Motoko template. Simplest starting point for Motoko developers. |
 | rust | `rust` | getting-started/quickstart | Backend-only Rust template. Shows Rust recipe with shrink, custom candid, metadata. |
 | bitcoin-starter | `bitcoin-starter` | guides/chain-fusion/bitcoin | Bitcoin integration template. Shows bitcoind-addr network config, environment-specific BITCOIN_NETWORK env var, multi-environment setup (local/staging/production). |
-| proxy | `proxy` | guides/testing/strategies, guides/production/cycles-management | Proxy canister for forwarding calls with cycles on connected networks. Useful for testing cycle-dependent methods on mainnet. |
+| proxy | `proxy` | guides/testing/strategies, guides/canister-management/cycles-management | Proxy canister for forwarding calls with cycles on connected networks. Useful for testing cycle-dependent methods on mainnet. |
 | static-website | `static-website` | guides/frontends/asset-canister, guides/frontends/frameworks | Pure frontend: Vite + asset-canister recipe. No backend. Good example for hosting-only use case. |
 
 ### Template Mentions
@@ -177,33 +177,33 @@ canisters:
 
 | Example | Language | Feature | Developer Docs Page | Inline or Link |
 |---|---|---|---|---|
-| motoko/parallel_calls | Motoko | Parallel inter-canister calls | guides/backends/parallel-calls | Link (good walkthrough) |
-| rust/parallel_calls | Rust | Parallel inter-canister calls | guides/backends/parallel-calls | Link |
-| rust/inter-canister-calls | Rust | Basic inter-canister calls | guides/inter-canister/calls | Link |
+| motoko/parallel_calls | Motoko | Parallel inter-canister calls | guides/canister-calls/parallel-calls | Link (good walkthrough) |
+| rust/parallel_calls | Rust | Parallel inter-canister calls | guides/canister-calls/parallel-calls | Link |
+| rust/inter-canister-calls | Rust | Basic inter-canister calls | guides/canister-calls/onchain-calls | Link |
 | motoko/cert-var | Motoko | Certified variables | guides/backends/certified-variables | Link |
-| motoko/hello_cycles | Motoko | Sending/receiving cycles | guides/production/cycles-management | Link |
+| motoko/hello_cycles | Motoko | Sending/receiving cycles | guides/canister-management/cycles-management | Link |
 | rust/periodic_tasks | Rust | Timers / periodic tasks | guides/backends/timers | Link |
-| motoko/random_maze | Motoko | On-chain randomness | guides/backends/randomness | Link |
-| motoko/pub-sub | Motoko | Pub/sub pattern | guides/inter-canister/calls | Link |
-| motoko/composite_query | Motoko | Composite queries | guides/inter-canister/calls | Link |
-| rust/composite_query | Rust | Composite queries | guides/inter-canister/calls | Link |
-| motoko/query_stats | Motoko | Query statistics | guides/canisters/logs | Link |
-| rust/query_stats | Rust | Query statistics | guides/canisters/logs | Link |
-| motoko/canister_logs | Motoko | Canister logging | guides/canisters/logs | Link |
-| rust/canister_logs | Rust | Canister logging | guides/canisters/logs | Link |
-| motoko/low_wasm_memory | Motoko | Low WASM memory handling | guides/canisters/optimization | Link |
-| rust/low_wasm_memory | Rust | Low WASM memory handling | guides/canisters/optimization | Link |
-| motoko/classes | Motoko | Motoko classes / canister factory | guides/canisters/lifecycle | Link |
-| motoko/canister_factory | Motoko | Programmatic canister creation | guides/canisters/lifecycle | Link |
-| rust/performance_counters | Rust | Performance counters | guides/canisters/optimization | Link |
+| motoko/random_maze | Motoko | Onchain randomness | guides/backends/randomness | Link |
+| motoko/pub-sub | Motoko | Pub/sub pattern | guides/canister-calls/onchain-calls | Link |
+| motoko/composite_query | Motoko | Composite queries | guides/canister-calls/onchain-calls | Link |
+| rust/composite_query | Rust | Composite queries | guides/canister-calls/onchain-calls | Link |
+| motoko/query_stats | Motoko | Query statistics | guides/canister-management/logs | Link |
+| rust/query_stats | Rust | Query statistics | guides/canister-management/logs | Link |
+| motoko/canister_logs | Motoko | Canister logging | guides/canister-management/logs | Link |
+| rust/canister_logs | Rust | Canister logging | guides/canister-management/logs | Link |
+| motoko/low_wasm_memory | Motoko | Low WASM memory handling | guides/canister-management/optimization | Link |
+| rust/low_wasm_memory | Rust | Low WASM memory handling | guides/canister-management/optimization | Link |
+| motoko/classes | Motoko | Motoko classes / canister factory | guides/canister-management/lifecycle | Link |
+| motoko/canister_factory | Motoko | Programmatic canister creation | guides/canister-management/lifecycle | Link |
+| rust/performance_counters | Rust | Performance counters | guides/canister-management/optimization | Link |
 | rust/guards | Rust | Access control guards | guides/security/access-management | Link |
-| rust/simd | Rust | SIMD operations in WASM | guides/canisters/optimization | Link |
-| rust/backend_wasm64 | Rust | Wasm64 backend | guides/canisters/optimization, guides/backends/large-wasm | Link |
+| rust/simd | Rust | SIMD operations in WASM | guides/canister-management/optimization | Link |
+| rust/backend_wasm64 | Rust | Wasm64 backend | guides/canister-management/optimization, guides/canister-management/large-wasm | Link |
 | rust/x509 | Rust | X.509 certificate handling | guides/security/data-integrity | Link |
-| rust/candid_type_generation | Rust | Candid type generation | guides/inter-canister/candid | Link |
-| rust/canister-info | Rust | Canister info API | guides/canisters/lifecycle | Link |
-| rust/canister-snapshots | Rust | Programmatic snapshots | guides/canisters/snapshots | Link |
-| rust/canister-snapshot-download | Rust | Snapshot download | guides/canisters/snapshots | Link |
+| rust/candid_type_generation | Rust | Candid type generation | guides/canister-calls/candid | Link |
+| rust/canister-info | Rust | Canister info API | guides/canister-management/lifecycle | Link |
+| rust/canister-snapshots | Rust | Programmatic snapshots | guides/canister-management/snapshots | Link |
+| rust/canister-snapshot-download | Rust | Snapshot download | guides/canister-management/snapshots | Link |
 | rust/unit_testable_rust_canister | Rust | Unit testing patterns | guides/testing/strategies | Link |
 | rust/stake_neuron_from_cli | Rust | NNS neuron staking | guides/governance/managing | Link |
 | rust/sns-adaptor | Rust | SNS adaptor canister | guides/governance/launching | Link |
@@ -260,8 +260,8 @@ canisters:
 | motoko/filevault | Motoko | Encrypted file storage | guides/security/data-integrity | Link |
 | rust/photo_gallery | Rust | Photo gallery with storage | guides/backends/data-persistence | Link |
 | rust/qrcode | Rust | QR code generation | guides/backends/https-outcalls | Link |
-| rust/face-recognition | Rust | Face recognition (WASM ML) | guides/canisters/optimization | Link |
-| rust/image-classification | Rust | Image classification (WASM ML) | guides/canisters/optimization | Link |
+| rust/face-recognition | Rust | Face recognition (WASM ML) | guides/canister-management/optimization | Link |
+| rust/image-classification | Rust | Image classification (WASM ML) | guides/canister-management/optimization | Link |
 | wasm/counter | WASM | Raw WASM counter | (none — advanced showcase) | — |
 
 ---
@@ -276,15 +276,15 @@ These icp-cli docs pages are strong candidates for syncing content into develope
 
 3. **`quickstart.md`** → `getting-started/quickstart` — Our quickstart should use identical commands. Sync the command sequence (icp new, network start, deploy, canister call).
 
-4. **`concepts/canister-discovery.md`** → `guides/inter-canister/calls` and `guides/frontends/asset-canister` — Canister environment variables and the ic_env cookie mechanism are critical for both frontend-to-backend and backend-to-backend communication. This content should be rewritten for our docs with links back to the icp-cli version.
+4. **`concepts/canister-discovery.md`** → `guides/canister-calls/onchain-calls` and `guides/frontends/asset-canister` — Canister environment variables and the ic_env cookie mechanism are critical for both frontend-to-backend and backend-to-backend communication. This content should be rewritten for our docs with links back to the icp-cli version.
 
-5. **`concepts/binding-generation.md`** → `guides/inter-canister/binding-generation` — Short enough to adapt into our page, linking to @icp-sdk/bindgen, candid crate, and didc.
+5. **`concepts/binding-generation.md`** → `guides/canister-calls/binding-generation` — Short enough to adapt into our page, linking to @icp-sdk/bindgen, candid crate, and didc.
 
-6. **`guides/canister-snapshots.md`** → `guides/canisters/snapshots` — This is the definitive guide; rewrite with links back.
+6. **`guides/canister-snapshots.md`** → `guides/canister-management/snapshots` — This is the definitive guide; rewrite with links back.
 
-7. **`guides/deploying-to-specific-subnets.md`** → `guides/production/subnet-types` — Subnet selection is production-critical; rewrite with links back.
+7. **`guides/deploying-to-specific-subnets.md`** → `guides/canister-management/subnet-selection` — Subnet selection is production-critical; rewrite with links back.
 
-8. **`guides/deploying-to-mainnet.md`** → `guides/production/cycles-management` — Identity setup, ICP acquisition, cycles minting, and deployment workflow. Rewrite the cycles/deployment portion.
+8. **`guides/deploying-to-mainnet.md`** → `guides/canister-management/cycles-management` — Identity setup, ICP acquisition, cycles minting, and deployment workflow. Rewrite the cycles/deployment portion.
 
 Pages that should be **link-only** (not synced):
 - `reference/cli.md` — Always link to https://dfinity.github.io/icp-cli/
@@ -344,9 +344,9 @@ The examples repo (`dfinity/examples`) still uses dfx commands throughout. All R
 ### 5. icp.yaml Environment Patterns to Highlight
 
 The bitcoin-starter template shows an excellent pattern for multi-environment config with environment-specific canister env vars. This pattern should be referenced in:
-- `guides/production/cycles-management` — staging vs production
+- `guides/canister-management/cycles-management` — staging vs production
 - `guides/chain-fusion/bitcoin` — regtest vs testnet vs mainnet
-- `guides/canisters/settings` — environment-specific settings
+- `guides/canister-management/settings` — environment-specific settings
 
 ### 6. Canister Discovery is Cross-Cutting
 
@@ -356,13 +356,13 @@ The canister discovery mechanism (PUBLIC_CANISTER_ID env vars + ic_env cookie) a
 - hello-world template README
 - icp-cli concepts/binding-generation.md
 
-This should be a single, well-explained section in `guides/inter-canister/calls` with cross-references from `guides/frontends/asset-canister` and `getting-started/project-structure`.
+This should be a single, well-explained section in `guides/canister-calls/onchain-calls` with cross-references from `guides/frontends/asset-canister` and `getting-started/project-structure`.
 
 ### 7. Missing Example Coverage
 
 Some developer-docs pages have no corresponding examples:
 - **guides/backends/data-persistence** — daily_planner and superheroes exist but are basic. Consider linking photo_gallery (Rust) for a more complete example.
-- **guides/canisters/reproducible-builds** — No dedicated example. Reference `@dfinity/prebuilt` recipe with sha256 verification.
+- **guides/canister-management/reproducible-builds** — No dedicated example. Reference `@dfinity/prebuilt` recipe with sha256 verification.
 - **guides/security/dos-prevention** — No example. This is a conceptual guide.
 - **guides/security/inter-canister-calls** — guards example (Rust) covers access control but not call safety patterns.
 - **guides/testing/pocket-ic** — containerized-networks guide covers Docker-based PocketIC, but no standalone PocketIC example exists in the examples repo.

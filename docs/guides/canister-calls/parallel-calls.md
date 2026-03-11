@@ -2,7 +2,7 @@
 title: "Parallel Calls"
 description: "Execute multiple inter-canister calls concurrently for better performance"
 sidebar:
-  order: 7
+  order: 5
 icskills: [multi-canister]
 ---
 
@@ -17,6 +17,6 @@ Execute multiple inter-canister calls concurrently instead of sequentially. Cove
 - Examples: parallel_calls (both), composite_query (both)
 
 <!-- Cross-Links -->
-- guides/inter-canister/calls -- basic inter-canister calls
-- guides/canisters/optimization -- performance improvements
+- guides/canister-calls/onchain-calls -- basic inter-canister calls
+- guides/canister-management/optimization -- performance improvements
 - guides/security/inter-canister-calls -- safety of async calls

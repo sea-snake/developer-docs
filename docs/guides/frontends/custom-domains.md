@@ -17,4 +17,4 @@ Configure a custom domain for your ICP-hosted frontend. Cover DNS setup (CNAME, 
 
 <!-- Cross-Links -->
 - guides/frontends/asset-canister -- prerequisite: deploy frontend first
-- guides/production/cycles-management -- custom domains on mainnet
+- guides/canister-management/cycles-management -- custom domains on mainnet

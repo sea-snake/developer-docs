@@ -20,13 +20,13 @@ Append new decisions at the bottom. Never modify existing entries.
 **Context:** Biggest gap in existing docs — no task-oriented guides for ICP backend patterns
 **Decision:** Create guides/backends/ with pages for: data-persistence, https-outcalls, timers, randomness, certified-variables, large-wasm, parallel-calls
 **Rationale:** Every canister developer needs these. Currently only concept explanations exist, not "how to do it" guides with code.
-**Alternatives considered:** Put under guides/canisters/ (too crowded, mixing management with development patterns)
+**Alternatives considered:** Put under guides/canister-management/ (too crowded, mixing management with development patterns)
 
-## 2026-03-11: New guides/production/ section
+## 2026-03-11: New guides/canister-management/ section
 **Context:** No home for "going to mainnet" topics like subnet selection, cycles management, canister discovery
-**Decision:** Create guides/production/ for topics that bridge local development to production deployment
+**Decision:** Create guides/canister-management/ for topics that bridge local development to production deployment
 **Rationale:** These don't fit under canisters/ (which is about management) or tools/ (which is about CLI). They're about production readiness.
-**Alternatives considered:** Under guides/canisters/ (conflates management with deployment), separate "deployment" section (too narrow)
+**Alternatives considered:** Under guides/canister-management/ (conflates management with deployment), separate "deployment" section (too narrow)
 
 ## 2026-03-11: Clean slate approach
 **Context:** Existing 124 pages were written for v3.1 structure which we're reconsidering
@@ -114,7 +114,7 @@ Append new decisions at the bottom. Never modify existing entries.
 
 ## 2026-03-11: Image/asset strategy — `src/assets/images/` with section-based organization
 **Context:** Portal has hand-drawn diagrams (canister internals, app architecture, create/install flows) worth carrying over. No image strategy existed for the new docs.
-**Decision:** Images live in `src/assets/images/`, organized by docs section (concepts/, guides/canisters/, etc.). Carry over portal images case-by-case during content writing — not bulk-imported upfront. Keep the existing hand-drawn visual style for consistency. Use descriptive kebab-case filenames.
+**Decision:** Images live in `src/assets/images/`, organized by docs section (concepts/, guides/canister-management/, etc.). Carry over portal images case-by-case during content writing — not bulk-imported upfront. Keep the existing hand-drawn visual style for consistency. Use descriptive kebab-case filenames.
 **Rationale:** `src/assets/` enables Astro image optimization (Sharp). Section-based organization mirrors the docs structure. Case-by-case approach avoids importing images for pages that may not need them or may need different visuals.
 **Alternatives considered:** `public/images/` (no optimization), co-located images next to .md files (clutters docs/), bulk import all portal images (wasteful, many won't be used)
 
@@ -132,7 +132,7 @@ Append new decisions at the bottom. Never modify existing entries.
 
 ## 2026-03-11: Add encryption and verifiable credentials guides
 **Context:** Portal crawl revealed 9 VetKeys pages and 4 Verifiable Credentials pages with no proper home in the 79-page plan. VetKeys how-to content was crammed into `concepts/vetkeys.md` (an explanation page). VC content was split as "partial" across internet-identity.md and concepts/security.md.
-**Decision:** Add `guides/security/encryption.md` (VetKeys how-to: encrypted storage, DKMS, IBE, timelock) and `guides/authentication/verifiable-credentials.md` (VC issuer/relying party patterns). Both P1, Sprint 6. Also update `guides/backends/large-wasm.md` stub to cover SIMD as a section, and `guides/defi/token-ledgers.md` stub to cover ICRC-7/NFTs as a section. Total pages: 79 → 81.
+**Decision:** Add `guides/security/encryption.md` (VetKeys how-to: encrypted storage, DKMS, IBE, timelock) and `guides/authentication/verifiable-credentials.md` (VC issuer/relying party patterns). Both P1, Sprint 6. Also update `guides/canister-management/large-wasm.md` stub to cover SIMD as a section, and `guides/defi/token-ledgers.md` stub to cover ICRC-7/NFTs as a section. Total pages: 79 → 81.
 **Rationale:** Encryption guide placed in security/ because the developer intent is "how do I handle privacy/encryption on ICP" — VetKeys is the answer, spanning backend and frontend. VC guide placed in authentication/ because VCs are an authentication/identity pattern built on Internet Identity. SIMD and NFTs don't warrant dedicated pages but need explicit coverage in existing stubs.
 **Alternatives considered:** VetKeys under guides/backends/ (undersells frontend/identity aspects), VCs folded into internet-identity.md (distinct enough for own page), dedicated SIMD page (too niche), dedicated NFT page (can be a section in token-ledgers)
 
@@ -161,7 +161,7 @@ Append new decisions at the bottom. Never modify existing entries.
 **Alternatives considered:** One page at a time with review (too slow), no verification pass (broken links accumulate)
 
 ## 2026-03-11: Add onchain AI guide in guides/backends/
-**Context:** The LLM canister (`w36hm-eqaaa-aaaal-qr76a-cai`) is an on-chain service for calling large language models from canister code. Previously, the llm_chatbot examples were referenced in the agentic-development page, but they don't belong there — agentic-development is about developer tooling (icskills), while the LLM canister is a backend capability.
+**Context:** The LLM canister (`w36hm-eqaaa-aaaal-qr76a-cai`) is an onchain service for calling large language models from canister code. Previously, the llm_chatbot examples were referenced in the agentic-development page, but they don't belong there — agentic-development is about developer tooling (icskills), while the LLM canister is a backend capability.
 **Decision:** Create `guides/backends/onchain-ai.md` for the LLM canister guide. Remove llm_chatbot references from `guides/tools/agentic-development.md`. The LLM canister is a backend pattern (like HTTPS outcalls or timers) — you call it from canister code using `ic-llm` (Rust) or `llm` (Motoko). P1, Sprint 5. Total pages: 81 → 82.
 **Rationale:** Developer intent is "how do I use AI from my canister" → `guides/backends/`. It's analogous to HTTPS outcalls but for decentralized inference. Separating it from agentic-development keeps both pages focused: tools page = developer workflow, backends page = canister capabilities.
 **Alternatives considered:** Under guides/tools/ (not a developer tool, it's a canister API), as a section in https-outcalls (different enough for own page — no HTTP, no API keys, different API)
@@ -184,8 +184,50 @@ Append new decisions at the bottom. Never modify existing entries.
 **Rationale:** Proper entry points for every section — both on the website and on GitHub (which renders `index.md` as directory landing pages). Developers browsing the repo on GitHub see a curated overview instead of a raw file listing. Consistent pattern across all sections. Total pages: 82 → 86.
 **Alternatives considered:** Link Guides to `getting-started/what-next.md` (wrong section, pathfinder not overview), keep arbitrary first-page links (confusing, no context), create index pages only for concepts/reference (inconsistent)
 
+## 2026-03-11: Rename guides/canisters/ → guides/canister-management/ and reorder to position 6
+**Context:** "Canisters" as a subsection name was ambiguous alongside "Backends" — developers couldn't tell whether "write canister code" belonged in Canisters or Backends. It was also placed first in the sidebar despite containing operational/management tasks (lifecycle, settings, snapshots) that belong to Stages 5-7 of the developer journey, not Stage 3 (backend development).
+**Decision:** Rename `guides/canisters/` to `guides/canister-management/` and move from sidebar position 1 to position 6 (after Testing, before Security). New sidebar order: Backends → Inter-Canister → Frontends → Authentication → Testing → Canister Management → Security → Production → Chain Fusion → DeFi → Governance → Tools.
+**Rationale:** "Canister Management" clearly signals operational tasks (configure, upgrade, optimize) vs. "Backends" (write canister logic). Position 6 matches the developer journey: build (1-4) → test (5) → configure & ship (6-8) → extend (9-11) → tools (12). The developer journey analysis already recommended this exact change.
+**Alternatives considered:** Keep name with sidebar reorder only (still ambiguous), merge into Production (too many pages), split across Backends and Production (loses cohesion)
+
 ## 2026-03-11: Content writing before infrastructure restoration
 **Context:** P0 infrastructure tasks (validation scripts, sync scripts) are pending alongside P0 content.
 **Decision:** Start content writing before restoring validation/sync scripts. Infra is not blocking content work.
 **Rationale:** Validation scripts catch issues but don't prevent writing. Content is the primary deliverable. Scripts will be restored when capacity allows.
 **Alternatives considered:** Infra first (delays content), in parallel (splits focus)
+
+## 2026-03-11: Dissolve guides/production/ into guides/canister-management/
+**Context:** `guides/production/` had only 3 pages (cycles-management, subnet-selection, canister-discovery). "Canister Discovery" was about metadata configuration — a canister setting, not a production concern. The other two pages (cycles, subnets) are tightly coupled with canister lifecycle and deployment. With 12 sidebar subsections already being a lot to scan, a 3-page subsection didn't justify its own group.
+**Decision:** Move all 3 production pages into `guides/canister-management/`. Remove `guides/production/` entirely. Sidebar subsections reduced from 12 to 11. Canister Management becomes the comprehensive operational section (9 pages): lifecycle → settings → logs → optimization → snapshots → reproducible-builds → cycles-management → subnet-selection → canister-discovery.
+**Rationale:** All 3 pages are canister operational tasks — funding, deploying to a subnet, and configuring metadata. They share the same developer intent ("manage my canister") as lifecycle, settings, and snapshots. Consolidation reduces sidebar noise and creates a single go-to section for all canister operations.
+**Alternatives considered:** Keep Production as standalone (too thin at 3 pages), merge only canister-discovery (still leaves a 2-page orphan), merge into a new "Deployment" section (just renaming the same problem)
+
+## 2026-03-11: Rename guides/inter-canister/ → guides/canister-calls/, broaden scope
+**Context:** "Inter-Canister" implied only canister-to-canister communication, but the section already covered Candid interfaces and binding generation — both equally relevant for off-chain callers (frontends, scripts, agents). "Parallel Calls" was misplaced in backends/ since it's fundamentally an inter-canister calling pattern. "Large Wasm Modules" was misplaced in backends/ since it's a deployment/operational concern, not a coding pattern.
+**Decision:** (1) Rename section to "Canister Calls" (`guides/canister-calls/`). (2) Rename `calls.md` → `onchain-calls.md` (title: "Onchain Calls"). (3) Create new `offchain-calls.md` for frontend/agent-to-canister call patterns. (4) Move `parallel-calls.md` from backends/ to canister-calls/. (5) Move `large-wasm.md` from backends/ to canister-management/. (6) Reorder: candid (1) → binding-generation (2) → onchain-calls (3) → offchain-calls (4) → parallel-calls (5). Sidebar stays at 11 subsections. Total pages: 81 → 82.
+**Rationale:** "Canister Calls" follows the noun-based naming pattern (like "HTTPS Outcalls") and encompasses both directions — calling into canisters from anywhere. Candid-first ordering reflects the foundation: understand the interface → generate bindings → use them. Large Wasm is operationally adjacent to optimization (reduce size) and lifecycle (deploy with chunk store). Parallel calls depend on onchain-calls as their foundation.
+**Alternatives considered:** "Canister Communication" (too vague), "Calling Canisters" (action-oriented, inconsistent with other titles), keep inter-canister and add separate off-chain section (adds a 12th subsection)
+
+## 2026-03-11: Rename subnet-types.md → subnet-selection.md
+**Context:** `guides/canister-management/subnet-types.md` had title "Subnet Types" which described what exists rather than the developer task. Other guide titles are noun-based and task-oriented (e.g., "Data Persistence", "Cycles Management").
+**Decision:** Rename to `subnet-selection.md` with title "Subnet Selection". Updated all cross-references across docs and planning artifacts.
+**Rationale:** "Subnet Selection" matches the developer intent — "which subnet should I deploy to?" — and follows the noun-based naming pattern of other guide titles. "Subnet Types" and "Subnet Choice" were considered but "Selection" best conveys the active decision.
+**Alternatives considered:** "Subnet Types" (descriptive, not task-oriented), "Subnet Choice" (informal)
+
+## 2026-03-11: Remove canister-discovery.md — content absorbed by existing pages
+**Context:** `guides/canister-management/canister-discovery.md` covered canister metadata, ICRC-1 token listing, and IC dashboard APIs. All canisters are automatically visible on the dashboard. Metadata is a canister setting. ICRC-1 compliance is covered in token-ledgers.md. Dashboard APIs are reference material covered by the ic-dashboard icskill.
+**Decision:** Delete `canister-discovery.md`. Add metadata (name, description, git commit) to the `canister-management/settings.md` content brief. Total pages: 82 → 81.
+**Rationale:** No standalone developer task warranted its own page. The content brief was a combination of things already covered elsewhere. Removing it keeps the docs focused and avoids a page with no clear developer intent.
+**Alternatives considered:** Keep as a thin page (adds maintenance burden for low value), merge entirely into settings (metadata is the only actionable part)
+
+## 2026-03-11: Hide section index pages from sidebar for Guides, Concepts, and Reference
+**Context:** Sections with `autogenerate` sidebars rendered their `index.md` as a nav entry with the same label as the parent group — e.g., "Concepts > Concepts", "Reference > Reference".
+**Decision:** Set `sidebar.hidden: true` on index pages for Guides (already done), Concepts, and Reference. The pages still exist for GitHub directory landing pages and direct links from the landing page — they just don't appear in the sidebar navigation.
+**Rationale:** Avoids redundant "Section > Section" entries. These index pages serve GitHub browsing and as entry points from the landing page, not as sidebar navigation items.
+**Alternatives considered:** Rename to "Overview" (still an extra click in nav with no unique content), delete index pages (loses GitHub directory landing pages)
+
+## 2026-03-11: Languages overview page visible in sidebar, expanded with community CDKs
+**Context:** Languages section only listed Rust and Motoko (official CDKs). Community CDKs (Azle, Kybra, icpp-pro, moonbit-ic-cdk) had no home. Unlike Concepts/Reference, the Languages index provides unique value — it's the only place listing all language options.
+**Decision:** Keep Languages index visible in sidebar as "Overview" (`sidebar.order: 0`). Add explicit slug entry in `astro.config.mjs`. Expand content to list community CDKs: TypeScript (Azle), Python (Kybra), C++ (icpp-pro), MoonBit (moonbit-ic-cdk) in a table with repository links.
+**Rationale:** Developers choosing a language need a single page comparing all options. This page serves that purpose — unlike the Concepts/Reference indexes which just list their children. Community CDKs are important for adoption even though we don't write dedicated docs for them.
+**Alternatives considered:** Separate "Community CDKs" page (too thin), list in each language's section (scattered, hard to compare)

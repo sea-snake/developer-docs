@@ -21,4 +21,4 @@ Operate a live SNS after launch. Cover making proposals (code upgrades, paramete
 <!-- Cross-Links -->
 - guides/governance/launching -- prerequisite
 - concepts/governance -- governance model
-- guides/production/cycles-management -- cycles for SNS canisters
+- guides/canister-management/cycles-management -- cycles for SNS canisters

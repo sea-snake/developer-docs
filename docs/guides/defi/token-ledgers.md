@@ -21,4 +21,4 @@ Interact with token ledgers from canisters and frontends. Cover ICP ledger trans
 <!-- Cross-Links -->
 - reference/token-standards -- ICRC standard specifications
 - guides/defi/chain-key-tokens -- ckBTC/ckETH ledger interaction
-- guides/inter-canister/calls -- ledger calls are inter-canister calls
+- guides/canister-calls/onchain-calls -- ledger calls are inter-canister calls

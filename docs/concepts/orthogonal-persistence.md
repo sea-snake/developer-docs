@@ -18,4 +18,4 @@ Explain orthogonal persistence on ICP. Cover how canister memory (heap) persists
 <!-- Cross-Links -->
 - guides/backends/data-persistence -- practical implementation
 - languages/rust/stable-structures -- Rust-specific patterns
-- guides/canisters/lifecycle -- persistence across upgrades
+- guides/canister-management/lifecycle -- persistence across upgrades

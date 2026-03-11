@@ -2,7 +2,7 @@
 title: "Reference"
 description: "Specifications, canister IDs, token standards, cycle costs, and technical reference for ICP"
 sidebar:
-  order: 0
+  hidden: true
 icskills: []
 ---
 

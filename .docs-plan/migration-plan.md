@@ -74,8 +74,8 @@ A developer can write canister logic, handle persistence, make HTTP calls, use t
 | 9 | `guides/backends/data-persistence.md` | L | concepts/canisters | Portal storage.mdx, idempotency.mdx; icskills: stable-memory | rewrite |
 | 10 | `guides/backends/https-outcalls.md` | L | concepts/canisters | Portal https-outcalls/ (5 files); icskills: https-outcalls | rewrite |
 | 11 | `guides/backends/timers.md` | M | concepts/canisters | Portal periodic-tasks.mdx | rewrite |
-| 12 | `guides/inter-canister/calls.md` | L | concepts/canisters | Portal advanced-calls.mdx, icp-cli canister-discovery; icskills: multi-canister | rewrite, sync |
-| 13 | `guides/inter-canister/candid.md` | M | inter-canister/calls | Portal Candid sections, generating-candid.mdx | rewrite |
+| 12 | `guides/canister-calls/onchain-calls.md` | L | concepts/canisters | Portal advanced-calls.mdx, icp-cli canister-discovery; icskills: multi-canister | rewrite, sync |
+| 13 | `guides/canister-calls/candid.md` | M | canister-calls/onchain-calls | Portal Candid sections, generating-candid.mdx | rewrite |
 | 14 | `concepts/https-outcalls.md` | M | concepts/canisters | Portal https-outcalls overview | rewrite |
 | 15 | `concepts/reverse-gas-model.md` | M | concepts/canisters | Portal gas-cost.mdx, tokens-and-cycles.mdx | rewrite |
 | 16 | `concepts/orthogonal-persistence.md` | M | concepts/canisters | Portal persistence sections | rewrite |
@@ -90,12 +90,12 @@ A developer can build a full-stack app with auth and deploy to mainnet.
 |---|------|--------|-------------|-----------------|--------|
 | 19 | `guides/frontends/asset-canister.md` | L | project-structure | Portal frontends/using-an-asset-canister.mdx; icskills: asset-canister | rewrite |
 | 20 | `guides/authentication/internet-identity.md` | L | asset-canister | Portal authentication/ (3 files); icskills: internet-identity | rewrite |
-| 21 | `guides/canisters/lifecycle.md` | XL | concepts/canisters, data-persistence | Portal canister-management/ (8 files); icp-cli build-deploy-sync | rewrite, sync |
-| 22 | `guides/canisters/settings.md` | M | lifecycle | Portal control.mdx, settings.mdx; icp-cli canister-settings | rewrite, sync |
-| 23 | `guides/canisters/reproducible-builds.md` | M | lifecycle | Portal reproducible-builds.mdx; @dfinity/prebuilt recipe | rewrite |
+| 21 | `guides/canister-management/lifecycle.md` | XL | concepts/canisters, data-persistence | Portal canister-management/ (8 files); icp-cli build-deploy-sync | rewrite, sync |
+| 22 | `guides/canister-management/settings.md` | M | lifecycle | Portal control.mdx, settings.mdx; icp-cli canister-settings | rewrite, sync |
+| 23 | `guides/canister-management/reproducible-builds.md` | M | lifecycle | Portal reproducible-builds.mdx; @dfinity/prebuilt recipe | rewrite |
 | 24 | `guides/testing/strategies.md` | M | lifecycle | Portal benchmarking.mdx; icp-cli containerized-networks | rewrite |
 | 25 | `guides/testing/pocket-ic.md` | M | strategies | JS SDK: pic-js docs | original |
-| 26 | `guides/production/cycles-management.md` | L | lifecycle, settings | Portal topping-up.mdx; icp-cli deploying-to-mainnet; icskills: cycles-management | rewrite, sync |
+| 26 | `guides/canister-management/cycles-management.md` | L | lifecycle, settings | Portal topping-up.mdx; icp-cli deploying-to-mainnet; icskills: cycles-management | rewrite, sync |
 | 27 | `guides/security/access-management.md` | M | concepts/canisters | Portal general.mdx (access sections); icskills: canister-security | rewrite |
 | 28 | `guides/security/canister-upgrades.md` | M | lifecycle, data-persistence | icskills: canister-security | original |
 | 29 | `concepts/security.md` | M | concepts/canisters | Portal trust-in-canisters.mdx | rewrite |
@@ -108,7 +108,7 @@ A developer can integrate with Bitcoin/Ethereum and work with tokens.
 |---|------|--------|-------------|-----------------|--------|
 | 30 | `guides/chain-fusion/bitcoin.md` | XL | chain-key-cryptography, chain-fusion concept | Portal build-on-btc/ (14 files); icskills: ckbtc | rewrite |
 | 31 | `guides/chain-fusion/ethereum.md` | XL | chain-key-cryptography, chain-fusion concept | Portal chain-fusion/ethereum/ (10 files); icskills: evm-rpc | rewrite |
-| 32 | `guides/defi/token-ledgers.md` | L | inter-canister/calls | Portal defi/tokens/; icskills: icrc-ledger | rewrite |
+| 32 | `guides/defi/token-ledgers.md` | L | canister-calls/onchain-calls | Portal defi/tokens/; icskills: icrc-ledger | rewrite |
 | 33 | `guides/tools/migrating-from-dfx.md` | S | None | Auto-synced from icp-cli repo | sync |
 | 34 | `languages/motoko/index.md` | S | None | Synced content landing page | original |
 | 35 | `languages/rust/index.md` | L | concepts/canisters | Portal Rust CDK intro, limitations, upgrading | rewrite |
@@ -129,22 +129,23 @@ These pages fill out the docs site with important secondary content.
 | 38b | `guides/backends/onchain-ai.md` | M | concepts/canisters | Forum post (LLM canister intro), docs.rs/ic-llm, mops.one/llm; examples: llm_chatbot (Rust/Motoko) | original |
 | 39 | `guides/backends/randomness.md` | M | concepts/canisters | Portal randomness.mdx | rewrite |
 | 40 | `guides/backends/certified-variables.md` | M | concepts/security | Portal advanced-calls.mdx (certified vars); icskills: certified-variables | rewrite |
-| 41 | `guides/canisters/logs.md` | M | lifecycle | Portal logs.mdx, backtraces.mdx, access-logs.mdx | rewrite |
-| 42 | `guides/canisters/optimization.md` | M | lifecycle | Portal optimize/rust.mdx, motoko.mdx | rewrite |
-| 43 | `guides/canisters/snapshots.md` | M | lifecycle | Portal snapshots.mdx; icp-cli canister-snapshots | rewrite, sync |
+| 41 | `guides/canister-management/logs.md` | M | lifecycle | Portal logs.mdx, backtraces.mdx, access-logs.mdx | rewrite |
+| 42 | `guides/canister-management/optimization.md` | M | lifecycle | Portal optimize/rust.mdx, motoko.mdx | rewrite |
+| 43 | `guides/canister-management/snapshots.md` | M | lifecycle | Portal snapshots.mdx; icp-cli canister-snapshots | rewrite, sync |
 | 44 | `guides/frontends/custom-domains.md` | M | asset-canister | Portal custom-domains/ (2 files) | rewrite |
 | 45 | `guides/frontends/certification.md` | M | asset-canister, certified-variables | Portal asset-security.mdx | rewrite |
 | 46 | `guides/authentication/wallet-integration.md` | M | internet-identity | Portal integrate-misc-wallets.mdx; icskills: wallet-integration | rewrite |
 
-### Sprint 6: Inter-Canister, Production, Security, Tools (10 pages)
+### Sprint 6: Canister Calls, Production, Security, Tools (10 pages)
 
 | # | Page | Effort | Dependencies | Source Material | Skills |
 |---|------|--------|-------------|-----------------|--------|
-| 47 | `guides/inter-canister/binding-generation.md` | M | candid | icp-cli binding-generation; JS SDK: @icp-sdk/bindgen | sync |
-| 48 | `guides/production/subnet-types.md` | M | cycles-management | Portal deploy-specific-subnet.mdx; icp-cli deploying-to-specific-subnets | rewrite, sync |
+| 47 | `guides/canister-calls/binding-generation.md` | M | candid | icp-cli binding-generation; JS SDK: @icp-sdk/bindgen | sync |
+| 47b | `guides/canister-calls/offchain-calls.md` | M | candid, binding-generation | JS SDK: @icp-sdk/core, @icp-sdk/canisters; icp-cli canister-discovery; hello-world template | original |
+| 48 | `guides/canister-management/subnet-selection.md` | M | cycles-management | Portal deploy-specific-subnet.mdx; icp-cli deploying-to-specific-subnets | rewrite, sync |
 | 49 | `guides/security/data-integrity.md` | L | concepts/security | icskills: vetkd, certified-variables; examples: vetkeys, vetkd | rewrite |
 | 50 | `guides/security/dos-prevention.md` | M | concepts/security | icskills: canister-security | original |
-| 51 | `guides/security/inter-canister-calls.md` | M | inter-canister/calls | icskills: canister-security, multi-canister | original |
+| 51 | `guides/security/inter-canister-calls.md` | M | canister-calls/onchain-calls | icskills: canister-security, multi-canister | original |
 | 52 | `guides/security/encryption.md` | L | concepts/vetkeys | Portal vetkeys/ (9 files: intro, API, BLS, DKMS, encrypted-storage, IBE, timelock, VRF, demos); icskills: vetkd; examples: vetkd, vetkeys, encrypted-notes-dapp-vetkd, filevault | rewrite |
 | 53 | `guides/authentication/verifiable-credentials.md` | M | internet-identity | Portal verifiable-credentials/ (4 files: overview, how-it-works, issuer, relying-party); VC spec: github.com/dfinity/internet-identity/blob/main/docs/vc-spec.md | rewrite |
 | 54 | `guides/tools/overview.md` | M | None | Portal dev-tools-overview.mdx, cdks/index.mdx | rewrite |
@@ -186,13 +187,13 @@ These pages cover niche or advanced topics. Ship after P0 and P1 are complete.
 
 | # | Page | Effort | Dependencies | Source Material | Skills |
 |---|------|--------|-------------|-----------------|--------|
-| 71 | `guides/backends/large-wasm.md` | M | lifecycle | Portal compile.mdx (large Wasm), simd.mdx; examples: backend_wasm64 | rewrite |
-| 72 | `guides/backends/parallel-calls.md` | M | inter-canister/calls | Portal advanced-calls.mdx (composite queries); examples: parallel_calls | rewrite |
+| 71 | `guides/canister-management/large-wasm.md` | M | lifecycle | Portal compile.mdx (large Wasm), simd.mdx; examples: backend_wasm64 | rewrite |
+| 72 | `guides/canister-calls/parallel-calls.md` | M | canister-calls/onchain-calls | Portal advanced-calls.mdx (composite queries); examples: parallel_calls | rewrite |
 | 73 | `guides/frontends/frameworks.md` | L | asset-canister | Portal existing-frontend.mdx; examples: react, svelte starters | rewrite |
 | 74 | `guides/chain-fusion/solana.md` | M | chain-fusion concept | Portal solana/overview.mdx | rewrite |
 | 75 | `guides/chain-fusion/dogecoin.md` | M | chain-fusion concept | Portal dogecoin/overview.mdx | rewrite |
 | 76 | `guides/defi/rosetta.md` | L | token-ledgers | Portal defi/rosetta/ files | rewrite |
-| 77 | `guides/production/canister-discovery.md` | M | settings | icskills: ic-dashboard | original |
+| 77 | `guides/canister-management/canister-discovery.md` | M | settings | icskills: ic-dashboard | original |
 
 ### Sprint 10: Remaining Reference and Languages (4 pages)
 
@@ -231,14 +232,14 @@ concepts/canisters.md
   └── concepts/reverse-gas-model.md
   └── concepts/security.md
   └── guides/backends/data-persistence.md
-        └── guides/canisters/lifecycle.md
-              └── guides/canisters/settings.md
-              └── guides/canisters/reproducible-builds.md
-              └── guides/production/cycles-management.md
+        └── guides/canister-management/lifecycle.md
+              └── guides/canister-management/settings.md
+              └── guides/canister-management/reproducible-builds.md
+              └── guides/canister-management/cycles-management.md
   └── guides/backends/https-outcalls.md
   └── guides/backends/timers.md
-  └── guides/inter-canister/calls.md
-        └── guides/inter-canister/candid.md
+  └── guides/canister-calls/onchain-calls.md
+        └── guides/canister-calls/candid.md
         └── guides/defi/token-ledgers.md
   └── guides/security/access-management.md
 

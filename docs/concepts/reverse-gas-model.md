@@ -16,6 +16,6 @@ Explain the reverse gas model. Cover why ICP flips the gas model (users do not p
 - Learn Hub: [Cycles](https://learn.internetcomputer.org/hc/en-us/articles/34573913497108)
 
 <!-- Cross-Links -->
-- guides/production/cycles-management -- practical cycles management
+- guides/canister-management/cycles-management -- practical cycles management
 - reference/cycles-costs -- exact cost tables
 - concepts/canisters -- canisters as the paying entity

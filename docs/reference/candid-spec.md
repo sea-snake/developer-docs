@@ -15,6 +15,6 @@ Summary of the Candid interface description language. Cover the type system (pri
 - Portal: references/candid-spec
 
 <!-- Cross-Links -->
-- guides/inter-canister/candid -- practical Candid usage
+- guides/canister-calls/candid -- practical Candid usage
 - reference/ic-interface-spec -- Candid in the IC spec context
-- guides/inter-canister/binding-generation -- generating code from Candid
+- guides/canister-calls/binding-generation -- generating code from Candid

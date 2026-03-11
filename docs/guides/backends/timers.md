@@ -18,5 +18,5 @@ Set up one-shot and periodic timers in canisters. Cover the timer API for both R
 
 <!-- Cross-Links -->
 - concepts/timers -- how the global timer mechanism works
-- guides/canisters/lifecycle -- timer setup during canister init
+- guides/canister-management/lifecycle -- timer setup during canister init
 - reference/cycles-costs -- timer execution costs

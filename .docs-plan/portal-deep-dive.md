@@ -38,11 +38,11 @@
 | Portal Path | Diataxis Type | Triage | New Docs Location | Priority | Notes |
 |------------|---------------|--------|-------------------|----------|-------|
 | building-apps/advanced/benchmarking.mdx | how-to | KEEP-REWRITE | guides/testing/strategies.md | medium | Performance benchmarking |
-| building-apps/advanced/canister-access-logs.mdx | how-to | KEEP-REWRITE | guides/canisters/logs.md | medium | Access logs for canisters |
-| building-apps/advanced/canister-migration.mdx | how-to | KEEP-REWRITE | guides/canisters/lifecycle.md | medium | Migrating canisters between subnets |
-| building-apps/advanced/optimize/motoko.mdx | how-to | KEEP-REWRITE | guides/canisters/optimization.md | medium | Motoko optimization |
-| building-apps/advanced/optimize/rust.mdx | how-to | KEEP-REWRITE | guides/canisters/optimization.md | medium | Rust optimization |
-| building-apps/advanced/using-third-party-canisters.mdx | how-to | KEEP-REWRITE | guides/inter-canister/calls.md | medium | Third-party canister integration |
+| building-apps/advanced/canister-access-logs.mdx | how-to | KEEP-REWRITE | guides/canister-management/logs.md | medium | Access logs for canisters |
+| building-apps/advanced/canister-migration.mdx | how-to | KEEP-REWRITE | guides/canister-management/lifecycle.md | medium | Migrating canisters between subnets |
+| building-apps/advanced/optimize/motoko.mdx | how-to | KEEP-REWRITE | guides/canister-management/optimization.md | medium | Motoko optimization |
+| building-apps/advanced/optimize/rust.mdx | how-to | KEEP-REWRITE | guides/canister-management/optimization.md | medium | Rust optimization |
+| building-apps/advanced/using-third-party-canisters.mdx | how-to | KEEP-REWRITE | guides/canister-calls/onchain-calls.md | medium | Third-party canister integration |
 
 ### building-apps/authentication/ (5 files)
 
@@ -59,7 +59,7 @@
 | Portal Path | Diataxis Type | Triage | New Docs Location | Priority | Notes |
 |------------|---------------|--------|-------------------|----------|-------|
 | building-apps/best-practices/general.mdx | how-to | KEEP-REWRITE | guides/security/access-management.md (partial) | medium | General best practices, split across guides |
-| building-apps/best-practices/reproducible-builds.mdx | how-to | KEEP-REWRITE | guides/canisters/reproducible-builds.md | high | **FLAGGED** Reproducible builds |
+| building-apps/best-practices/reproducible-builds.mdx | how-to | KEEP-REWRITE | guides/canister-management/reproducible-builds.md | high | **FLAGGED** Reproducible builds |
 | building-apps/best-practices/application-architectures.mdx | explanation | ALREADY-PLANNED | concepts/app-architecture.md | medium | App architecture patterns |
 | building-apps/best-practices/idempotency.mdx | explanation | KEEP-REWRITE | guides/backends/data-persistence.md | medium | Idempotent operations |
 | building-apps/best-practices/storage.mdx | how-to | KEEP-REWRITE | guides/backends/data-persistence.md | medium | Storage best practices |
@@ -70,20 +70,20 @@
 
 | Portal Path | Diataxis Type | Triage | New Docs Location | Priority | Notes |
 |------------|---------------|--------|-------------------|----------|-------|
-| building-apps/canister-management/control.mdx | how-to | KEEP-REWRITE | guides/canisters/settings.md | high | Controller management |
-| building-apps/canister-management/settings.mdx | reference | KEEP-REWRITE | guides/canisters/settings.md | high | Canister settings |
-| building-apps/canister-management/snapshots.mdx | how-to | KEEP-REWRITE | guides/canisters/snapshots.md | medium | **FLAGGED** Canister snapshots |
-| building-apps/canister-management/upgrade.mdx | how-to | KEEP-REWRITE | guides/canisters/lifecycle.md | high | Canister upgrades |
-| building-apps/canister-management/state.mdx | explanation | KEEP-REWRITE | guides/canisters/lifecycle.md | medium | Canister state management |
+| building-apps/canister-management/control.mdx | how-to | KEEP-REWRITE | guides/canister-management/settings.md | high | Controller management |
+| building-apps/canister-management/settings.mdx | reference | KEEP-REWRITE | guides/canister-management/settings.md | high | Canister settings |
+| building-apps/canister-management/snapshots.mdx | how-to | KEEP-REWRITE | guides/canister-management/snapshots.md | medium | **FLAGGED** Canister snapshots |
+| building-apps/canister-management/upgrade.mdx | how-to | KEEP-REWRITE | guides/canister-management/lifecycle.md | high | Canister upgrades |
+| building-apps/canister-management/state.mdx | explanation | KEEP-REWRITE | guides/canister-management/lifecycle.md | medium | Canister state management |
 | building-apps/canister-management/storage.mdx | how-to | KEEP-REWRITE | guides/backends/data-persistence.md | high | Storage management |
-| building-apps/canister-management/logs.mdx | how-to | KEEP-REWRITE | guides/canisters/logs.md | medium | Canister logging |
-| building-apps/canister-management/backtraces.mdx | how-to | KEEP-REWRITE | guides/canisters/logs.md | low | Backtrace debugging |
-| building-apps/canister-management/topping-up.mdx | how-to | KEEP-REWRITE | guides/production/cycles-management.md | high | **FLAGGED** Cycles top-up |
+| building-apps/canister-management/logs.mdx | how-to | KEEP-REWRITE | guides/canister-management/logs.md | medium | Canister logging |
+| building-apps/canister-management/backtraces.mdx | how-to | KEEP-REWRITE | guides/canister-management/logs.md | low | Backtrace debugging |
+| building-apps/canister-management/topping-up.mdx | how-to | KEEP-REWRITE | guides/canister-management/cycles-management.md | high | **FLAGGED** Cycles top-up |
 | building-apps/canister-management/cycles-wallet.mdx | deprecated | DROP | N/A | low | Cycles wallet is deprecated |
-| building-apps/canister-management/delete.mdx | how-to | KEEP-REWRITE | guides/canisters/lifecycle.md | low | Deleting canisters |
-| building-apps/canister-management/history.mdx | how-to | KEEP-REWRITE | guides/canisters/lifecycle.md | low | Canister history |
+| building-apps/canister-management/delete.mdx | how-to | KEEP-REWRITE | guides/canister-management/lifecycle.md | low | Deleting canisters |
+| building-apps/canister-management/history.mdx | how-to | KEEP-REWRITE | guides/canister-management/lifecycle.md | low | Canister history |
 | building-apps/canister-management/resource-limits.mdx | reference | KEEP-REWRITE | reference/cycles-costs.md | medium | Resource limits |
-| building-apps/canister-management/trapping.mdx | explanation | KEEP-REWRITE | guides/canisters/lifecycle.md | low | Trap handling |
+| building-apps/canister-management/trapping.mdx | explanation | KEEP-REWRITE | guides/canister-management/lifecycle.md | low | Trap handling |
 
 ### building-apps/chain-fusion/ (16 files)
 
@@ -119,8 +119,8 @@
 | building-apps/developer-tools/cdks/index.mdx | explanation | KEEP-REWRITE | guides/tools/overview.md | medium | CDK overview |
 | building-apps/developer-tools/cdks/rust/intro-to-rust.mdx | tutorial | KEEP-REWRITE | languages/rust/index.md | high | Rust CDK intro |
 | building-apps/developer-tools/cdks/rust/canister-state.mdx | how-to | KEEP-REWRITE | languages/rust/stable-structures.md | medium | Rust canister state |
-| building-apps/developer-tools/cdks/rust/generating-candid.mdx | how-to | KEEP-REWRITE | guides/inter-canister/binding-generation.md | medium | **FLAGGED** Candid generation |
-| building-apps/developer-tools/cdks/rust/intercanister.mdx | how-to | KEEP-REWRITE | guides/inter-canister/calls.md | medium | Rust inter-canister calls |
+| building-apps/developer-tools/cdks/rust/generating-candid.mdx | how-to | KEEP-REWRITE | guides/canister-calls/binding-generation.md | medium | **FLAGGED** Candid generation |
+| building-apps/developer-tools/cdks/rust/intercanister.mdx | how-to | KEEP-REWRITE | guides/canister-calls/onchain-calls.md | medium | Rust inter-canister calls |
 | building-apps/developer-tools/cdks/rust/message-inspect.mdx | how-to | KEEP-REWRITE | languages/rust/index.md | low | Message inspect |
 | building-apps/developer-tools/cdks/rust/rust-limitations.mdx | reference | KEEP-REWRITE | languages/rust/index.md | low | Rust CDK limitations |
 | building-apps/developer-tools/cdks/rust/stable-structures.mdx | how-to | KEEP-REWRITE | languages/rust/stable-structures.md | high | Stable structures |
@@ -131,11 +131,11 @@
 | Portal Path | Diataxis Type | Triage | New Docs Location | Priority | Notes |
 |------------|---------------|--------|-------------------|----------|-------|
 | building-apps/developing-canisters/write.mdx | tutorial | ALREADY-PLANNED | getting-started/quickstart.md | high | Writing canister code |
-| building-apps/developing-canisters/create.mdx | how-to | KEEP-REWRITE | guides/canisters/lifecycle.md | high | Creating canisters |
-| building-apps/developing-canisters/compile.mdx | how-to | KEEP-REWRITE | guides/canisters/lifecycle.md | medium | Compiling canisters, mentions large Wasm |
-| building-apps/developing-canisters/install.mdx | how-to | KEEP-REWRITE | guides/canisters/lifecycle.md | medium | Installing code |
-| building-apps/developing-canisters/deploy.mdx | how-to | KEEP-REWRITE | guides/canisters/lifecycle.md | high | Deploying canisters |
-| building-apps/developing-canisters/deploy-specific-subnet.mdx | how-to | KEEP-REWRITE | guides/production/subnet-types.md | medium | **FLAGGED** Deploy to specific subnet |
+| building-apps/developing-canisters/create.mdx | how-to | KEEP-REWRITE | guides/canister-management/lifecycle.md | high | Creating canisters |
+| building-apps/developing-canisters/compile.mdx | how-to | KEEP-REWRITE | guides/canister-management/lifecycle.md | medium | Compiling canisters, mentions large Wasm |
+| building-apps/developing-canisters/install.mdx | how-to | KEEP-REWRITE | guides/canister-management/lifecycle.md | medium | Installing code |
+| building-apps/developing-canisters/deploy.mdx | how-to | KEEP-REWRITE | guides/canister-management/lifecycle.md | high | Deploying canisters |
+| building-apps/developing-canisters/deploy-specific-subnet.mdx | how-to | KEEP-REWRITE | guides/canister-management/subnet-selection.md | medium | **FLAGGED** Deploy to specific subnet |
 | building-apps/developing-canisters/custom-networks.mdx | how-to | LINK-EXTERNAL | icp-cli docs | low | Custom network config |
 
 ### building-apps/essentials/ (4 files)
@@ -217,14 +217,14 @@
 |------------|---------------|--------|-------------------|----------|-------|
 | building-apps/interact-with-canisters/query-calls.mdx | explanation | ALREADY-PLANNED | concepts/canisters.md | high | Query calls |
 | building-apps/interact-with-canisters/update-calls.mdx | explanation | ALREADY-PLANNED | concepts/canisters.md | high | Update calls |
-| building-apps/interact-with-canisters/advanced-calls.mdx | explanation | KEEP-REWRITE | guides/inter-canister/calls.md | high | **FLAGGED** Composite queries, certified queries |
+| building-apps/interact-with-canisters/advanced-calls.mdx | explanation | KEEP-REWRITE | guides/canister-calls/onchain-calls.md | high | **FLAGGED** Composite queries, certified queries |
 | building-apps/interact-with-canisters/agents/overview.mdx | explanation | LINK-EXTERNAL | JS SDK docs | medium | Agent overview |
 | building-apps/interact-with-canisters/agents/javascript-agent.mdx | how-to | LINK-EXTERNAL | JS SDK docs (js.icp.build) | medium | JS agent |
 | building-apps/interact-with-canisters/agents/nodejs.mdx | how-to | LINK-EXTERNAL | JS SDK docs | medium | Node.js agent |
 | building-apps/interact-with-canisters/agents/rust-agent.mdx | how-to | KEEP-REWRITE | languages/rust/index.md | medium | Rust agent |
-| building-apps/interact-with-canisters/candid/candid-concepts.mdx | explanation | ALREADY-PLANNED | guides/inter-canister/candid.md | medium | Candid concepts |
-| building-apps/interact-with-canisters/candid/using-candid.mdx | how-to | KEEP-REWRITE | guides/inter-canister/candid.md | medium | Using Candid |
-| building-apps/interact-with-canisters/candid/candid-tools.mdx | reference | KEEP-REWRITE | guides/inter-canister/binding-generation.md | medium | **FLAGGED** Candid tools/binding generation |
+| building-apps/interact-with-canisters/candid/candid-concepts.mdx | explanation | ALREADY-PLANNED | guides/canister-calls/candid.md | medium | Candid concepts |
+| building-apps/interact-with-canisters/candid/using-candid.mdx | how-to | KEEP-REWRITE | guides/canister-calls/candid.md | medium | Using Candid |
+| building-apps/interact-with-canisters/candid/candid-tools.mdx | reference | KEEP-REWRITE | guides/canister-calls/binding-generation.md | medium | **FLAGGED** Candid tools/binding generation |
 
 ### building-apps/network-features/ (19 files)
 
@@ -232,7 +232,7 @@
 |------------|---------------|--------|-------------------|----------|-------|
 | building-apps/network-features/periodic-tasks-timers.mdx | how-to | KEEP-REWRITE | guides/backends/timers.md + concepts/timers.md | high | **FLAGGED** Timers |
 | building-apps/network-features/randomness.mdx | how-to | KEEP-REWRITE | guides/backends/randomness.md + concepts/onchain-randomness.md | high | **FLAGGED** Randomness |
-| building-apps/network-features/simd.mdx | explanation | KEEP-REWRITE | guides/backends/large-wasm.md (partial) | medium | **FLAGGED** SIMD instructions |
+| building-apps/network-features/simd.mdx | explanation | KEEP-REWRITE | guides/canister-management/large-wasm.md (partial) | medium | **FLAGGED** SIMD instructions |
 | building-apps/network-features/time-and-timestamps.mdx | reference | KEEP-REWRITE | guides/backends/timers.md | low | Time/timestamps |
 | building-apps/network-features/signatures/t-ecdsa.mdx | how-to | KEEP-REWRITE | concepts/chain-key-cryptography.md + guides/chain-fusion/bitcoin.md | high | Threshold ECDSA |
 | building-apps/network-features/signatures/t-schnorr.mdx | how-to | KEEP-REWRITE | concepts/chain-key-cryptography.md + guides/chain-fusion/bitcoin.md | medium | Threshold Schnorr |
@@ -270,7 +270,7 @@
 | building-apps/security/decentralization.mdx | explanation | KEEP-REWRITE | concepts/security.md | medium | Decentralization security |
 | building-apps/security/formal-verification.mdx | how-to | KEEP-REWRITE | guides/testing/strategies.md | low | Formal verification |
 | building-apps/security/misc.mdx | how-to | KEEP-REWRITE | guides/security/access-management.md | low | Misc security tips |
-| building-apps/security/observability-and-monitoring.mdx | how-to | KEEP-REWRITE | guides/canisters/logs.md | medium | Monitoring |
+| building-apps/security/observability-and-monitoring.mdx | how-to | KEEP-REWRITE | guides/canister-management/logs.md | medium | Monitoring |
 | building-apps/security/resources.mdx | reference | KEEP-REWRITE | concepts/security.md | low | Security resources |
 
 ### building-apps/test/ (2 files)
@@ -338,7 +338,7 @@
 
 | Portal Path | Diataxis Type | Triage | New Docs Location | Priority | Notes |
 |------------|---------------|--------|-------------------|----------|-------|
-| defi/token-ledgers/cycles-ledger.mdx | how-to | KEEP-REWRITE | guides/production/cycles-management.md | high | **FLAGGED** Cycles ledger |
+| defi/token-ledgers/cycles-ledger.mdx | how-to | KEEP-REWRITE | guides/canister-management/cycles-management.md | high | **FLAGGED** Cycles ledger |
 | defi/token-ledgers/setup/icp_ledger_setup.mdx | how-to | KEEP-REWRITE | guides/defi/token-ledgers.md | medium | ICP ledger setup |
 | defi/token-ledgers/setup/icrc1_ledger_setup.mdx | how-to | KEEP-REWRITE | guides/defi/token-ledgers.md | medium | ICRC-1 ledger setup |
 | defi/token-ledgers/upgrading/icrc1_ledger_upgrade.mdx | how-to | KEEP-REWRITE | guides/defi/token-ledgers.md | low | ICRC-1 ledger upgrade |
@@ -371,7 +371,7 @@
 | references/dashboard-apis.mdx | reference | KEEP-REWRITE | reference/system-canisters.md | low | Dashboard APIs |
 | references/id-encoding-spec.mdx | reference | KEEP-REWRITE | reference/ic-interface-spec.md | low | ID encoding spec |
 | references/message-execution-properties.mdx | reference | KEEP-REWRITE | reference/management-canister.md | medium | Message execution properties |
-| references/async-code.mdx | explanation | KEEP-REWRITE | guides/inter-canister/calls.md | medium | Async code patterns |
+| references/async-code.mdx | explanation | KEEP-REWRITE | guides/canister-calls/onchain-calls.md | medium | Async code patterns |
 | references/asset-canister.mdx | reference | KEEP-REWRITE | reference/application-canisters.md | medium | Asset canister spec |
 | references/advanced-ingress-messages.mdx | reference | KEEP-REWRITE | reference/ic-interface-spec.md | low | Advanced ingress messages |
 | references/bitcoin-how-it-works.mdx | explanation | KEEP-REWRITE | concepts/chain-fusion.md | medium | Bitcoin integration internals |
@@ -404,7 +404,7 @@
 | tutorials/hackathon-prep-course/5-create-deploy-token.mdx | tutorial | EVALUATE | guides/defi/token-ledgers.md | low | Token creation tutorial |
 | tutorials/hackathon-prep-course/6-authentication.mdx | tutorial | DROP | guides/authentication/ | low | Overlaps with auth guides |
 | tutorials/hackathon-prep-course/7-setup-dev-env.mdx | tutorial | DROP | icp-cli docs | low | Dev env setup |
-| tutorials/hackathon-prep-course/8-managing-canisters.mdx | tutorial | DROP | guides/canisters/ | low | Overlaps with canister guides |
+| tutorials/hackathon-prep-course/8-managing-canisters.mdx | tutorial | DROP | guides/canister-management/ | low | Overlaps with canister guides |
 | tutorials/hackathon-prep-course/9-advanced-features.mdx | tutorial | EVALUATE | guides/ | low | Advanced features |
 | tutorials/hackathon-prep-course/10-resources.mdx | reference | DROP | N/A | low | Resource links, stale |
 
@@ -431,9 +431,9 @@ Ranked by developer impact -- these should be written first, extracting content 
 |------|--------------|----------------|-----|
 | 1 | guides/backends/https-outcalls.md | building-apps/network-features/using-http/https-outcalls/{overview,get,post}.mdx, references/https-outcalls-how-it-works.mdx, building-apps/security/https-outcalls.mdx | Core ICP differentiator. 5 portal files with rich code examples. |
 | 2 | guides/backends/timers.md | building-apps/network-features/periodic-tasks-timers.mdx | Core ICP differentiator. Every backend needs periodic tasks. |
-| 3 | guides/canisters/lifecycle.md | building-apps/developing-canisters/{create,compile,install,deploy}.mdx, building-apps/canister-management/{upgrade,state,delete,history}.mdx | Fundamental canister operations. 8+ portal files to consolidate. |
-| 4 | guides/canisters/reproducible-builds.md | building-apps/best-practices/reproducible-builds.mdx | Trust-critical for production canisters. Well-written source. |
-| 5 | guides/production/cycles-management.md | building-apps/canister-management/topping-up.mdx, defi/token-ledgers/cycles-ledger.mdx, building-apps/essentials/gas-cost.mdx | Every developer needs this for mainnet. |
+| 3 | guides/canister-management/lifecycle.md | building-apps/developing-canisters/{create,compile,install,deploy}.mdx, building-apps/canister-management/{upgrade,state,delete,history}.mdx | Fundamental canister operations. 8+ portal files to consolidate. |
+| 4 | guides/canister-management/reproducible-builds.md | building-apps/best-practices/reproducible-builds.mdx | Trust-critical for production canisters. Well-written source. |
+| 5 | guides/canister-management/cycles-management.md | building-apps/canister-management/topping-up.mdx, defi/token-ledgers/cycles-ledger.mdx, building-apps/essentials/gas-cost.mdx | Every developer needs this for mainnet. |
 | 6 | concepts/canisters.md | building-apps/essentials/canisters.mdx, building-apps/essentials/message-execution.mdx, building-apps/interact-with-canisters/{query-calls,update-calls,advanced-calls}.mdx | Foundational concept. 5 portal files. |
 | 7 | guides/chain-fusion/bitcoin.md | build-on-btc/{index,btc-api,btc-dev-env,btc-dev-workflow}.mdx, build-on-btc/btc-transactions/*.mdx | 14 portal files, major ecosystem feature. |
 | 8 | guides/chain-fusion/ethereum.md | building-apps/chain-fusion/ethereum/**/*.mdx | 12 portal files, major ecosystem feature. |
@@ -445,10 +445,10 @@ Ranked by developer impact -- these should be written first, extracting content 
 | 14 | concepts/chain-key-cryptography.md | references/t-sigs-how-it-works.mdx, building-apps/network-features/signatures/{t-ecdsa,t-schnorr}.mdx | Core ICP differentiator. |
 | 15 | reference/token-standards.md | defi/token-standards/{index,icrc-1,icrc-2,icrc-7,icrc-37}.mdx | Essential for DeFi developers. |
 | 16 | guides/defi/chain-key-tokens.md | defi/chain-key-tokens/**/*.mdx | 9 portal files, major DeFi feature. |
-| 17 | guides/inter-canister/calls.md | building-apps/interact-with-canisters/advanced-calls.mdx, references/async-code.mdx | Core development pattern. |
-| 18 | guides/canisters/snapshots.md | building-apps/canister-management/snapshots.mdx, tutorials/developer-liftoff-rust/level-3/3.3-canister-snapshots.mdx | Recovery mechanism, important for production. |
+| 17 | guides/canister-calls/onchain-calls.md | building-apps/interact-with-canisters/advanced-calls.mdx, references/async-code.mdx | Core development pattern. |
+| 18 | guides/canister-management/snapshots.md | building-apps/canister-management/snapshots.mdx, tutorials/developer-liftoff-rust/level-3/3.3-canister-snapshots.mdx | Recovery mechanism, important for production. |
 | 19 | guides/security/access-management.md | building-apps/security/{overview,iam}.mdx | Security fundamentals. |
-| 20 | guides/production/subnet-types.md | references/subnets/subnet-types.mdx, building-apps/developing-canisters/deploy-specific-subnet.mdx | Production deployment decisions. |
+| 20 | guides/canister-management/subnet-selection.md | references/subnets/subnet-types.mdx, building-apps/developing-canisters/deploy-specific-subnet.mdx | Production deployment decisions. |
 
 ---
 
@@ -504,16 +504,16 @@ Portal content that no current new-docs page cleanly covers:
 | **Verifiable credentials** (4 files) | building-apps/network-features/verifiable-credentials/*.mdx | Add guides/authentication/verifiable-credentials.md or fold into internet-identity.md |
 | **VetKeys** (8 files) | building-apps/network-features/vetkeys/*.mdx | concepts/vetkeys.md covers explanation; may need guides/backends/vetkeys.md for how-to |
 | **NFT collections** | defi/nft-collections.mdx | No explicit NFT guide planned; fold into guides/defi/token-ledgers.md |
-| **Async code patterns** | references/async-code.mdx | Important content about Rust/Motoko async; needs home in guides/inter-canister/calls.md |
+| **Async code patterns** | references/async-code.mdx | Important content about Rust/Motoko async; needs home in guides/canister-calls/onchain-calls.md |
 | **Application architectures** | building-apps/best-practices/application-architectures.mdx | concepts/app-architecture.md covers this but may need more depth |
 | **Agent SDK guides** | building-apps/interact-with-canisters/agents/{overview,javascript-agent,nodejs,rust-agent}.mdx | JS agent content links to JS SDK; Rust agent needs coverage in languages/rust/ |
 | **Rosetta API** (13 files) | defi/rosetta/**/*.mdx | guides/defi/rosetta.md is a single page; may need expansion for this volume |
-| **Canister discovery** | No explicit portal file | New content needed for guides/production/canister-discovery.md |
-| **Binding generation** | building-apps/developer-tools/cdks/rust/generating-candid.mdx, building-apps/interact-with-canisters/candid/candid-tools.mdx | guides/inter-canister/binding-generation.md needs both files |
+| **Canister discovery** | No explicit portal file | New content needed for guides/canister-management/canister-discovery.md |
+| **Binding generation** | building-apps/developer-tools/cdks/rust/generating-candid.mdx, building-apps/interact-with-canisters/candid/candid-tools.mdx | guides/canister-calls/binding-generation.md needs both files |
 | **HSM identities** | references/using-hsm-with-identities.mdx | Niche but valuable; evaluate for guides/security/access-management.md |
 | **Dashboard APIs** | references/dashboard-apis.mdx | No planned page; consider reference/system-canisters.md |
 | **Formal verification** | building-apps/security/formal-verification.mdx | No planned page; fold into guides/testing/strategies.md |
-| **SIMD** | building-apps/network-features/simd.mdx | No dedicated page; fold into guides/backends/large-wasm.md or create new guide |
+| **SIMD** | building-apps/network-features/simd.mdx | No dedicated page; fold into guides/canister-management/large-wasm.md or create new guide |
 | **Idempotency** | building-apps/best-practices/idempotency.mdx | Important pattern; fold into guides/backends/data-persistence.md |
 
 ---

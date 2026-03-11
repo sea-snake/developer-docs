@@ -17,6 +17,6 @@ API reference for the IC management canister (aaaaa-aa). Document all methods: c
 
 <!-- Cross-Links -->
 - concepts/canisters -- canister lifecycle
-- guides/canisters/lifecycle -- practical lifecycle management
+- guides/canister-management/lifecycle -- practical lifecycle management
 - guides/backends/randomness -- raw_rand usage
 - guides/chain-fusion/bitcoin -- ecdsa/schnorr signing

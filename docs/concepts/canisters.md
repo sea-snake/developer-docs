@@ -18,5 +18,5 @@ Explain what canisters are and how they work. Cover the Wasm execution model, me
 <!-- Cross-Links -->
 - concepts/app-architecture -- canisters in context
 - concepts/reverse-gas-model -- how canisters pay
-- guides/canisters/lifecycle -- practical lifecycle management
+- guides/canister-management/lifecycle -- practical lifecycle management
 - reference/management-canister -- canister management API

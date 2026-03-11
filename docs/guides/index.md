@@ -10,17 +10,16 @@ Practical how-to guides organized by development stage. Each guide solves a spec
 
 ## Build
 
-- **[Canisters](canisters/canister-lifecycle.md)** -- Create, deploy, upgrade, and manage canister smart contracts.
 - **[Backends](backends/data-persistence.md)** -- Data persistence, HTTPS outcalls, timers, randomness, and other backend patterns.
-- **[Inter-Canister](inter-canister/inter-canister-calls.md)** -- Cross-canister calls, Candid interfaces, and binding generation.
+- **[Canister Calls](canister-calls/candid.md)** -- Candid interfaces, binding generation, onchain and offchain calling patterns.
 - **[Frontends](frontends/asset-canister.md)** -- Asset canisters, frontend frameworks, custom domains, and response certification.
 - **[Authentication](authentication/internet-identity.md)** -- Internet Identity, verifiable credentials, and wallet integration.
 
 ## Quality and shipping
 
 - **[Testing](testing/testing-strategies.md)** -- Unit testing, integration testing with PocketIC, and end-to-end strategies.
+- **[Canister Management](canister-management/lifecycle.md)** -- Create, upgrade, configure, optimize, fund, deploy, and back up canisters.
 - **[Security](security/access-management.md)** -- Access control, encryption, data integrity, DoS prevention, and safe upgrades.
-- **[Production](production/cycles-management.md)** -- Cycles management, subnet selection, and canister discovery.
 
 ## Advanced features
 

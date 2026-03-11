@@ -21,6 +21,6 @@ Walk through the full canister lifecycle: creation, code installation, upgrades 
 <!-- Cross-Links -->
 - concepts/canisters -- what is a canister
 - guides/backends/data-persistence -- state across upgrades
-- guides/production/cycles-management -- cycles for canister creation
+- guides/canister-management/cycles-management -- cycles for canister creation
 - guides/security/canister-upgrades -- upgrade safety
 - icp-cli docs: https://dfinity.github.io/icp-cli/

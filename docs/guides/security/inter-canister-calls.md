@@ -15,6 +15,6 @@ Handle the security pitfalls of async inter-canister calls. Cover reentrancy att
 - icskills: canister-security, multi-canister
 
 <!-- Cross-Links -->
-- guides/inter-canister/calls -- basic inter-canister call patterns
-- guides/backends/parallel-calls -- parallel call safety
+- guides/canister-calls/onchain-calls -- basic inter-canister call patterns
+- guides/canister-calls/parallel-calls -- parallel call safety
 - concepts/security -- security model

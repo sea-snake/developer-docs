@@ -35,16 +35,12 @@ export default defineConfig({
           items: [
             // Build: core development
             {
-              label: "Canisters",
-              autogenerate: { directory: "guides/canisters" },
-            },
-            {
               label: "Backends",
               autogenerate: { directory: "guides/backends" },
             },
             {
-              label: "Inter-Canister",
-              autogenerate: { directory: "guides/inter-canister" },
+              label: "Canister Calls",
+              autogenerate: { directory: "guides/canister-calls" },
             },
             {
               label: "Frontends",
@@ -60,12 +56,12 @@ export default defineConfig({
               autogenerate: { directory: "guides/testing" },
             },
             {
-              label: "Security",
-              autogenerate: { directory: "guides/security" },
+              label: "Canister Management",
+              autogenerate: { directory: "guides/canister-management" },
             },
             {
-              label: "Production",
-              autogenerate: { directory: "guides/production" },
+              label: "Security",
+              autogenerate: { directory: "guides/security" },
             },
             // Advanced features
             {
@@ -93,6 +89,7 @@ export default defineConfig({
         {
           label: "Languages",
           items: [
+            { slug: "languages", label: "Overview" },
             {
               label: "Motoko",
               items: [

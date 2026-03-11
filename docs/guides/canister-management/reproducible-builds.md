@@ -17,6 +17,6 @@ Build and verify canisters deterministically so users can confirm deployed code 
 - icp-cli: prebuilt recipe configuration
 
 <!-- Cross-Links -->
-- guides/canisters/lifecycle -- build and deploy workflow
+- guides/canister-management/lifecycle -- build and deploy workflow
 - concepts/security -- trust model for canisters
-- guides/production/cycles-management -- deploying verified builds
+- guides/canister-management/cycles-management -- deploying verified builds

@@ -19,5 +19,5 @@ Overview of testing approaches for ICP canisters. Cover unit testing (mocking ic
 
 <!-- Cross-Links -->
 - guides/testing/pocket-ic -- primary testing tool
-- guides/canisters/logs -- debugging with logs
-- guides/canisters/lifecycle -- testing before upgrades
+- guides/canister-management/logs -- debugging with logs
+- guides/canister-management/lifecycle -- testing before upgrades

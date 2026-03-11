@@ -107,8 +107,8 @@ The Learn Hub (learn.internetcomputer.org) provides protocol-level explanations 
 | What is a Principal? | [link](https://learn.internetcomputer.org/hc/en-us/articles/34250491785108) | concepts/canisters.md |
 | Computational Model | [link](https://learn.internetcomputer.org/hc/en-us/articles/34573860369172) | concepts/canisters.md |
 | Cycles | [link](https://learn.internetcomputer.org/hc/en-us/articles/34573913497108) | concepts/reverse-gas-model.md |
-| Canister Control | [link](https://learn.internetcomputer.org/hc/en-us/articles/34573932107796) | guides/canisters/lifecycle.md |
-| Cycles Ledger | [link](https://learn.internetcomputer.org/hc/en-us/articles/45034096457748) | guides/production/cycles-management.md |
+| Canister Control | [link](https://learn.internetcomputer.org/hc/en-us/articles/34573932107796) | guides/canister-management/lifecycle.md |
+| Cycles Ledger | [link](https://learn.internetcomputer.org/hc/en-us/articles/45034096457748) | guides/canister-management/cycles-management.md |
 
 ### Section: Chain-Key Cryptography (33150155785492)
 
@@ -223,8 +223,8 @@ The Learn Hub (learn.internetcomputer.org) provides protocol-level explanations 
 | guides/defi/* | 2 articles (token ledgers, chain-key tokens) |
 | guides/frontends/certification.md | 1 article (asset certification) |
 | guides/backends/certified-variables.md | 1 article (certified communication) |
-| guides/production/cycles-management.md | 1 article (cycles ledger) |
-| guides/canisters/lifecycle.md | 1 article (canister control) |
+| guides/canister-management/cycles-management.md | 1 article (cycles ledger) |
+| guides/canister-management/lifecycle.md | 1 article (canister control) |
 | reference/* | 3 articles (HTTP gateway, subnet creation, exchange rate canister) |
 
 ## Linking Strategy

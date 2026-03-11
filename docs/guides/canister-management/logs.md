@@ -17,5 +17,5 @@ Debug canisters using the logging API. Cover log levels, structured logging patt
 
 <!-- Cross-Links -->
 - guides/testing/strategies -- logs as part of debugging
-- guides/canisters/lifecycle -- log visibility settings
+- guides/canister-management/lifecycle -- log visibility settings
 - icp-cli docs: https://dfinity.github.io/icp-cli/

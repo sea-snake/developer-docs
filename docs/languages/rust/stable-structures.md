@@ -19,4 +19,4 @@ Use stable data structures in Rust canisters for upgrade-safe storage. Cover Sta
 <!-- Cross-Links -->
 - guides/backends/data-persistence -- general persistence guide
 - concepts/orthogonal-persistence -- conceptual background
-- guides/canisters/lifecycle -- upgrades and stable memory
+- guides/canister-management/lifecycle -- upgrades and stable memory

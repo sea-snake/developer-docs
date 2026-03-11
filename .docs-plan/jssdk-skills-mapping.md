@@ -20,7 +20,7 @@
 | 12 | `multi-canister` | Architecture | Inter-canister calls, canister factory, async messaging, bounded/unbounded wait, 2MB limits |
 | 13 | `sns-launch` | Governance | Token economics, governance params, testflight, NNS proposal, decentralization swap |
 | 14 | `stable-memory` | Architecture | StableBTreeMap (Rust), persistent actor (Motoko), MemoryManager, upgrade hooks |
-| 15 | `vetkd` | Security | On-chain encryption, IBE, transport keys, key derivation, access control for secrets |
+| 15 | `vetkd` | Security | Onchain encryption, IBE, transport keys, key derivation, access control for secrets |
 | 16 | `wallet-integration` | Wallet | ICRC signer standards (21/25/27/29/49), popup wallet model, consent messages, OISY signer |
 | 17 | `wallet` (alias) | Infrastructure | Published alias of `cycles-management` in dist |
 
@@ -46,16 +46,16 @@
 | `canister-security` | `guides/security/access-management`, `guides/security/canister-upgrades`, `guides/security/data-integrity`, `guides/security/dos-prevention`, `guides/security/inter-canister-calls`, `concepts/security` | Broad skill; map to all security guide pages plus concepts/security |
 | `certified-variables` | `guides/backends/certified-variables`, `guides/frontends/certification`, `concepts/security` | Primary is backends/certified-variables; also relevant for frontend cert verification |
 | `ckbtc` | `guides/chain-fusion/bitcoin`, `guides/defi/chain-key-tokens`, `guides/defi/token-ledgers` | Primary is bitcoin chain-fusion; also relevant for chain-key tokens overview |
-| `cycles-management` | `guides/production/cycles-management`, `guides/canisters/lifecycle`, `guides/canisters/settings`, `concepts/reverse-gas-model` | Primary is cycles-management; lifecycle and settings pages reference cycle operations |
+| `cycles-management` | `guides/canister-management/cycles-management`, `guides/canister-management/lifecycle`, `guides/canister-management/settings`, `concepts/reverse-gas-model` | Primary is cycles-management; lifecycle and settings pages reference cycle operations |
 | `evm-rpc` | `guides/chain-fusion/ethereum`, `concepts/chain-fusion` | Primary is ethereum chain-fusion page |
 | `https-outcalls` | `guides/backends/https-outcalls`, `concepts/https-outcalls` | Both the guide and concept page |
-| `ic-dashboard` | `guides/production/canister-discovery`, `reference/system-canisters` | Dashboard APIs are for off-chain discovery; reference for system canister metadata |
+| `ic-dashboard` | `guides/canister-management/canister-discovery`, `reference/system-canisters` | Dashboard APIs are for off-chain discovery; reference for system canister metadata |
 | `icp-cli` | `getting-started/quickstart`, `getting-started/project-structure`, `guides/tools/overview`, `guides/tools/migrating-from-dfx` | Foundational skill; referenced from getting-started and tools sections |
 | `icrc-ledger` | `guides/defi/token-ledgers`, `reference/token-standards`, `guides/defi/chain-key-tokens` | Primary is token-ledgers; also token-standards reference |
 | `internet-identity` | `guides/authentication/internet-identity`, `reference/internet-identity-spec` | Primary is the II guide page |
-| `multi-canister` | `guides/inter-canister/calls`, `guides/inter-canister/candid`, `guides/backends/parallel-calls`, `concepts/app-architecture` | Primary is inter-canister/calls; also relevant for parallel calls and app architecture |
+| `multi-canister` | `guides/canister-calls/onchain-calls`, `guides/canister-calls/candid`, `guides/canister-calls/parallel-calls`, `concepts/app-architecture` | Primary is canister-calls/onchain-calls; also relevant for parallel calls and app architecture |
 | `sns-launch` | `guides/governance/launching`, `guides/governance/managing`, `guides/governance/testing`, `concepts/governance` | Maps to all three governance guide pages |
-| `stable-memory` | `guides/backends/data-persistence`, `guides/canisters/lifecycle`, `concepts/orthogonal-persistence` | Primary is data-persistence; lifecycle covers upgrade patterns |
+| `stable-memory` | `guides/backends/data-persistence`, `guides/canister-management/lifecycle`, `concepts/orthogonal-persistence` | Primary is data-persistence; lifecycle covers upgrade patterns |
 | `vetkd` | `concepts/vetkeys`, `guides/security/data-integrity` | Primary is concepts/vetkeys; security/data-integrity for encryption use cases |
 | `wallet-integration` | `guides/authentication/wallet-integration` | Direct 1:1 mapping |
 | `wallet` (alias) | (same as `cycles-management`) | Not a separate mapping needed |
@@ -68,7 +68,7 @@
 | | `guides/tools/agentic-development` | Agent setup section; link to Core docs for HttpAgent |
 | | `guides/frontends/frameworks` | JS framework integration; Core is the base dependency |
 | | `guides/frontends/certification` | Client-side certificate verification uses Core |
-| | `guides/inter-canister/candid` | Agent/actor creation from JS side |
+| | `guides/canister-calls/candid` | Agent/actor creation from JS side |
 | | `concepts/app-architecture` | Frontend-to-canister communication overview |
 | **Auth** (`@icp-sdk/auth`) | `guides/authentication/internet-identity` | "Frontend integration" section; link to https://js.icp.build/auth |
 | | `guides/authentication/wallet-integration` | Auth prerequisites section |
@@ -80,8 +80,8 @@
 | **Pic JS** | `guides/testing/strategies` | "JavaScript testing" section; link to https://js.icp.build/pic-js |
 | | `guides/testing/pocket-ic` | Pic JS is the JS wrapper for PocketIC |
 | | `guides/governance/testing` | SNS testflight with Pic JS |
-| **Bindgen** (`@icp-sdk/bindgen`) | `guides/inter-canister/binding-generation` | Primary page; link to https://js.icp.build/bindgen |
-| | `guides/inter-canister/candid` | "Generating JS bindings" subsection |
+| **Bindgen** (`@icp-sdk/bindgen`) | `guides/canister-calls/binding-generation` | Primary page; link to https://js.icp.build/bindgen |
+| | `guides/canister-calls/candid` | "Generating JS bindings" subsection |
 | | `getting-started/project-structure` | Mention bindgen in project scaffolding |
 
 ## Gaps
@@ -90,7 +90,7 @@
 
 | Skill | Gap | Recommendation |
 |-------|-----|----------------|
-| `ic-dashboard` | No dedicated docs page for dashboard APIs | Map to `guides/production/canister-discovery` and mention in `reference/system-canisters`. Consider a short "Dashboard APIs" section in canister-discovery page. |
+| `ic-dashboard` | No dedicated docs page for dashboard APIs | Map to `guides/canister-management/canister-discovery` and mention in `reference/system-canisters`. Consider a short "Dashboard APIs" section in canister-discovery page. |
 | `canister-security` | Covers many topics spread across 5+ pages | No single landing page. Consider linking from a `guides/security/` index or overview callout. |
 
 ### Docs pages with no skill coverage
@@ -99,15 +99,15 @@
 |-----------|--------------|----------------|
 | `guides/backends/timers` | No `timers` skill | Create a `timers` skill or fold into existing skill. Covered in `concepts/timers` but no agent skill exists. |
 | `guides/backends/randomness` | No `randomness` skill | Create a `randomness` skill. Covered in `concepts/onchain-randomness` but no agent skill exists. |
-| `guides/backends/large-wasm` | No skill | Niche topic; may not need a skill. Document icp-cli `--wasm-chunk-store` flag. |
-| `guides/canisters/logs` | No skill | Could be a section in `icp-cli` skill or a new `canister-observability` skill. |
-| `guides/canisters/optimization` | No skill | Covered partially by `icp-cli` (ic-wasm). Consider adding optimization guidance to `icp-cli` skill. |
-| `guides/canisters/snapshots` | No skill | New IC feature; consider a `canister-snapshots` skill when stable. |
-| `guides/canisters/reproducible-builds` | No skill | Could be a section in `icp-cli` skill. |
+| `guides/canister-management/large-wasm` | No skill | Niche topic; may not need a skill. Document icp-cli `--wasm-chunk-store` flag. |
+| `guides/canister-management/logs` | No skill | Could be a section in `icp-cli` skill or a new `canister-observability` skill. |
+| `guides/canister-management/optimization` | No skill | Covered partially by `icp-cli` (ic-wasm). Consider adding optimization guidance to `icp-cli` skill. |
+| `guides/canister-management/snapshots` | No skill | New IC feature; consider a `canister-snapshots` skill when stable. |
+| `guides/canister-management/reproducible-builds` | No skill | Could be a section in `icp-cli` skill. |
 | `guides/chain-fusion/solana` | No skill | No Solana integration skill exists. Create when Solana support is ready. |
 | `guides/chain-fusion/dogecoin` | No skill | No Dogecoin skill. The `ckbtc` skill covers Bitcoin; Dogecoin may need its own. |
 | `guides/defi/rosetta` | No skill | Rosetta API is specialized; consider a `rosetta` skill for exchange integration. |
-| `guides/production/subnet-types` | No skill | Reference/informational page; may not need a skill. |
+| `guides/canister-management/subnet-selection` | No skill | Reference/informational page; may not need a skill. |
 | `reference/*` (most pages) | No skills | Reference pages are lookups, not how-to guides. Skills are not expected here. |
 | `concepts/*` (most pages) | No skills | Concept pages explain architecture; link to skills where relevant but concepts pages themselves do not need `icskills` frontmatter. |
 
@@ -119,7 +119,7 @@
 | Auth | Well-covered by `guides/authentication/internet-identity`. No gap. |
 | Canisters | No dedicated "JS canister interaction" page. Usage is spread across multiple guides. |
 | Pic JS | Well-covered by `guides/testing/` pages. No gap. |
-| Bindgen | Well-covered by `guides/inter-canister/binding-generation`. No gap. |
+| Bindgen | Well-covered by `guides/canister-calls/binding-generation`. No gap. |
 
 ## Recommendations
 
@@ -157,7 +157,7 @@ Standard link format per CLAUDE.md rules (link to https://js.icp.build, not vers
 ### 3. Priority new skills to create
 
 1. **`timers`** -- Covers periodic and one-shot timers (concepts/timers, guides/backends/timers). High value since timers are common in production canisters.
-2. **`randomness`** -- Covers on-chain randomness via management canister (concepts/onchain-randomness, guides/backends/randomness). Important for games, lotteries, fair selection.
+2. **`randomness`** -- Covers onchain randomness via management canister (concepts/onchain-randomness, guides/backends/randomness). Important for games, lotteries, fair selection.
 3. **`rosetta`** -- Covers Rosetta API for exchange integration (guides/defi/rosetta). Specialized but important for DeFi ecosystem.
 
 ### 4. Cross-reference pattern

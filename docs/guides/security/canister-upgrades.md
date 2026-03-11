@@ -16,7 +16,7 @@ Upgrade canisters safely without losing data or breaking functionality. Cover pr
 - icskills: canister-security
 
 <!-- Cross-Links -->
-- guides/canisters/lifecycle -- upgrade mechanics
-- guides/canisters/snapshots -- snapshot-based rollback
+- guides/canister-management/lifecycle -- upgrade mechanics
+- guides/canister-management/snapshots -- snapshot-based rollback
 - guides/backends/data-persistence -- data across upgrades
 - guides/testing/strategies -- testing upgrades

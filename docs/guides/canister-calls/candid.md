@@ -2,7 +2,7 @@
 title: "Candid Interface"
 description: "Define and use Candid interfaces for type-safe canister communication"
 sidebar:
-  order: 2
+  order: 1
 icskills: []
 ---
 
@@ -17,6 +17,7 @@ Define Candid interfaces for canister-to-canister and frontend-to-canister commu
 - JS SDK: @icp-sdk/core (https://js.icp.build/core) -- actor creation
 
 <!-- Cross-Links -->
-- guides/inter-canister/calls -- using Candid in practice
-- guides/inter-canister/binding-generation -- auto-generating bindings
+- guides/canister-calls/onchain-calls -- using Candid in canister-to-canister calls
+- guides/canister-calls/offchain-calls -- using Candid in frontend/agent calls
+- guides/canister-calls/binding-generation -- auto-generating bindings
 - reference/candid-spec -- full specification

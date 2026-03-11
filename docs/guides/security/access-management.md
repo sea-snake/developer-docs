@@ -18,5 +18,5 @@ Control who can call your canister functions. Cover controller-only functions, c
 
 <!-- Cross-Links -->
 - concepts/security -- security model background
-- guides/canisters/settings -- controller configuration
+- guides/canister-management/settings -- controller configuration
 - guides/security/dos-prevention -- rate limiting as access control

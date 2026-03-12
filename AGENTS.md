@@ -357,7 +357,7 @@ When reviewing portal tracking issues:
 
 > **Note:** Validation scripts (`validate`, `generate`, `sync`) were removed during the clean slate. They are preserved on `restructuring-attempt-1` and will be restored when the docs are ready for production.
 
-> **Tech stack note:** Starlight is pinned to 0.37.3 due to a Zod v4 compatibility issue (see `package.json` overrides). Do not upgrade Starlight or Astro without testing the build.
+> **Tech stack note:** Using Astro 6 + Starlight 0.38. The Zod v4 sitemap override from earlier versions has been removed.
 
 ## Previous work
 

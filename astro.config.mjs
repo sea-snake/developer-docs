@@ -14,6 +14,13 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "ICP Developer Docs",
+      customCss: [
+        "@fontsource/inter/400.css",
+        "@fontsource/inter/500.css",
+        "@fontsource/inter/600.css",
+        "@fontsource/inter/700.css",
+        "./src/styles/custom.css",
+      ],
       social: [
         {
           icon: "github",

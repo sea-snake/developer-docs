@@ -12,11 +12,12 @@
   },
   "dependencies": {
     "@astrojs/starlight": "^0.38.1",
+    "@fontsource/inter": "^5.2.8",
     "astro": "^6.0.4",
     "sharp": "^0.34.2"
   },
   "devDependencies": {
-    "gray-matter": "^4.0.3",
-    "glob": "^11.0.1"
+    "glob": "^11.0.1",
+    "gray-matter": "^4.0.3"
   }
 }

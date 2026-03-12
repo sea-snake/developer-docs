@@ -49,6 +49,7 @@ Restoration checklist:
 | P1 | Restore build generators | M | `scripts/generate-llms-txt.mjs`, `scripts/generate-manifest.mjs` — update for new page paths |
 | P1 | Custom styling / theming | L | Design TBD — currently using Starlight defaults |
 | P1 | Content gap analysis | L | Systematic comparison of all upstream sources against written docs. Depends on Sprint 4 completion (all P0 content). See details below. |
+| P2 | Configure CODEOWNERS and branch protection | S | Set up CODEOWNERS with team-specific reviewers (security, defi, languages, etc.) and require CODEOWNERS approval on PRs. Depends on content being written (need to know final review ownership per section). |
 | P2 | Content lifecycle strategy | M | Define upstream change detection, sync automation, and freshness ownership. Depends on gap analysis + sync recommendations from content PRs. See details below. |
 
 **Content gap analysis — details:**

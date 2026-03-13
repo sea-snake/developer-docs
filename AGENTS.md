@@ -209,6 +209,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Modify the rationale or context of existing decisions in `.docs-plan/decisions.md` — you may remove entries that are fully reflected in the current codebase (renames, file moves, cleanup) but never alter the reasoning behind active decisions
 - Add `Co-Authored-By` or any AI attribution to commits or PR descriptions
 - Link to `internetcomputer.org/docs/` or `docs.internetcomputer.org` — the old docs site is being replaced by this project and those URLs will break. Link to pages in this site (relative paths, even stubs), Learn Hub, or explain inline. If a needed topic has no page, create a page proposal issue.
+- Link to internal pages that don't exist — every `[text](path.md)` must resolve to an actual file. Agents have repeatedly linked to plausible-sounding paths (e.g., `reference/certified-variables.md`, `guides/backends/stable-memory.md`) that don't exist. Always `ls` the target before linking. If the page doesn't exist, find the correct existing page or file a page proposal issue.
 
 ## Key directories
 
@@ -309,6 +310,9 @@ When drafting a new docs page:
    - Follow the content brief in the stub
    - Use icp-cli commands (never dfx)
    - **Verify all CLI commands and flags** against `.sources/icp-cli/docs/reference/cli.md` — never guess command syntax
+   - **Verify all internal links** — every `[text](path.md)` must point to a file that exists. Run `ls <target-path>` before submitting. If the target page doesn't exist, either link to an existing page that covers the topic, or file a page proposal issue and note the missing link in your PR description. Never link to a path that doesn't exist.
+   - **Verify all external URLs** — use the linking rules table below for known resources. For any URL not in the table (crate docs, npm packages, GitHub repos), verify it is correct. Do not guess or generalize from similar URLs (e.g., `docs.rs/ic-cdk` is NOT the same as `docs.rs/ic-stable-structures`).
+   - **Self-consistency check** — before submitting, re-read your frontmatter description and body opening paragraph. They must not contradict each other (e.g., different time estimates, different scope claims).
    - Use plain markdown (never JSX/MDX)
    - Ensure complete frontmatter (see CONTRIBUTING.md)
    - Code examples: <30 lines inline, >30 lines link to `dfinity/examples`
@@ -348,10 +352,14 @@ When drafting a new docs page:
 |-------------|---------|
 | CLI commands | https://dfinity.github.io/icp-cli/ |
 | Motoko standard library | https://mops.one/core/docs (core supersedes base) |
-| Rust CDK API | https://docs.rs/ic-cdk/latest/ic_cdk/ |
+| Rust CDK API (`ic-cdk`) | https://docs.rs/ic-cdk/latest/ic_cdk/ |
+| Rust stable structures (`ic-stable-structures`) | https://docs.rs/ic-stable-structures/latest/ic_stable_structures/ |
+| Rust Candid (`candid`) | https://docs.rs/candid/latest/candid/ |
 | JS SDK | https://js.icp.build |
 | Protocol internals | https://learn.internetcomputer.org |
 | Agent skill files | https://skills.internetcomputer.org |
+
+> **Important:** Each Rust crate has its own `docs.rs` URL. Do NOT substitute one crate URL for another — `docs.rs/ic-cdk` is NOT the same as `docs.rs/ic-stable-structures`. If you need to link a crate not in this table, construct the URL as `https://docs.rs/<crate-name>/latest/<crate_name>/` (note: hyphens in crate name become underscores in the path).
 
 ## External docs (don't duplicate these)
 
@@ -362,7 +370,8 @@ When drafting a new docs page:
 | icskills | https://skills.internetcomputer.org |
 | Learn Hub | https://learn.internetcomputer.org |
 | Motoko core library | https://mops.one/core/docs (supersedes base; migration guide is synced from Motoko repo) |
-| Rust CDK API | https://docs.rs/ic-cdk/latest/ic_cdk/ |
+| Rust CDK API (`ic-cdk`) | https://docs.rs/ic-cdk/latest/ic_cdk/ |
+| Rust stable structures (`ic-stable-structures`) | https://docs.rs/ic-stable-structures/latest/ic_stable_structures/ |
 
 ## Skills
 

@@ -200,18 +200,22 @@ Three outcomes:
 
 When asked to review a PR, load the `technical-documentation` skill and the relevant icskill for the page topic first.
 
+**When delegating to sub-agents:** Sub-agents cannot load skills. Before launching a sub-agent for writing or reviewing, read the relevant `.sources/icskills/skills/<topic>/SKILL.md` file yourself and include key details (canister IDs, correct API patterns, common pitfalls) in the sub-agent's prompt. Without this, sub-agents will write or review code from memory instead of verified upstream patterns.
+
 **Mechanical checks:**
 1. **Internal links** — `ls` every `[text](path.md)` target. Flag any that don't resolve to an existing file.
 2. **External URLs** — verify against the linking rules table. Flag any guessed or wrong URLs (especially `docs.rs` crate links).
 3. **CLI commands** — verify all `icp` commands and flags against `.sources/icp-cli/docs/reference/cli.md`.
 4. **Frontmatter** — complete and consistent with the body (no contradictions in descriptions, time estimates, scope).
 5. **Content rules compliance** — no `dfx` references, no `.mdx`/JSX, code examples <30 lines inline, relative links with `.md` extension, `core` not `base` for Motoko.
+6. **Code snippet verification** — for every code example, verify function names, import paths, and return type handling against `.sources/`. Search efficiently: start with the most likely submodule (JS → `icp-js-sdk-docs/` or `examples/`, Rust/Motoko → `icp-cli-templates/` or `examples/`, CLI → `icp-cli/docs/`), then broaden only if the function isn't found. Flag snippets that leave the reader with an unusable intermediate value (e.g., unhandled optionals, raw strings where a `Principal` is needed). For recipe versions, check `.sources/icp-cli-recipes` tags.
+7. **Verification flags** — search the page for `<!-- TODO: verify output -->` and `<!-- Needs human verification:` comments. These are not failures — they are signals that the author flagged uncertainty. Ensure each flag has a clear reason. If you can resolve the uncertainty from `.sources/`, do so and remove the flag. Otherwise, call it out in the review so a human reviewer addresses it.
 
 **Content quality checks:**
-6. **Content brief coverage** — read the stub's `<!-- Content Brief -->` and `<!-- Source Material -->` comments. Does the page address every point in the brief? Was the source material actually consulted? Flag significant gaps or divergences.
-7. **Completeness** — would a developer reading this page have enough information to accomplish the task or understand the concept? Flag missing prerequisites, unexplained terms, or logical gaps.
-8. **Accuracy** — cross-check technical claims (memory limits, latency numbers, API behavior) against `.sources/` material. Flag anything that looks wrong or outdated.
-9. **What's next links** — do they guide the reader to a logical next step? Are they all valid?
+8. **Content brief coverage** — read the stub's `<!-- Content Brief -->` and `<!-- Source Material -->` comments. Does the page address every point in the brief? Was the source material actually consulted? Flag significant gaps or divergences.
+9. **Completeness** — would a developer reading this page have enough information to accomplish the task or understand the concept? Flag missing prerequisites, unexplained terms, or logical gaps.
+10. **Accuracy** — cross-check technical claims (memory limits, latency numbers, API behavior) against `.sources/` material. Search across ALL relevant submodules, not just one. Flag anything that looks wrong or outdated.
+11. **What's next links** — do they guide the reader to a logical next step? Are they all valid?
 
 **Post a single PR comment** using this format:
 
@@ -302,6 +306,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Write plain `.md` files only — never `.mdx` or JSX
 - Include complete frontmatter (see CONTRIBUTING.md for schema)
 - Make code examples self-contained and copy-pasteable
+- Flag uncertainty with `<!-- Needs human verification: [reason] -->` rather than guessing — it is always better to flag than to be silently wrong
 - Link to external docs instead of duplicating content (see linking rules below)
 - Read the stub page's `<!-- Source Material -->` and `<!-- Content Brief -->` comments before writing content
 - Sync Beads before and after work: `bd dolt pull` at session start, `bd dolt push` after every status change
@@ -327,6 +332,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Edit synced files directly (`docs/languages/motoko/`, `docs/guides/tools/migrating-from-dfx.md`)
 - Nest sidebar items more than 3 levels deep
 - Skip reading source material before writing a page
+- Write code snippets from memory — find and adapt from actual upstream code in `.sources/` (see "Verify all code snippets" in the content authoring workflow)
 - Modify the rationale or context of existing decisions in `.docs-plan/decisions.md` — you may remove entries that are fully reflected in the current codebase (renames, file moves, cleanup) but never alter the reasoning behind active decisions
 - Add `Co-Authored-By` or any AI attribution to commits or PR descriptions
 - Link to `internetcomputer.org/docs/` or `docs.internetcomputer.org` — the old docs site is being replaced by this project and those URLs will break. Link to pages in this site (relative paths, even stubs), Learn Hub, or explain inline. If a needed topic has no page, create a page proposal issue.
@@ -429,11 +435,15 @@ When drafting a new docs page:
 1. Read the stub page — it contains content brief, source material, and cross-links
 2. Read source material from `.sources/`. Stub references use shorthand — resolve them per the mapping in "Source material repos" above (e.g., `Portal: building-apps/foo.mdx` → `.sources/portal/docs/building-apps/foo.mdx`).
    > **If source material is unavailable at the expected path:** (1) search `.sources/portal/` for the content under a different path, (2) if truly unavailable, write from the content brief + icskills + your training knowledge, and add `<!-- Source unavailable: [path] — written from content brief -->` so future contributors know to verify.
-3. Read any related icskills skill file from `.sources/icskills/` for accurate canister IDs and code patterns
+3. Read any related icskills skill file from `.sources/icskills/` for accurate canister IDs and code patterns. If delegating writing to a sub-agent, include key details from the skill file in the sub-agent's prompt (sub-agents cannot load skills themselves).
 4. Write the content:
    - Follow the content brief in the stub
    - Use icp-cli commands (never dfx)
    - **Verify all CLI commands and flags** against `.sources/icp-cli/docs/reference/cli.md` — never guess command syntax
+   - **Verify all code snippets against upstream source** — never write code examples from memory. Adapt from the source material you read in step 2, or grep `.sources/` for the specific function/API you're using. Ensure return types are handled correctly (e.g., unwrap Motoko `?Text` with `switch`/`case`, wrap raw strings with `Principal::from_text` where needed). For recipe versions, check `.sources/icp-cli-recipes` tags.
+   - **Safe code adaptation** — when adapting code from `.sources/` into a shorter snippet, preserve all imports, error handling, and type conversions that affect correctness. If you must omit setup code, use `// ...` to indicate elided lines — never silently drop lines. Do not invent variable names or types that aren't in the source. If the source context (test harness, full app) is significantly different from a standalone snippet, note what you changed.
+   - **Never invent command output** — if a page shows expected CLI output or canister responses, copy from actual output in `.sources/` (READMEs, test fixtures, example logs). If no actual output exists, write `<!-- TODO: verify output -->` instead of guessing. Do not fabricate canister IDs, cycle counts, error messages, or version strings.
+   - **Flag uncertainty** — if after checking `.sources/` you are not confident a code snippet, API behavior, or technical claim is correct, add `<!-- Needs human verification: [reason] -->` as an HTML comment next to the uncertain content. This tells reviewers where to focus. It is always better to flag than to silently guess.
    - **Verify all internal links** — every `[text](path.md)` must point to a file that exists. Run `ls <target-path>` before submitting. If the target page doesn't exist, either link to an existing page that covers the topic, or file a page proposal issue and note the missing link in your PR description. Never link to a path that doesn't exist.
    - **Verify all external URLs** — use the linking rules table below for known resources. For any URL not in the table (crate docs, npm packages, GitHub repos), verify it is correct. Do not guess or generalize from similar URLs (e.g., `docs.rs/ic-cdk` is NOT the same as `docs.rs/ic-stable-structures`).
    - **Self-consistency check** — before submitting, re-read your frontmatter description and body opening paragraph. They must not contradict each other (e.g., different time estimates, different scope claims).

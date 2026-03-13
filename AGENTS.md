@@ -204,22 +204,24 @@ When asked to review a PR, load the `technical-documentation` skill and the rele
 
 **When delegating to sub-agents:** Sub-agents cannot load skills. Before launching a sub-agent for writing or reviewing, read the relevant `.sources/icskills/skills/<topic>/SKILL.md` file yourself and include key details (canister IDs, correct API patterns, common pitfalls) in the sub-agent's prompt. Without this, sub-agents will write or review code from memory instead of verified upstream patterns.
 
-**Mechanical checks:**
+**Initial review** (first time reviewing a page):
+
+*Mechanical checks:*
 1. **Internal links** — `ls` every `[text](path.md)` target. Flag any that don't resolve to an existing file.
 2. **External URLs** — verify against the linking rules table. Flag any guessed or wrong URLs (especially `docs.rs` crate links).
 3. **CLI commands** — verify all `icp` commands and flags against `.sources/icp-cli/docs/reference/cli.md`.
 4. **Frontmatter** — complete and consistent with the body (no contradictions in descriptions, time estimates, scope).
-5. **Content rules compliance** — no `dfx` references, no `.mdx`/JSX, code examples <30 lines inline, relative links with `.md` extension, `core` not `base` for Motoko.
+5. **Content rules compliance** — no `dfx` references, no `.mdx`/JSX, code examples <30 lines inline, relative links with `.md` extension, `core` not `base` for Motoko, Diataxis content type respected.
 6. **Code snippet verification** — for every code example, verify function names, import paths, and return type handling against `.sources/`. Search efficiently: start with the most likely submodule (JS → `icp-js-sdk-docs/` or `examples/`, Rust/Motoko → `icp-cli-templates/` or `examples/`, CLI → `icp-cli/docs/`), then broaden only if the function isn't found. Flag snippets that leave the reader with an unusable intermediate value (e.g., unhandled optionals, raw strings where a `Principal` is needed). For recipe versions, check `.sources/icp-cli-recipes` tags.
 7. **Verification flags** — search the page for `<!-- TODO: verify output -->` and `<!-- Needs human verification:` comments. These are not failures — they are signals that the author flagged uncertainty. Ensure each flag has a clear reason. If you can resolve the uncertainty from `.sources/`, do so and remove the flag. Otherwise, call it out in the review so a human reviewer addresses it.
 
-**Content quality checks:**
+*Content quality checks:*
 8. **Content brief coverage** — read the stub's `<!-- Content Brief -->` and `<!-- Source Material -->` comments. Does the page address every point in the brief? Was the source material actually consulted? Flag significant gaps or divergences.
 9. **Completeness** — would a developer reading this page have enough information to accomplish the task or understand the concept? Flag missing prerequisites, unexplained terms, or logical gaps.
 10. **Accuracy** — cross-check technical claims (memory limits, latency numbers, API behavior) against `.sources/` material. Search across ALL relevant submodules, not just one. Flag anything that looks wrong or outdated.
 11. **What's next links** — do they guide the reader to a logical next step? Are they all valid?
 
-**Post a single PR comment** using this format:
+*Post using this format:*
 
 ```markdown
 ## Review: <page title>
@@ -234,7 +236,30 @@ When asked to review a PR, load the `technical-documentation` skill and the rele
 - <what checked out> (e.g., "All CLI commands verified against .sources/icp-cli/docs/reference/cli.md")
 ```
 
-Omit any section that has no items. Every review must include the "Verified" section to show what was actually checked.
+Omit any section that has no items. Every initial review must include the "Verified" section to show what was actually checked.
+
+**Follow-up review** (after feedback was addressed):
+
+Only run this when reviewing a PR that already had an initial review. Do NOT re-run the full checklist.
+
+1. Read the previous review comment(s) to understand what was requested.
+2. Verify each requested change was made correctly.
+3. Check that fixes didn't introduce new issues (e.g., dangling links from removed sections, broken frontmatter from removed fields).
+4. Skip re-verifying items that were already signed off in the initial review, unless the fix directly touches them.
+
+*Post using this format:*
+
+```markdown
+## Follow-up review: <page title>
+
+### Fixed
+- <what was fixed and confirmed correct>
+
+### Still needs work
+- <what wasn't addressed or was addressed incorrectly>
+```
+
+Omit "Still needs work" if everything looks good.
 
 ### Submitting
 

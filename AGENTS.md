@@ -208,6 +208,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Skip reading source material before writing a page
 - Modify the rationale or context of existing decisions in `.docs-plan/decisions.md` — you may remove entries that are fully reflected in the current codebase (renames, file moves, cleanup) but never alter the reasoning behind active decisions
 - Add `Co-Authored-By` or any AI attribution to commits or PR descriptions
+- Link to `internetcomputer.org/docs/` or `docs.internetcomputer.org` — the old docs site is being replaced by this project and those URLs will break. Link to pages in this site (relative paths, even stubs), Learn Hub, or explain inline. If a needed topic has no page, create a page proposal issue.
 
 ## Key directories
 

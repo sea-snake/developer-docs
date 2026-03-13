@@ -2,6 +2,12 @@
 dolt/
 dolt-access.lock
 
+# Hooks (we don't install them — see decisions.md)
+hooks/
+
+# Runtime interaction log
+interactions.jsonl
+
 # Runtime files
 bd.sock
 bd.sock.startlock

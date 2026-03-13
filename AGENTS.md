@@ -196,7 +196,7 @@ Three outcomes:
      2. `ls` any new or changed link targets to confirm they exist
      3. If the fix moves content elsewhere, confirm the target page covers it (or flag with `<!-- TODO -->`)
   8. Push to the existing branch
-  9. **Update the PR description** to reflect the current state of the page. The description is used as the squash-merge commit message, so it must accurately describe what the PR delivers — not what the original draft contained. Use `gh pr edit <PR#> --body "..."` to update it.
+  9. **Update the PR description** to reflect the current state of the page. The description is used as the squash-merge commit message, so it must accurately describe what the PR delivers — not what the original draft contained. Keep the "Summary" and "Sync recommendation" sections (see PR template in "Submitting"). Use `gh pr edit <PR#> --body "..."` to update it.
   10. **Post a "Feedback addressed" reply** on the PR so future agents know this round of feedback is handled:
      ```bash
      gh pr comment <PR#> --body "$(cat <<'EOF'
@@ -285,7 +285,14 @@ Omit "Still needs work" if everything looks good.
 npm run build                         # must pass before submitting
 git rebase origin/main                # prevent merge conflicts
 git push -u origin docs/<slug>
-gh pr create --title "docs: <page title>" --body "..."   # body becomes the squash-merge commit message — make it accurate
+gh pr create --title "docs: <page title>" --body "$(cat <<'EOF'
+## Summary
+<bullet list of what the page covers and key decisions>
+
+## Sync recommendation
+<one of: `hand-written`, `sync from <repo> <path>`, or `informed by <repo> — <files>`>
+EOF
+)"
 bd update <id> --status draft --notes "PR #<number>" && bd dolt push
 bd show <id> --json | jq -r .status   # MUST print "draft" — do not proceed until verified
 git checkout main                     # return to main so the workspace is clean for the next task
@@ -508,6 +515,7 @@ When drafting a new docs page:
    <!-- Upstream: informed by dfinity/portal docs/building-apps/canister-management/settings.mdx -->
    ```
    Consider syncing when the upstream content is comprehensive, well-maintained, and a close fit. Prefer hand-writing when the page synthesizes multiple sources or serves a different audience than the upstream.
+   **This must appear in two places:** (1) as an HTML comment in the page file, and (2) as a "Sync recommendation" section in the PR body (see the PR template in "Submitting" above). Both are required.
 6. **Propose missing pages:** If source material reveals topics that aren't covered by any existing page in the plan (e.g., a canister migration guide in icp-cli with no corresponding docs page), create a GitHub Issue with the `page-proposal` label. Include: what the page would cover, where it would live in the structure, and which upstream source it would draw from. Reference the issue in your PR description. Do not create the page — just flag it for human discussion.
 7. Submit: push branch, create PR, update Beads status to `draft` (see "Multi-agent workflow" above)
 8. Review by the relevant team (see `.github/CODEOWNERS` and CONTRIBUTING.md review ownership table)

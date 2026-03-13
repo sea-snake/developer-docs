@@ -225,6 +225,8 @@ Three outcomes:
 
 ### Reviewing PRs
 
+**Only review PRs when explicitly asked by a human.** Agents must never offer, suggest, or perform PR reviews on their own initiative. Reviews are a developer decision. The agent's focus is: (1) manage tasks, (2) create content PRs, (3) fix content based on existing reviews/comments.
+
 When asked to review a PR, load the `technical-documentation` skill and the relevant icskill for the page topic first.
 
 **When delegating to sub-agents:** Sub-agents cannot load skills. Before launching a sub-agent for writing or reviewing, read the relevant `.sources/icskills/skills/<topic>/SKILL.md` file yourself and include key details (canister IDs, correct API patterns, common pitfalls) in the sub-agent's prompt. Without this, sub-agents will write or review code from memory instead of verified upstream patterns.
@@ -388,6 +390,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 
 ## Never (do not do these under any circumstances)
 
+- Offer, suggest, or perform PR reviews unless a human explicitly asks — reviews are a developer decision, not an agent initiative
 - Reference `dfx` — it is deprecated and banned
 - Create `.mdx` files or use JSX components
 - Duplicate content that lives in external docs (icp-cli, JS SDK, icskills, Learn Hub)

@@ -38,6 +38,21 @@ All tasks (content pages, infrastructure, tooling) are coordinated through [Bead
 
 If `bd` or `dolt` aren't installed, the script tells you how. Without them you can still write docs — check `.docs-plan/migration-plan.md` for tasks manually.
 
+### Parallel agents (worktrees)
+
+For batch operations like addressing PR feedback across multiple PRs, Claude Code can launch background agents in isolated git worktrees. Each agent works on a separate branch without conflicts.
+
+**Prerequisites:**
+- `.claude/settings.json` (committed to git) pre-approves tools that agents need (Bash, Edit, Read, etc.). Without this, background agents block waiting for interactive permission approval that never comes.
+- `.claude/settings.local.json` and `.claude/worktrees/` are gitignored (local-only).
+
+**How it works:**
+1. The parent agent claims tasks in Beads, then launches one background agent per PR using `isolation: "worktree"`
+2. Each agent gets its own git worktree (isolated copy of the repo), checks out its branch, makes edits, and commits
+3. The parent agent collects results, pushes branches, and posts feedback-addressed comments
+
+**If agents fail with permission errors:** Check that `.claude/settings.json` exists and includes all required tools. The shared settings file is the authoritative source — per-user `~/.claude/projects/` settings don't apply to worktree agents (different path).
+
 ### Session start
 
 ```bash
@@ -298,6 +313,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - `docs/guides/tools/migrating-from-dfx.md` — Synced from `dfinity/icp-cli` (do not edit directly)
 - `.docs-plan/` — Analysis artifacts, decisions, and progress tracking (see `.docs-plan/README.md`)
 - `.sources/` — **Pinned submodules of upstream source repos** (see "Source material repos" below)
+- `.claude/settings.json` — Shared Claude Code permissions (committed to git). Ensures worktree/background agents can run without interactive approval.
 - `icp.yaml` — icp-cli project config (asset canister recipe)
 - `.icp/data/` — Canister ID mappings (committed to git). `.icp/cache/` is gitignored.
 

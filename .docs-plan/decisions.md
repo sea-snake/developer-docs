@@ -130,3 +130,10 @@ Record decisions that constrain future work — things an agent needs to know th
 **Decision:** Never link to `internetcomputer.org/docs/` or `docs.internetcomputer.org` — these are the old docs being replaced by this project. Instead: (1) link to a page in this docs site using relative paths, even if it's still a stub, or (2) link to Learn Hub (`learn.internetcomputer.org`) for protocol internals, or (3) explain the concept inline if no suitable page exists yet.
 **Rationale:** Old docs URLs will break once the new site replaces the old one. Linking to stubs is fine — they'll have content by the time the site launches. If a topic has no planned page, flag it as a page proposal.
 **Alternatives considered:** Keep old links with a TODO to update later (easy to forget, broken links at launch)
+
+## 2026-03-13: Shared Claude Code permissions for parallel worktree agents
+
+**Context:** Background agents launched in git worktrees need Bash, Edit, Read, etc. but block waiting for interactive permission approval that never comes. Per-user settings at `~/.claude/projects/<path>/settings.json` don't apply to worktree agents because the worktree has a different filesystem path.
+**Decision:** Commit `.claude/settings.json` to the repo with pre-approved tools (git, npm, bd, gh, Edit, Write, Read, Grep, Glob). Deny destructive operations (force push, rm -rf). Gitignore `.claude/settings.local.json` and `.claude/worktrees/` (local-only).
+**Rationale:** Shared settings travel with the repo and apply to all agents regardless of working directory. Every developer gets the same permission baseline without manual configuration.
+**Alternatives considered:** Per-user project settings (doesn't apply to worktrees), fully permissive mode (too broad), manual approval (blocks background agents)

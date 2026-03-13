@@ -11,13 +11,12 @@ This file is the single source of truth for all agents (Claude Code, Codex, Curs
 ## Quick orientation
 
 1. Read this file for rules and boundaries
-2. Check `.docs-plan/decisions.md` before making any structural changes
-3. First-time setup: `npm install -g @beads/bd && brew install dolt && bd bootstrap` (pulls task DB from `refs/dolt/data`)
-4. Sync task state: `bd dolt pull`
-5. Pick a task using the priority order in "Multi-agent workflow" below
-6. Look up that task in `.docs-plan/migration-plan.md` for dependencies, source material, and effort
-7. Do the work following the rules below
-8. Record any structural decisions in `.docs-plan/decisions.md`
+2. Run `./scripts/setup.sh` — initializes submodules, npm deps, Beads task DB, and verifies the build
+3. Check `.docs-plan/decisions.md` before making any structural changes
+4. Pick a task using the priority order in "Multi-agent workflow" below
+5. Look up that task in `.docs-plan/migration-plan.md` for dependencies, source material, and effort
+6. Do the work following the rules below
+7. Record any structural decisions in `.docs-plan/decisions.md`
 
 For research artifacts (portal triage, Learn Hub mapping, examples inventory), see `.docs-plan/README.md`.
 
@@ -34,10 +33,10 @@ All tasks (content pages, infrastructure, tooling) are coordinated through [Bead
 ### First-time setup (once per clone)
 
 ```bash
-npm install -g @beads/bd    # install Beads CLI
-brew install dolt            # install Dolt (version-controlled SQL engine)
-bd bootstrap                 # clones task DB from refs/dolt/data on origin
+./scripts/setup.sh    # submodules, npm deps, Beads task DB, build check
 ```
+
+If `bd` or `dolt` aren't installed, the script tells you how. Without them you can still write docs — check `.docs-plan/migration-plan.md` for tasks manually.
 
 ### Session start
 

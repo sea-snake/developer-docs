@@ -160,7 +160,7 @@ gh pr list --head docs/<slug>         # PR exists?
 ```
 
 Three outcomes:
-- **Branch + PR exist** → "changes requested" pickup. `git checkout docs/<slug> && git rebase origin/main`
+- **Branch + PR exist** → "changes requested" pickup. `git checkout docs/<slug> && git pull origin docs/<slug>`
 - **Branch exists, no PR** → stale from a crashed agent. Delete remote branch, start fresh from `main`
 - **Neither exists** → fresh work. `git checkout -b docs/<slug> origin/main`
 
@@ -278,7 +278,6 @@ git checkout main                     # return to main so the workspace is clean
 
 **Changes requested fix** (also used after PR feedback fixes)**:**
 ```bash
-git fetch origin main && git rebase origin/main    # rebase as part of the fix
 npm run build                                      # must pass before pushing
 git push
 gh pr comment <PR#> --body "$(cat <<'EOF'
@@ -305,10 +304,10 @@ git checkout main
 
 ### Merge conflict policy
 
-- **Always** rebase on `main` before pushing (both fresh PRs and "changes requested" fixes)
-- **Don't** rebase PRs that are under review — force-pushing changes the diff the reviewer is looking at
-- **Do** rebase approved PRs that are blocked by merge conflicts
-- **Do** rebase as part of "changes requested" fixes
+- **Fresh PRs** — rebase on `main` before the first push (ensures a clean start, no force-push needed)
+- **Feedback fixes** — just commit and push. Do NOT rebase unless the branch has merge conflicts with `main`. Unnecessary rebases cause force-pushes, which rewrite history and can lose work.
+- **Approved PRs with merge conflicts** (Priority B) — rebase + `git push --force-with-lease`. This is the only case where force-push is justified.
+- **Never force-push a PR that is under active review** — it changes the diff the reviewer is looking at
 
 ### After PR merge
 

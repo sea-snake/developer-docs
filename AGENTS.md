@@ -65,10 +65,23 @@ bd list --status in_progress --json | jq '.[] | select(.notes == "" or .notes ==
 ```
 For each stale task: check how long it's been `in_progress` (compare `updated_at`). If >1 hour and no PR, it's safe to reclaim or reset to `open`.
 
-**Priority A — Fix "changes requested" PRs** (unblocks reviews, highest value)
+**Priority A — Address PR feedback** (unblocks reviews, highest value)
+
+Check for PRs with formal "changes requested" reviews OR unresolved comment threads:
 ```bash
+# Formal change requests
 gh pr list --search "review:changes_requested" --json number,title,headRefName
+
+# PRs with unresolved comments (catches comment-only feedback)
+gh pr list --state open --json number,title,headRefName,comments \
+  --jq '.[] | select(.comments | length > 0) | {number, title, headRefName}'
 ```
+For PRs with comments but no formal review status, read the comments:
+```bash
+gh pr view <PR#> --comments
+```
+If comments contain actionable feedback (bug reports, broken links, requested changes), treat them the same as a formal "changes requested" review. **Present the feedback to the user for confirmation before making changes** — the user decides which comments to address and how.
+
 Cross-reference with Beads: the task should be in `draft` status. If it's `in_progress`, another agent is already on it — skip.
 
 **Priority B — Rebase approved PRs with merge conflicts** (quick, unblocks merges)
@@ -113,7 +126,11 @@ Three outcomes:
 ### Doing the work
 
 - **Fresh task:** Follow the "Content authoring workflow" below (for content pages) or task-specific instructions in `migration-plan.md` (for infrastructure)
-- **Changes requested:** Read review comments via `gh pr view <PR#> --json reviews`, address each comment, push fixes to the existing branch
+- **PR feedback (formal reviews or comments):**
+  1. Read all feedback: `gh pr view <PR#> --comments` and `gh api repos/{owner}/{repo}/pulls/<PR#>/reviews --jq '.[] | {state, body}'`
+  2. **Present a summary of the feedback to the user** — list each actionable item and your proposed fix
+  3. **Wait for the user to confirm** which changes to make. Do not apply changes autonomously.
+  4. After confirmation, check out the branch, apply the fixes, and push to the existing branch
 
 ### Submitting
 

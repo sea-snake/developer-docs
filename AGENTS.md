@@ -196,7 +196,8 @@ Three outcomes:
      2. `ls` any new or changed link targets to confirm they exist
      3. If the fix moves content elsewhere, confirm the target page covers it (or flag with `<!-- TODO -->`)
   8. Push to the existing branch
-  9. **Post a "Feedback addressed" reply** on the PR so future agents know this round of feedback is handled:
+  9. **Update the PR description** to reflect the current state of the page. The description is used as the squash-merge commit message, so it must accurately describe what the PR delivers — not what the original draft contained. Use `gh pr edit <PR#> --body "..."` to update it.
+  10. **Post a "Feedback addressed" reply** on the PR so future agents know this round of feedback is handled:
      ```bash
      gh pr comment <PR#> --body "$(cat <<'EOF'
      <!-- feedback-addressed -->
@@ -205,7 +206,7 @@ Three outcomes:
      EOF
      )"
      ```
-  10. **Return task to `draft`:**
+  11. **Return task to `draft`:**
      ```bash
      bd update <id> --status draft && bd dolt push
      bd show <id> --json | jq -r .status   # MUST print "draft"
@@ -284,7 +285,7 @@ Omit "Still needs work" if everything looks good.
 npm run build                         # must pass before submitting
 git rebase origin/main                # prevent merge conflicts
 git push -u origin docs/<slug>
-gh pr create --title "docs: <page title>" --body "..."
+gh pr create --title "docs: <page title>" --body "..."   # body becomes the squash-merge commit message — make it accurate
 bd update <id> --status draft --notes "PR #<number>" && bd dolt push
 bd show <id> --json | jq -r .status   # MUST print "draft" — do not proceed until verified
 git checkout main                     # return to main so the workspace is clean for the next task

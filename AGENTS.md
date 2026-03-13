@@ -46,6 +46,25 @@ bd dolt pull    # sync task state from remote
 
 Then scan for work in this priority order:
 
+**Priority 0 — Housekeeping** (keeps task state accurate, runs every session)
+
+*Close merged PRs:* PRs may be merged manually without updating Beads. Check for `draft` tasks whose PRs are already merged:
+```bash
+bd list --status draft --json | jq -r '.[].notes'   # extract PR numbers
+gh pr list --state merged --json number,title        # cross-reference
+```
+For each match, close the task:
+```bash
+bd update <id> --status closed && bd dolt push
+bd show <id> --json | jq -r .status                  # MUST print "closed"
+```
+
+*Reclaim stale tasks:* If a task has been `in_progress` for >1 hour with no PR in notes, the previous agent likely crashed. Reclaim it:
+```bash
+bd list --status in_progress --json | jq '.[] | select(.notes == "" or .notes == null) | {id, title, updated_at}'
+```
+For each stale task: check how long it's been `in_progress` (compare `updated_at`). If >1 hour and no PR, it's safe to reclaim or reset to `open`.
+
 **Priority A — Fix "changes requested" PRs** (unblocks reviews, highest value)
 ```bash
 gh pr list --search "review:changes_requested" --json number,title,headRefName
@@ -67,23 +86,24 @@ bd ready    # shows unblocked tasks (deps in draft/closed)
 
 Before any files are touched:
 ```bash
+bd dolt pull                                          # refresh state — another agent may have claimed this
 bd update <id> --status in_progress --claim && bd dolt push
+bd show <id> --json | jq -r .status                   # MUST print "in_progress"
 ```
 This is atomic — claim + push happens immediately. The race window for duplicate claims is negligible (sub-second).
-
-**Stale claims:** If a task has been `in_progress` for >1 hour with no PR in notes, treat it as a crashed session. Reclaim it.
 
 ### Pre-flight check
 
 ```bash
+git fetch origin                      # always fetch latest state first
 git ls-remote origin docs/<slug>      # branch exists?
 gh pr list --head docs/<slug>         # PR exists?
 ```
 
 Three outcomes:
-- **Branch + PR exist** → "changes requested" pickup. `git fetch origin && git checkout docs/<slug>`
+- **Branch + PR exist** → "changes requested" pickup. `git checkout docs/<slug> && git rebase origin/main`
 - **Branch exists, no PR** → stale from a crashed agent. Delete remote branch, start fresh from `main`
-- **Neither exists** → fresh work. `git checkout -b docs/<slug> main`
+- **Neither exists** → fresh work. `git checkout -b docs/<slug> origin/main`
 
 ### Branch naming
 
@@ -99,10 +119,13 @@ Three outcomes:
 
 **Fresh task:**
 ```bash
+npm run build                         # must pass before submitting
 git rebase origin/main                # prevent merge conflicts
 git push -u origin docs/<slug>
 gh pr create --title "docs: <page title>" --body "..."
 bd update <id> --status draft --notes "PR #<number>" && bd dolt push
+bd show <id> --json | jq -r .status   # MUST print "draft" — do not proceed until verified
+git checkout main                     # return to main so the workspace is clean for the next task
 ```
 
 **Changes requested fix:**
@@ -110,6 +133,8 @@ bd update <id> --status draft --notes "PR #<number>" && bd dolt push
 git fetch origin main && git rebase origin/main    # rebase as part of the fix
 git push
 bd update <id> --status draft && bd dolt push
+bd show <id> --json | jq -r .status   # MUST print "draft" — do not proceed until verified
+git checkout main
 ```
 
 **Rebase approved PR (Priority B):**
@@ -117,7 +142,11 @@ bd update <id> --status draft && bd dolt push
 git fetch origin && git checkout <branch>
 git rebase origin/main
 git push --force-with-lease
+git checkout main
 ```
+
+> **CRITICAL — verify status after every `bd update`:**
+> Agents have repeatedly failed to update Beads status despite clear instructions. After every `bd update` + `bd dolt push`, you **must** run `bd show <id> --json | jq -r .status` and confirm it prints the expected value (e.g. `draft`). If the status is wrong, fix it immediately. Do NOT move on until verification passes.
 
 ### Merge conflict policy
 
@@ -130,15 +159,18 @@ git push --force-with-lease
 
 ```bash
 bd update <id> --status closed && bd dolt push
+bd show <id> --json | jq -r .status   # MUST print "closed"
 ```
 
 ### Agent can't finish
 
 If you hit a blocker (missing source material, unclear requirements):
 ```bash
-bd update <id> --status open && bd dolt push    # unclaim, leave a note
+bd update <id> --status open --notes "Blocker: <describe>" && bd dolt push
+bd show <id> --json | jq -r .status   # MUST print "open"
+git checkout main                     # return to main
 ```
-Add context in the Beads notes so the next agent (or human) understands the blocker.
+Add enough context in the notes so the next agent (or human) understands the blocker without needing to ask.
 
 ## Always (do these without asking)
 
@@ -175,6 +207,7 @@ Add context in the Beads notes so the next agent (or human) understands the bloc
 - Nest sidebar items more than 3 levels deep
 - Skip reading source material before writing a page
 - Modify the rationale or context of existing decisions in `.docs-plan/decisions.md` — you may remove entries that are fully reflected in the current codebase (renames, file moves, cleanup) but never alter the reasoning behind active decisions
+- Add `Co-Authored-By` or any AI attribution to commits or PR descriptions
 
 ## Key directories
 
@@ -412,19 +445,12 @@ bd create "Found bug" -t bug -p 1 --deps discovered-from:<parent-id> --json
 
 ### Session completion
 
-When ending a work session, complete ALL steps:
+The "Submitting" section above handles the normal flow (build → push → PR → Beads update → checkout main). This checklist covers anything that may remain at session end:
 
-1. **File issues** for remaining work with `bd create`
-2. **Run quality gates** (if code changed) — `npm run build`
-3. **Update issue status** — close finished work, update in-progress items
-4. **Push to remote** — this is mandatory:
-   ```bash
-   git pull --rebase
-   git push
-   git status  # MUST show "up to date with origin"
-   ```
-5. **Verify** — all changes committed and pushed
-6. **Hand off** — provide context for next session
+1. **No uncommitted changes** — `git status` must show a clean working tree. If you have unfinished work, either commit + push it on the task branch, or stash and reset the task to `open` (see "Agent can't finish")
+2. **File issues** for discovered work with `bd create`
+3. **Beads is synced** — every status change was followed by `bd dolt push` and verified
+4. **On `main`** — you should already be on `main` from the submit step. If not: `git checkout main`
 
-Work is NOT complete until `git push` succeeds. Never stop before pushing — that leaves work stranded locally.
+Work is NOT complete until all changes are pushed and Beads is synced. Never stop before pushing — that leaves work stranded locally.
 <!-- END BEADS INTEGRATION -->

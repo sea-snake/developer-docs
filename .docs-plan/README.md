@@ -7,13 +7,14 @@ This directory contains all analysis, design decisions, and progress tracking fo
 1. **Read `AGENTS.md`** (project root) — rules, boundaries, content guidelines
 2. **Read `decisions.md`** — understand past structural decisions before proposing new ones
 3. **Find your next task:**
-   - Open `progress.md` — the project-level table shows infrastructure/tooling tasks; the content table shows all 79 pages in priority order (P0 first)
-   - Pick the highest-priority task with status `stub` or `pending`
+   - Run `bd dolt pull` to sync task state
+   - Run `bd ready` to see tasks with no unresolved blockers
+   - Follow the priority order in `AGENTS.md` → "Multi-agent workflow"
 4. **Get execution details:**
    - For content pages: read the stub file itself (has content brief, source material, cross-links in HTML comments), then check `migration-plan.md` for dependencies, effort estimate, and skills needed
    - For infrastructure tasks: check `migration-plan.md` for details
 5. **Do the work** following `AGENTS.md` rules (especially the "Content authoring workflow" section)
-6. **Update `progress.md`** — change status, add your name/agent ID and date
+6. **Update Beads** — `bd update <id> --status draft --notes "PR #X" && bd dolt push`
 7. **Record decisions in `decisions.md`** if you made any structural choices
 
 ## Files
@@ -23,8 +24,9 @@ This directory contains all analysis, design decisions, and progress tracking fo
 | File | What it answers |
 |------|-----------------|
 | `decisions.md` | "Has this been decided already?" — append-only decision log |
-| `progress.md` | "What's done? What's next?" — single status tracker for all work |
 | `migration-plan.md` | "How do I execute this task?" — dependencies, source material, effort, skills per page |
+
+> **Task state** is tracked in [Beads](https://github.com/steveyegge/beads) (`bd ready`), not in a file. See `AGENTS.md` → "Multi-agent workflow".
 
 ### Research artifacts (read when writing specific pages)
 
@@ -39,10 +41,7 @@ This directory contains all analysis, design decisions, and progress tracking fo
 
 ## Source repos analyzed
 
-These repos were analyzed during the research phase. To read source material, either ask the user for the local clone path, or fetch from GitHub:
-```bash
-gh api repos/dfinity/portal/contents/docs/building-apps/foo.mdx --jq '.content' | base64 -d
-```
+These repos were analyzed during the research phase. All source repos are pinned as git submodules under `.sources/` — see `AGENTS.md` → "Source material repos" for the mapping and rules.
 
 | Repo | GitHub | Path within repo | What |
 |------|--------|-------------------|------|
@@ -63,4 +62,4 @@ Branch `restructuring-attempt-1` contains the previous restructuring attempt wit
 - CI workflows, sync scripts, validation scripts
 - `DOCS_RESTRUCTURING_PROPOSAL.md` (v3.1)
 
-This branch (`restructuring-attempt-2`) starts fresh with stubs, informed by the analysis.
+The current `main` branch starts fresh with stubs, informed by the analysis.

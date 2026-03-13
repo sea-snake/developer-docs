@@ -124,7 +124,7 @@ Before submitting a PR, manually verify:
 
 ## Draft completeness checklist
 
-Before marking a page as `draft` in `progress.md`, verify:
+Before setting a task to `draft` status in Beads, verify:
 
 1. Content brief from the stub is fully addressed
 2. All code examples are tested and copy-pasteable
@@ -135,8 +135,11 @@ Before marking a page as `draft` in `progress.md`, verify:
 
 ## Progress tracking
 
-After completing work on any page, update `.docs-plan/progress.md`:
-- Set the page status to `draft` and add your name/agent and the date
-- For non-page tasks (research, tooling), add a row to the project-level table at the top
+All tasks are tracked in [Beads](https://github.com/steveyegge/beads) (`bd`). See `AGENTS.md` → "Multi-agent workflow" for the full coordination protocol.
 
-See `.docs-plan/README.md` for the full workflow and all analysis artifacts.
+Key commands:
+- `bd ready` — show tasks you can work on (no unresolved blockers)
+- `bd update <id> --status draft --notes "PR #X"` — mark task as draft after PR creation
+- `bd list --limit 0` — see all tasks (default caps at 50)
+
+See `.docs-plan/README.md` for analysis artifacts and `.docs-plan/migration-plan.md` for execution details.

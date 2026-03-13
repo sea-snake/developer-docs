@@ -137,3 +137,10 @@ Record decisions that constrain future work — things an agent needs to know th
 **Decision:** Commit `.claude/settings.json` to the repo with pre-approved tools (git, npm, bd, gh, Edit, Write, Read, Grep, Glob). Deny destructive operations (force push, rm -rf). Gitignore `.claude/settings.local.json` and `.claude/worktrees/` (local-only).
 **Rationale:** Shared settings travel with the repo and apply to all agents regardless of working directory. Every developer gets the same permission baseline without manual configuration.
 **Alternatives considered:** Per-user project settings (doesn't apply to worktrees), fully permissive mode (too broad), manual approval (blocks background agents)
+
+## 2026-03-13: No Beads git hooks — manual sync only
+
+**Context:** `bd doctor` recommends installing git hooks (`pre-commit`, `post-merge`, `pre-push`) that auto-sync Beads state on git operations. During Sprint 1, the Dolt journal corrupted when the parent agent ran parallel `bd` commands while worktree agents were active.
+**Decision:** Do not install Beads git hooks. All `bd dolt pull`/`push` calls must be manual and serialized. Only the parent agent may run `bd` commands — worktree agents must never touch Beads.
+**Rationale:** Git hooks fire automatically on git operations (push, pull, checkout). Worktree agents perform these git operations concurrently, so hooks would trigger concurrent `bd` calls against the shared Dolt server, risking journal corruption. Manual serialized calls give the parent full control over when Beads is accessed.
+**Alternatives considered:** Install hooks only on the main worktree (hooks still fire on parent git ops during agent runs), install hooks with a lock file (Dolt doesn't support external locking), use `--sandbox` mode for agents (still shares the server)

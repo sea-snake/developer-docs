@@ -52,11 +52,30 @@ For batch operations like addressing PR feedback across multiple PRs, Claude Cod
 3. The parent agent collects results, pushes branches from worktrees (`git -C <worktree-path> push`), and posts feedback-addressed comments
 4. The parent agent cleans up worktrees after all work is done:
    ```bash
-   git worktree remove <path>    # for each worktree
-   git worktree prune            # clean up stale references
+   git worktree remove --force <path>           # for each worktree (--force needed due to submodules)
+   git worktree prune                           # clean up stale references
+   git branch -D $(git branch | grep worktree-agent)  # delete backing branches
    ```
 
 **If agents fail with permission errors:** Check that `.claude/settings.json` exists and includes all required tools. The shared settings file is the authoritative source — per-user `~/.claude/projects/` settings don't apply to worktree agents (different path).
+
+**Beads safety:** Worktree agents share the parent's `.beads/` directory and Dolt server. Concurrent `bd` commands can corrupt the Dolt journal.
+- **Only the parent agent** may run `bd` commands (claim, update, push, pull)
+- **Worktree agents must NEVER run `bd`** — they only write content, build, and commit
+- **Serialize all `bd` calls** — never run `bd update` for multiple tasks in parallel; always wait for one to complete before starting the next
+- Auto-backup is enabled (`.beads/config.yaml`) — JSONL snapshots go to `.beads/backup/` every 15 min as a local safety net
+- **NEVER run `bd init --force`** without explicit user confirmation — this can destroy the database
+- **NEVER run `bd dolt push` after a re-init** without verifying the local DB has the correct data — pushing an empty or corrupted DB overwrites the remote
+- **NEVER delete `refs/dolt/data`** — this is the only remote copy of all task state. Do not run `git push origin --delete refs/dolt/data` or any command that modifies this ref directly.
+
+**Dolt recovery:** If the Dolt journal becomes corrupted (symptoms: `circuit breaker is open`, `corrupted journal`, `invalid journal record length`):
+```bash
+pkill -9 -f dolt                      # kill all dolt processes
+rm -rf .beads/dolt                    # remove corrupted data
+bd dolt start                         # start fresh server
+bd dolt pull                          # re-pull all state from git remote
+```
+All task state is stored in `refs/dolt/data` in the git remote, so nothing is lost — only local state needs rebuilding.
 
 ### Session start
 
@@ -127,6 +146,8 @@ bd update <id> --status in_progress --claim && bd dolt push
 bd show <id> --json | jq -r .status                   # MUST print "in_progress"
 ```
 This is atomic — claim + push happens immediately. The race window for duplicate claims is negligible (sub-second).
+
+**Claiming multiple tasks (for parallel agents):** When claiming several tasks before launching worktree agents, claim them **sequentially** — wait for each `bd update && bd dolt push` to finish before starting the next. Never run `bd` calls in parallel; this can corrupt the Dolt journal.
 
 ### Pre-flight check
 
@@ -310,6 +331,8 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Add `Co-Authored-By` or any AI attribution to commits or PR descriptions
 - Link to `internetcomputer.org/docs/` or `docs.internetcomputer.org` — the old docs site is being replaced by this project and those URLs will break. Link to pages in this site (relative paths, even stubs), Learn Hub, or explain inline. If a needed topic has no page, create a page proposal issue.
 - Link to internal pages that don't exist — every `[text](path.md)` must resolve to an actual file. Agents have repeatedly linked to plausible-sounding paths (e.g., `reference/certified-variables.md`, `guides/backends/stable-memory.md`) that don't exist. Always `ls` the target before linking. If the page doesn't exist, find the correct existing page or file a page proposal issue.
+- Delete or force-push `refs/dolt/data` — this ref is the sole remote copy of all Beads task state. Never run `git push origin --delete refs/dolt/data` or any git command that modifies this ref directly.
+- Run `bd init --force` without explicit user confirmation — a forced re-init destroys the local database and a subsequent `bd dolt push` would wipe the remote.
 
 ## Key directories
 

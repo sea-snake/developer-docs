@@ -117,13 +117,23 @@ gh pr list --search "review:changes_requested" --json number,title,headRefName
 gh pr list --state open --json number,title,headRefName,comments \
   --jq '.[] | select(.comments | length > 0) | {number, title, headRefName}'
 ```
-For each PR with comments, read **both** top-level comments and inline review comments to determine if feedback is unaddressed:
+For each PR with comments, check **both** top-level comments and inline review comments (these are separate API endpoints with independent timestamps):
 ```bash
-gh pr view <PR#> --comments                                          # top-level comments
-gh api repos/{owner}/{repo}/pulls/<PR#>/comments --jq '.[] | {user: .user.login, path: .path, body: .body}'  # inline review comments
+# Top-level PR comments (includes feedback-addressed markers)
+gh pr view <PR#> --json comments --jq '.comments[] | {author: .author.login, created: .createdAt, body: .body}'
+
+# Inline review comments (file-level feedback — NOT included in the above)
+gh api repos/{owner}/{repo}/pulls/<PR#>/comments --jq '.[] | {user: .user.login, created_at: .created_at, path: .path, body: .body}'
 ```
 
-**How to tell if feedback needs attention:** Read the PR comments chronologically. If the most recent substantive comment is a `<!-- feedback-addressed -->` reply (posted by an agent after fixing feedback), there is no unaddressed feedback — skip this PR. If there are review comments or feedback *after* the last `<!-- feedback-addressed -->` reply (or no such reply exists), there is unaddressed feedback to handle.
+**How to tell if feedback needs attention:** You must compare timestamps across both comment streams. A `<!-- feedback-addressed -->` marker only appears as a top-level comment — it does NOT cover inline review comments posted after it.
+
+Concrete procedure:
+1. Find the timestamp of the most recent `<!-- feedback-addressed -->` top-level comment (if any)
+2. Check if ANY top-level comments or inline review comments were posted **after** that timestamp
+3. If yes → there is unaddressed feedback. If no such marker exists → all feedback is unaddressed.
+
+**Common mistake:** Only checking top-level comments and seeing `<!-- feedback-addressed -->` as the last one. Inline review comments live in a separate API endpoint and are often posted later (by reviewers or bots like Copilot). You MUST check both.
 
 If unaddressed feedback exists, treat it the same as a formal "changes requested" review.
 

@@ -215,11 +215,13 @@ When asked to review a PR, load the `technical-documentation` skill and the rele
 6. **Code snippet verification** — for every code example, verify function names, import paths, and return type handling against `.sources/`. Search efficiently: start with the most likely submodule (JS → `icp-js-sdk-docs/` or `examples/`, Rust/Motoko → `icp-cli-templates/` or `examples/`, CLI → `icp-cli/docs/`), then broaden only if the function isn't found. Flag snippets that leave the reader with an unusable intermediate value (e.g., unhandled optionals, raw strings where a `Principal` is needed). For recipe versions, check `.sources/icp-cli-recipes` tags.
 7. **Verification flags** — search the page for `<!-- TODO: verify output -->` and `<!-- Needs human verification:` comments. These are not failures — they are signals that the author flagged uncertainty. Ensure each flag has a clear reason. If you can resolve the uncertainty from `.sources/`, do so and remove the flag. Otherwise, call it out in the review so a human reviewer addresses it.
 
-*Content quality checks:*
-8. **Content brief coverage** — read the stub's `<!-- Content Brief -->` and `<!-- Source Material -->` comments. Does the page address every point in the brief? Was the source material actually consulted? Flag significant gaps or divergences.
-9. **Completeness** — would a developer reading this page have enough information to accomplish the task or understand the concept? Flag missing prerequisites, unexplained terms, or logical gaps.
-10. **Accuracy** — cross-check technical claims (memory limits, latency numbers, API behavior) against `.sources/` material. Search across ALL relevant submodules, not just one. Flag anything that looks wrong or outdated.
-11. **What's next links** — do they guide the reader to a logical next step? Are they all valid?
+*Content quality checks (the unique value of review — mechanical checks above are a safety net for authoring, but these assess things the writing agent can't self-check):*
+8. **Reader test** — read the page title, then the first two paragraphs. Does the opening deliver on the title's promise? Would a developer scanning search results keep reading, or bounce? Flag pages that open with background or history instead of what the reader came for.
+9. **Funnel check** — does the page follow: orient (what is this, who is it for) → explain/instruct → what's next? Flag pages that bury the lede, put prerequisites after the main content, or end without a clear next step.
+10. **Scanability** — can a developer skimming headings and bold text get the gist without reading every paragraph? Flag walls of text, headings that don't differentiate (e.g., "Overview" → "Details" → "More Details"), and important information buried mid-paragraph.
+11. **Content brief coverage** — read the stub's `<!-- Content Brief -->` and `<!-- Source Material -->` comments. Does the page address every point in the brief? Was the source material actually consulted? Flag significant gaps or divergences.
+12. **Accuracy** — cross-check technical claims (memory limits, latency numbers, API behavior) against `.sources/` material. Search across ALL relevant submodules, not just one. Flag anything that looks wrong or outdated.
+13. **Developer empathy** — does the page anticipate what a developer would actually struggle with? Flag pages that explain obvious things at length while glossing over the hard parts. For concept pages: does it answer "why should I care?" For guides: does it handle the error cases a developer will actually hit?
 
 *Post using this format:*
 

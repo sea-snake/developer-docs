@@ -503,6 +503,7 @@ When drafting a new docs page:
 ## Content rules
 
 - **NEVER reference `dfx`** — it is deprecated. Use icp-cli instead.
+- **Spelling rules:** "onchain" and "offchain" (no hyphens, ever). Use "icp-cli" in prose (not "the `icp` CLI"); use `icp` only in code blocks for the literal command.
 - All docs must have complete frontmatter (see CONTRIBUTING.md for schema)
 - Synced content must not be edited directly — edits must go to the source repo
 - All code examples must be self-contained and copy-pasteable

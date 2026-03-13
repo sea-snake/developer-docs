@@ -58,10 +58,15 @@ Record decisions that constrain future work — things an agent needs to know th
 **Rationale:** `core` is actively developed with AI-friendly design, consistent naming, and stable memory support. `base` is legacy.
 **Alternatives considered:** List both as equal options (confusing, encourages legacy use)
 
-## 2026-03-11: Use "onchain" not "on-chain"
-**Context:** Inconsistent usage across docs
-**Decision:** Always use "onchain" (no hyphen) in all docs content.
-**Rationale:** "Onchain" is the prevailing convention in ICP ecosystem.
+## 2026-03-11: Use "onchain" and "offchain" — no hyphens
+**Context:** Inconsistent usage across docs (on-chain vs onchain, off-chain vs offchain)
+**Decision:** Always use "onchain" and "offchain" (no hyphens) in all docs content. Never "on-chain", "off-chain", "on chain", or "off chain".
+**Rationale:** "Onchain" is the prevailing convention in ICP ecosystem. "Offchain" follows the same pattern for consistency.
+
+## 2026-03-13: Use "icp-cli" not "`icp` CLI" in prose
+**Context:** Inconsistent references to the CLI tool — some pages say "the `icp` CLI", others say "icp-cli"
+**Decision:** Always use "icp-cli" when referring to the tool/project in prose. Use `icp` (code-formatted) only when showing the literal command the user types (e.g., `icp deploy`). Never write "the `icp` CLI" or "the icp command-line tool".
+**Rationale:** "icp-cli" is the official project name and is consistent with how the tool is referenced in its own docs and repo. Using the project name avoids ambiguity.
 
 ## 2026-03-11: Content writing pacing — batch per sprint
 **Context:** Need a review strategy for content pages

@@ -117,14 +117,22 @@ gh pr list --search "review:changes_requested" --json number,title,headRefName
 gh pr list --state open --json number,title,headRefName,comments \
   --jq '.[] | select(.comments | length > 0) | {number, title, headRefName}'
 ```
-For each PR with comments, read the timeline to determine if feedback is unaddressed:
+For each PR with comments, read **both** top-level comments and inline review comments to determine if feedback is unaddressed:
 ```bash
-gh pr view <PR#> --comments
+gh pr view <PR#> --comments                                          # top-level comments
+gh api repos/{owner}/{repo}/pulls/<PR#>/comments --jq '.[] | {user: .user.login, path: .path, body: .body}'  # inline review comments
 ```
 
 **How to tell if feedback needs attention:** Read the PR comments chronologically. If the most recent substantive comment is a `<!-- feedback-addressed -->` reply (posted by an agent after fixing feedback), there is no unaddressed feedback — skip this PR. If there are review comments or feedback *after* the last `<!-- feedback-addressed -->` reply (or no such reply exists), there is unaddressed feedback to handle.
 
 If unaddressed feedback exists, treat it the same as a formal "changes requested" review.
+
+**Automated reviewer feedback (Copilot, bots):** Treat automated review comments (e.g., GitHub Copilot) as suggestions worth investigating, not as authoritative. Do NOT blindly accept or blindly ignore them. For each automated comment:
+1. **Verify the claim** — check `.sources/`, the codebase, or upstream docs. Is the comment factually correct?
+2. **Assess the impact** — even if technically correct, is the suggestion meaningful? Pedantic or stylistic nitpicks can be skipped.
+3. **Include in your feedback summary** — present automated feedback alongside human feedback when summarizing for the user, clearly labeled as automated. Let the user decide.
+
+Common patterns where Copilot is often right: factual inaccuracies (wrong API names, incorrect behavior descriptions), internal inconsistencies within a page, misleading implications. Common patterns where Copilot is often wrong or unhelpful: style preferences, over-qualifying already-clear statements, suggesting changes that conflict with project conventions.
 
 Cross-reference with Beads: the task should be in `draft` status. If it's `in_progress`, another agent is already on it — skip.
 

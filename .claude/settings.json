@@ -1,23 +1,54 @@
 {
   "permissions": {
     "allow": [
-      "Bash(git *)",
+      "Bash(git fetch *)",
+      "Bash(git checkout *)",
+      "Bash(git rebase *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log *)",
+      "Bash(git log)",
+      "Bash(git ls-remote *)",
+      "Bash(git branch *)",
+      "Bash(git submodule *)",
+      "Bash(git worktree *)",
+      "Bash(git -C *)",
       "Bash(npm run *)",
       "Bash(ls *)",
       "Bash(bd *)",
-      "Bash(gh *)",
+      "Bash(gh pr *)",
+      "Bash(gh api *)",
+      "Bash(gh issue create *)",
       "Bash(npx skills *)",
-      "Edit",
-      "Write",
-      "Read",
+      "Edit(**)",
+      "Write(**)",
+      "Read(**)",
       "Grep",
       "Glob",
       "WebSearch",
       "WebFetch"
     ],
+    "ask": [
+      "Edit(.claude/settings.json)",
+      "Edit(.claude/settings.local.json)",
+      "Write(.claude/settings.json)",
+      "Write(.claude/settings.local.json)"
+    ],
     "deny": [
       "Bash(git push --force *)",
-      "Bash(rm -rf *)"
+      "Bash(git reset *)",
+      "Bash(git clean *)",
+      "Bash(git config *)",
+      "Bash(rm -rf *)",
+      "Edit(~/**)",
+      "Edit(//**)",
+      "Write(~/**)",
+      "Write(//**)",
+      "Read(~/**)",
+      "Read(//**)"
     ]
   }
 }

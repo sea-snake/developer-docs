@@ -150,12 +150,15 @@ gh pr list --search "review:changes_requested" --json number,title,headRefName
 gh pr list --state open --json number,title,headRefName,comments \
   --jq '.[] | select(.comments | length > 0) | {number, title, headRefName}'
 ```
-For each PR with comments, check **both** top-level comments and inline review comments (these are separate API endpoints with independent timestamps):
+For each PR with comments, check **all three** feedback sources (these are separate API endpoints):
 ```bash
-# Top-level PR comments (includes feedback-addressed markers)
+# 1. Review body (text attached to the review decision — often contains high-level feedback)
+gh api repos/{owner}/{repo}/pulls/<PR#>/reviews --jq '.[] | {user: .user.login, state: .state, body: .body}'
+
+# 2. Top-level PR comments (includes feedback-addressed markers)
 gh pr view <PR#> --json comments --jq '.comments[] | {author: .author.login, created: .createdAt, body: .body}'
 
-# Inline review comments (file-level feedback — NOT included in the above)
+# 3. Inline review comments (file-level feedback — NOT included in the above two)
 gh api repos/{owner}/{repo}/pulls/<PR#>/comments --jq '.[] | {user: .user.login, created_at: .created_at, path: .path, body: .body}'
 ```
 
@@ -166,7 +169,7 @@ Concrete procedure:
 2. Check if ANY top-level comments or inline review comments were posted **after** that timestamp
 3. If yes → there is unaddressed feedback. If no such marker exists → all feedback is unaddressed.
 
-**Common mistake:** Only checking top-level comments and seeing `<!-- feedback-addressed -->` as the last one. Inline review comments live in a separate API endpoint and are often posted later (by reviewers or bots like Copilot). You MUST check both.
+**Common mistakes:** (1) Missing the review body — the text attached to a "changes requested" review decision often contains feedback that doesn't appear in either comment stream. (2) Only checking top-level comments and seeing `<!-- feedback-addressed -->` as the last one. Inline review comments live in a separate API endpoint and are often posted later (by reviewers or bots like Copilot). You MUST check all three sources.
 
 If unaddressed feedback exists, treat it the same as a formal "changes requested" review.
 
@@ -229,7 +232,7 @@ Three outcomes:
      bd update <id> --status in_progress && bd dolt push
      bd show <id> --json | jq -r .status   # MUST print "in_progress"
      ```
-  2. Read all feedback: `gh pr view <PR#> --comments` and `gh api repos/{owner}/{repo}/pulls/<PR#>/reviews --jq '.[] | {state, body}'`
+  2. Read all feedback from **all three sources** (see Priority A above): review body, top-level comments, and inline review comments. Do not start fixing until you have read all three.
   3. **Evaluate each feedback item** — cross-check claims against `.sources/`. Is the reviewer's suggestion technically correct? Does the proposed fix actually improve the page? Flag any feedback you disagree with and explain why.
   4. **Present a summary of the feedback to the user** — list each actionable item with your assessment: agree (with proposed fix), partially agree (with alternative), or disagree (with reasoning). The user makes the final call.
   5. **Wait for the user to confirm** which changes to make. Do not apply changes autonomously.

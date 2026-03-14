@@ -106,6 +106,25 @@ bd dolt start   # ensure Dolt server is running (no-op if already up)
 bd dolt pull    # sync task state from remote
 ```
 
+**Verify the pull worked:** Another agent may have updated task state from a different environment since your last session. After pulling, cross-reference Beads against GitHub to catch stale local state:
+```bash
+bd list --status draft --limit 0    # should match open PRs
+gh pr list --state open --json number,title
+```
+If open PRs exist but no corresponding `draft` tasks appear (or tasks that should be `draft` still show `open`), the local DB is stale and the pull did not merge correctly. **Do not make any `bd update` calls against a stale DB** — this will cause merge conflicts on push. Instead, do a clean recovery:
+```bash
+pkill -9 -f dolt
+rm -rf .beads/dolt
+bd dolt start
+bd init --force --prefix developer-docs   # safe: only destroys local, pulls from remote
+# restart server after init (init may not reconnect automatically)
+pkill -9 -f dolt
+bd dolt start
+bd dolt pull
+bd list --limit 5                          # verify data is correct
+```
+Only after verifying correct state should you proceed with updates. **Do NOT `bd dolt push` until you have confirmed the local DB matches expected state.**
+
 Then scan for work in this priority order:
 
 **Priority 0 — Housekeeping** (keeps task state accurate, runs every session)

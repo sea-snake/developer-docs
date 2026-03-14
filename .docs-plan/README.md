@@ -28,6 +28,13 @@ This directory contains all analysis, design decisions, and progress tracking fo
 
 > **Task state** is tracked in [Beads](https://github.com/steveyegge/beads) (`bd ready`), not in a file. See `AGENTS.md` → "Multi-agent workflow".
 
+### Agent workflow references
+
+| File | What it answers |
+|------|-----------------|
+| `content-authoring.md` | "How do I write a page?" — full content workflow, content rules, linking rules, external docs |
+| `review-guidelines.md` | "How do I review a PR?" — mechanical checks, content quality checks, post format |
+
 ### Research artifacts (read when writing specific pages)
 
 | File | What it answers |

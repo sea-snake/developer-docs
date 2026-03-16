@@ -443,7 +443,13 @@ Some submodules (`portal`, `examples`) contain **nested submodules** of their ow
 
 - **Always read source material from `.sources/`** — never from local clones, `gh api`, or your training data
 - **Stub shorthand mapping:** `Portal: building-apps/foo.mdx` → `.sources/portal/docs/building-apps/foo.mdx`, `icp-cli: guides/bar.md` → `.sources/icp-cli/docs/guides/bar.md`
-- **Consult relevant repos before writing.** The stub's `<!-- Source Material -->` lists portal pages, but also check the upstream source repos that cover your page's topic. For any page with Motoko code, read the API from `motoko-core`; for Rust code, check `cdk-rs`; for Candid content, check `candid`; for certified data or query verification, check `response-verification`; for CLI commands, check `icp-cli`. These repos are the ground truth — use them to write accurate content, not just to verify after the fact.
+- **Consult relevant repos when writing or reviewing** — these are the ground truth for both creating content and verifying PR claims. The stub's `<!-- Source Material -->` lists portal pages, but also check the upstream source repos for your page's topic:
+  - **Motoko code** → `motoko-core` (API signatures, module docs) + `motoko` (compiler: system function names, keywords)
+  - **Rust code** → `cdk-rs` (`ic-cdk`, `ic-cdk-timers`, management canister types)
+  - **Candid** → `candid` (spec, type system, `didc` behavior)
+  - **Certified data / query verification** → `response-verification` (certificate trees, verification patterns)
+  - **CLI commands** → `icp-cli` (command reference — do not guess flags or syntax)
+  - **Code examples** → `examples` (link to for snippets >30 lines)
 - **Do not modify `.sources/`** — these are read-only references. Edits go to the upstream repos.
 
 ### Bumping submodules

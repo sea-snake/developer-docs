@@ -25,3 +25,15 @@
 	path = .sources/icp-js-sdk-docs
 	url = git@github.com:dfinity/icp-js-sdk-docs.git
 	branch = main
+[submodule ".sources/motoko"]
+	path = .sources/motoko
+	url = git@github.com:caffeinelabs/motoko.git
+[submodule ".sources/motoko-core"]
+	path = .sources/motoko-core
+	url = git@github.com:caffeinelabs/motoko-core.git
+[submodule ".sources/cdk-rs"]
+	path = .sources/cdk-rs
+	url = git@github.com:dfinity/cdk-rs.git
+[submodule ".sources/candid"]
+	path = .sources/candid
+	url = git@github.com:dfinity/candid.git

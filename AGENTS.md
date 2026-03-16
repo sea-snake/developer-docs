@@ -413,14 +413,40 @@ All upstream source repos are pinned as **git submodules** under `.sources/`. Th
 | `.sources/icskills` | `dfinity/icskills` | `main` | Skill files with canister IDs and code patterns |
 | `.sources/examples` | `dfinity/examples` | `master` | Code examples (link to for >30 line snippets) |
 | `.sources/icp-js-sdk-docs` | `dfinity/icp-js-sdk-docs` | `main` | JS SDK documentation |
+| `.sources/motoko` | `caffeinelabs/motoko` | `v1.3.0` (latest release) | Motoko compiler — language spec, system function names, syntax verification |
+| `.sources/motoko-core` | `caffeinelabs/motoko-core` | `v2.1.0` (latest release) | Motoko core library (`mo:core`) — API signatures, module docs |
+| `.sources/cdk-rs` | `dfinity/cdk-rs` | `timers-1.0.0` / `executor-2.0.0` | Rust CDK (`ic-cdk`, `ic-cdk-timers`, `ic-cdk-macros`) — API signatures, management canister types |
+| `.sources/candid` | `dfinity/candid` | `2025-12-18` | Candid spec, type system, `didc` tool source |
+
+### Submodule initialization
+
+Some submodules (`portal`, `examples`) contain **nested submodules** of their own (e.g., portal pulls in `dfinity/sdk`, `dfinity/motoko`, `dfinity/internet-identity`). These nested submodules are used for the upstream project's build — **you do not need them for docs work**.
+
+- **Standard init (sufficient for all docs work):**
+  ```bash
+  git submodule update --init --depth 1
+  ```
+  This fetches only the top-level `.sources/` submodules. Fast and lightweight.
+
+- **Do NOT use `--recursive`** unless you specifically need a nested submodule's content. Recursive init pulls many GB of unnecessary data (portal alone has 6 nested submodules).
+
+- **Portal `file=` references:** Some portal `.mdx` files contain `file=../../../../submodules/samples/...` paths that inline code from portal's nested submodules. You do not need to init these — the same code is available in our top-level submodules (e.g., `submodules/samples` → `.sources/examples`). When you see a `file=` path in portal source, resolve it to the corresponding top-level submodule instead.
+
+- **If a shallow clone can't resolve a pinned commit** (e.g., the tag wasn't on the default branch tip), fetch the full history for that submodule only:
+  ```bash
+  git -C .sources/<repo> fetch --unshallow
+  git -C .sources/<repo> checkout <commit>
+  ```
 
 ### Rules for agents
 
 - **Always read source material from `.sources/`** — never from local clones, `gh api`, or your training data
 - **Stub shorthand mapping:** `Portal: building-apps/foo.mdx` → `.sources/portal/docs/building-apps/foo.mdx`, `icp-cli: guides/bar.md` → `.sources/icp-cli/docs/guides/bar.md`
 - **CLI command verification:** Check `.sources/icp-cli/docs/reference/cli.md` — do not guess flags or syntax
+- **Motoko syntax verification:** Check `.sources/motoko/` (compiler) for system function names, keywords, and language features. Check `.sources/motoko-core/` for `mo:core` module APIs and signatures.
+- **Rust CDK verification:** Check `.sources/cdk-rs/` for `ic-cdk` API signatures, management canister types, and timer APIs.
+- **Candid verification:** Check `.sources/candid/` for the Candid spec (`candid/spec/Candid.md`), type system rules, and `didc` command behavior.
 - **Do not modify `.sources/`** — these are read-only references. Edits go to the upstream repos.
-- **After cloning this repo:** Run `git submodule update --init --depth 1` to fetch all submodules
 
 ### Bumping submodules
 

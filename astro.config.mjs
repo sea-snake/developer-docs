@@ -9,7 +9,7 @@ import agentDocs from "./plugins/astro-agent-docs.mjs";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://docs.internetcomputer.org",
+  site: "https://beta-docs.internetcomputer.org",
   markdown: {
     // Rehype plugins work with Starlight (remark plugins don't — Starlight overrides them).
     // See: https://github.com/dfinity/icp-cli/issues/423

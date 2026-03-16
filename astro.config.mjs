@@ -21,6 +21,9 @@ export default defineConfig({
     agentDocs(),
     starlight({
       title: "ICP Developer Docs",
+      components: {
+        EditLink: "./src/components/EditLink.astro",
+      },
       customCss: [
         "@fontsource/inter/400.css",
         "@fontsource/inter/500.css",

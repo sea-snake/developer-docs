@@ -47,10 +47,12 @@ const SECTIONS = [
 // a charset=utf-8 in the Content-Type header.
 const BOM = "\uFEFF";
 
-/** Strip YAML frontmatter and HTML comments from markdown content. */
+/** Strip YAML frontmatter and HTML comments, prepend title heading. */
 function cleanMarkdown(raw) {
-  const { content } = matter(raw);
-  return BOM + content.replace(/<!--[\s\S]*?-->/g, "").trim() + "\n";
+  const { data, content } = matter(raw);
+  const body = content.replace(/<!--[\s\S]*?-->/g, "").trim();
+  const title = data.title ? `# ${data.title}\n\n` : "";
+  return BOM + title + body + "\n";
 }
 
 /** Find the best matching section for a file path (longest prefix wins). */
@@ -68,7 +70,10 @@ function findSection(filePath) {
 }
 
 /** Generate llms.txt content from collected page metadata. */
-function generateLlmsTxt(pages) {
+function generateLlmsTxt(pages, siteUrl) {
+  // Use absolute URLs so link-resolution checkers can verify them.
+  const base = siteUrl.replace(/\/$/, "");
+
   const lines = [
     "# ICP Developer Docs",
     "",
@@ -79,7 +84,9 @@ function generateLlmsTxt(pages) {
   // Root index page
   const rootIndex = pages.find((p) => p.file === "index.md");
   if (rootIndex) {
-    lines.push(`- [${rootIndex.title}](/index.md): ${rootIndex.description}`);
+    lines.push(
+      `- [${rootIndex.title}](${base}/index.md): ${rootIndex.description}`
+    );
     lines.push("");
   }
 
@@ -106,9 +113,10 @@ function generateLlmsTxt(pages) {
     lines.push(`## ${label}`);
     lines.push("");
     for (const page of sectionPages) {
+      const url = `${base}/${page.file}`;
       const entry = page.description
-        ? `- [${page.title}](/${page.file}): ${page.description}`
-        : `- [${page.title}](/${page.file})`;
+        ? `- [${page.title}](${url}): ${page.description}`
+        : `- [${page.title}](${url})`;
       lines.push(entry);
     }
     lines.push("");
@@ -118,9 +126,14 @@ function generateLlmsTxt(pages) {
 }
 
 export default function agentDocs() {
+  let siteUrl = "";
+
   return {
     name: "agent-docs",
     hooks: {
+      "astro:config:done": ({ config }) => {
+        siteUrl = config.site || "";
+      },
       "astro:build:done": async ({ dir, logger }) => {
         const outDir = fileURLToPath(dir);
         const docsDir = path.resolve("docs");
@@ -149,7 +162,7 @@ export default function agentDocs() {
         logger.info(`Generated ${pages.length} markdown endpoints`);
 
         // 2. Generate llms.txt
-        const llmsTxt = generateLlmsTxt(pages);
+        const llmsTxt = generateLlmsTxt(pages, siteUrl);
         fs.writeFileSync(path.join(outDir, "llms.txt"), llmsTxt);
         logger.info(
           `Generated llms.txt (${llmsTxt.length} chars, ${pages.length} pages)`

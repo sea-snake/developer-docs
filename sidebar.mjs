@@ -1,0 +1,111 @@
+/**
+ * Shared sidebar definition.
+ *
+ * Single source of truth consumed by:
+ *   - astro.config.mjs  (passed to Starlight)
+ *   - plugins/astro-agent-docs.mjs  (derives llms.txt section grouping)
+ *
+ * Format follows the Starlight sidebar schema:
+ *   https://starlight.astro.build/reference/configuration/#sidebar
+ */
+
+export const sidebar = [
+  {
+    label: "Getting Started",
+    autogenerate: { directory: "getting-started" },
+  },
+  {
+    label: "Guides",
+    items: [
+      // Build: core development
+      {
+        label: "Backends",
+        autogenerate: { directory: "guides/backends" },
+      },
+      {
+        label: "Canister Calls",
+        autogenerate: { directory: "guides/canister-calls" },
+      },
+      {
+        label: "Frontends",
+        autogenerate: { directory: "guides/frontends" },
+      },
+      {
+        label: "Authentication",
+        autogenerate: { directory: "guides/authentication" },
+      },
+      // Quality & shipping
+      {
+        label: "Testing",
+        autogenerate: { directory: "guides/testing" },
+      },
+      {
+        label: "Canister Management",
+        autogenerate: { directory: "guides/canister-management" },
+      },
+      {
+        label: "Security",
+        autogenerate: { directory: "guides/security" },
+      },
+      // Advanced features
+      {
+        label: "Chain Fusion",
+        autogenerate: { directory: "guides/chain-fusion" },
+      },
+      {
+        label: "DeFi",
+        autogenerate: { directory: "guides/defi" },
+      },
+      {
+        label: "Governance",
+        autogenerate: { directory: "guides/governance" },
+      },
+      {
+        label: "Tools",
+        autogenerate: { directory: "guides/tools" },
+      },
+    ],
+  },
+  {
+    label: "Concepts",
+    autogenerate: { directory: "concepts" },
+  },
+  {
+    label: "Languages",
+    items: [
+      { slug: "languages", label: "Overview" },
+      {
+        label: "Motoko",
+        items: [
+          { slug: "languages/motoko", label: "Overview" },
+          {
+            label: "Fundamentals",
+            autogenerate: {
+              directory: "languages/motoko/fundamentals",
+            },
+          },
+          {
+            label: "ICP Features",
+            autogenerate: {
+              directory: "languages/motoko/icp-features",
+            },
+          },
+          {
+            label: "Reference",
+            autogenerate: {
+              directory: "languages/motoko/reference",
+            },
+          },
+        ],
+      },
+      {
+        label: "Rust",
+        autogenerate: { directory: "languages/rust" },
+      },
+    ],
+  },
+  {
+    label: "Reference",
+    autogenerate: { directory: "reference" },
+  },
+];

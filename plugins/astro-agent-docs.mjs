@@ -13,35 +13,68 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { glob } from "glob";
 import matter from "gray-matter";
+import { sidebar } from "../sidebar.mjs";
 
 /**
- * Maps directory prefixes to section labels for llms.txt grouping.
- * Order here determines order in the generated file.
- * Uses longest-prefix matching, so "guides/backends" matches before "guides".
+ * Derives llms.txt section mappings from the shared sidebar definition.
+ *
+ * Walks the sidebar tree and extracts { dir, label } entries from every
+ * `autogenerate` node. Parent groups that contain `items` but no
+ * `autogenerate` get a fallback entry using the common directory prefix
+ * of their children — this catches files that don't match a more specific
+ * child prefix.
+ *
+ * The result is ordered children-first so that longest-prefix matching
+ * in findSection() naturally picks the most specific match.
  */
-const SECTIONS = [
-  { dir: "getting-started", label: "Getting Started" },
-  { dir: "guides/backends", label: "Backends" },
-  { dir: "guides/canister-calls", label: "Canister Calls" },
-  { dir: "guides/frontends", label: "Frontends" },
-  { dir: "guides/authentication", label: "Authentication" },
-  { dir: "guides/testing", label: "Testing" },
-  { dir: "guides/canister-management", label: "Canister Management" },
-  { dir: "guides/security", label: "Security" },
-  { dir: "guides/chain-fusion", label: "Chain Fusion" },
-  { dir: "guides/defi", label: "DeFi" },
-  { dir: "guides/governance", label: "Governance" },
-  { dir: "guides/tools", label: "Tools" },
-  { dir: "guides", label: "Guides" },
-  { dir: "concepts", label: "Concepts" },
-  { dir: "languages/motoko/fundamentals", label: "Motoko — Fundamentals" },
-  { dir: "languages/motoko/icp-features", label: "Motoko — ICP Features" },
-  { dir: "languages/motoko/reference", label: "Motoko — Reference" },
-  { dir: "languages/motoko", label: "Motoko" },
-  { dir: "languages/rust", label: "Rust" },
-  { dir: "languages", label: "Languages" },
-  { dir: "reference", label: "Reference" },
-];
+function deriveSections(items, parentLabel = "", depth = 0) {
+  const sections = [];
+
+  for (const item of items) {
+    if (item.autogenerate) {
+      // Leaf with a directory — direct mapping.
+      // Only prefix the parent label for items nested 2+ levels deep
+      // (e.g. "Motoko — Fundamentals") but not for direct children of
+      // top-level groups (e.g. "Backends" not "Guides — Backends").
+      const label =
+        parentLabel && depth > 1
+          ? `${parentLabel} — ${item.label}`
+          : item.label;
+      sections.push({ dir: item.autogenerate.directory, label });
+    } else if (item.items) {
+      // Group with children — recurse first (children before parent)
+      const childSections = deriveSections(item.items, item.label, depth + 1);
+      sections.push(...childSections);
+
+      // Add a parent fallback if children have a common directory prefix
+      const childDirs = childSections.map((s) => s.dir);
+      const commonPrefix = findCommonPrefix(childDirs);
+      if (commonPrefix) {
+        sections.push({ dir: commonPrefix, label: item.label });
+      }
+    }
+  }
+
+  return sections;
+}
+
+/** Find the longest common directory prefix among a list of paths. */
+function findCommonPrefix(dirs) {
+  if (dirs.length === 0) return "";
+  const parts = dirs[0].split("/");
+  let prefix = "";
+  for (let i = 0; i < parts.length; i++) {
+    const candidate = parts.slice(0, i + 1).join("/");
+    if (dirs.every((d) => d.startsWith(candidate + "/") || d === candidate)) {
+      prefix = candidate;
+    } else {
+      break;
+    }
+  }
+  return prefix;
+}
+
+const SECTIONS = deriveSections(sidebar);
 
 // UTF-8 BOM — ensures browsers interpret .md files correctly even without
 // a charset=utf-8 in the Content-Type header.

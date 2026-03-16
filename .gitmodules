@@ -37,3 +37,6 @@
 [submodule ".sources/candid"]
 	path = .sources/candid
 	url = git@github.com:dfinity/candid.git
+[submodule ".sources/response-verification"]
+	path = .sources/response-verification
+	url = git@github.com:dfinity/response-verification.git

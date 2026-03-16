@@ -417,6 +417,7 @@ All upstream source repos are pinned as **git submodules** under `.sources/`. Th
 | `.sources/motoko-core` | `caffeinelabs/motoko-core` | `v2.1.0` (latest release) | Motoko core library (`mo:core`) — API signatures, module docs |
 | `.sources/cdk-rs` | `dfinity/cdk-rs` | `timers-1.0.0` / `executor-2.0.0` | Rust CDK (`ic-cdk`, `ic-cdk-timers`, `ic-cdk-macros`) — API signatures, management canister types |
 | `.sources/candid` | `dfinity/candid` | `2025-12-18` | Candid spec, type system, `didc` tool source |
+| `.sources/response-verification` | `dfinity/response-verification` | `v3.1.0` (latest release) | Response verification, certified variables, certificate trees |
 
 ### Submodule initialization
 
@@ -446,6 +447,7 @@ Some submodules (`portal`, `examples`) contain **nested submodules** of their ow
 - **Motoko syntax verification:** Check `.sources/motoko/` (compiler) for system function names, keywords, and language features. Check `.sources/motoko-core/` for `mo:core` module APIs and signatures.
 - **Rust CDK verification:** Check `.sources/cdk-rs/` for `ic-cdk` API signatures, management canister types, and timer APIs.
 - **Candid verification:** Check `.sources/candid/` for the Candid spec (`candid/spec/Candid.md`), type system rules, and `didc` command behavior.
+- **Response verification:** Check `.sources/response-verification/` for certified variables, certificate tree implementations, and response verification patterns.
 - **Do not modify `.sources/`** — these are read-only references. Edits go to the upstream repos.
 
 ### Bumping submodules

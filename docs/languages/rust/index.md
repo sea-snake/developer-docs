@@ -87,7 +87,7 @@ This generates an `icp.yaml` with a Rust canister recipe and a Cargo workspace. 
 canisters:
   - name: backend
     recipe:
-      type: "@dfinity/rust"
+      type: "@dfinity/rust@<version>"
       configuration:
         package: backend
         shrink: true

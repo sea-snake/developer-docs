@@ -24,4 +24,4 @@ The essential guide for going to mainnet. Cover ICP-to-cycles conversion via the
 - guides/canister-management/settings -- freezing threshold, allocation
 - reference/cycles-costs -- exact cost tables
 - guides/canister-management/lifecycle -- deploy workflow
-- icp-cli docs: https://dfinity.github.io/icp-cli/
+- icp-cli docs: https://cli.internetcomputer.org/

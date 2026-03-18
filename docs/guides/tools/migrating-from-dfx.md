@@ -17,4 +17,4 @@ This page is synced from the icp-cli repo (dfinity/icp-cli). It covers command m
 <!-- Cross-Links -->
 - guides/tools/overview -- developer tools overview
 - getting-started/quickstart -- start fresh with icp-cli
-- icp-cli docs: https://dfinity.github.io/icp-cli/
+- icp-cli docs: https://cli.internetcomputer.org/

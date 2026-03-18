@@ -19,4 +19,4 @@ Create and manage canister snapshots for backup and recovery. Cover creating sna
 <!-- Cross-Links -->
 - guides/canister-management/lifecycle -- snapshots during upgrade workflow
 - guides/security/canister-upgrades -- snapshot-based rollback
-- icp-cli docs: https://dfinity.github.io/icp-cli/
+- icp-cli docs: https://cli.internetcomputer.org/

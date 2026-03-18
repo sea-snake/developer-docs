@@ -23,7 +23,7 @@ Record decisions that constrain future work — things an agent needs to know th
 **Alternatives considered:** Always inline (maintenance burden), always link (poor reading experience)
 
 ## 2026-03-11: icp-cli content — link, don't duplicate
-**Context:** icp-cli has its own comprehensive docs at dfinity.github.io/icp-cli/
+**Context:** icp-cli has its own comprehensive docs at cli.internetcomputer.org/
 **Decision:** Link to icp-cli docs. Inline icp-cli commands in guides where they aid reading flow. Don't duplicate guides.
 **Rationale:** Single source of truth. The migration guide is the only exception (synced).
 **Alternatives considered:** Sync more content (maintenance burden), duplicate quickstart (violates single-source principle)

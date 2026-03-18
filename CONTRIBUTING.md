@@ -146,7 +146,7 @@ Before setting a task to `draft` status in Beads, verify:
 
 1. Content brief from the stub is fully addressed
 2. All code examples are tested and copy-pasteable
-3. icp-cli commands verified against [CLI reference](https://dfinity.github.io/icp-cli/)
+3. icp-cli commands verified against [CLI reference](https://cli.internetcomputer.org/)
 4. Cross-links from `<!-- Cross-Links -->` converted to actual markdown links
 5. Source material HTML comments removed from the final content
 6. `npm run build` passes

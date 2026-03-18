@@ -62,7 +62,7 @@ npx skills add dfinity/icskills
 
 | Resource | Description |
 |----------|-------------|
-| [icp-cli](https://dfinity.github.io/icp-cli/) | Command-line tool for ICP development |
+| [icp-cli](https://cli.internetcomputer.org/) | Command-line tool for ICP development |
 | [JS SDK](https://js.icp.build) | JavaScript/TypeScript libraries for ICP |
 | [icskills](https://skills.internetcomputer.org) | AI agent skill files for ICP development |
 | [Learn Hub](https://learn.internetcomputer.org) | Deep protocol-level explanations |

@@ -24,7 +24,7 @@
 
 | Need | Docs page(s) | External docs | icskills |
 |------|-------------|---------------|----------|
-| Install icp-cli, scaffold project | getting-started/quickstart.md | [icp-cli docs](https://dfinity.github.io/icp-cli/) | — |
+| Install icp-cli, scaffold project | getting-started/quickstart.md | [icp-cli docs](https://cli.internetcomputer.org/) | — |
 | Understand project files | getting-started/project-structure.md | icp-cli docs (project structure) | — |
 | AI-assisted development | guides/tools/agentic-development.md | [icskills](https://skills.internetcomputer.org) | All 17 skills |
 | Choose next steps | getting-started/what-next.md | — | — |

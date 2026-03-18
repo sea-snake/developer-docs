@@ -20,4 +20,4 @@ Configure all canister settings: controllers (who can manage the canister), memo
 - guides/canister-management/lifecycle -- settings are part of canister management
 - guides/canister-management/cycles-management -- freezing threshold and cost implications
 - reference/cycles-costs -- cost of compute/memory allocation
-- icp-cli docs: https://dfinity.github.io/icp-cli/
+- icp-cli docs: https://cli.internetcomputer.org/

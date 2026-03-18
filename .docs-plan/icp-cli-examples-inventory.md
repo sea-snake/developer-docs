@@ -34,7 +34,7 @@ Compiled 2026-03-11. Sources: icp-cli/docs (33 files), icp-cli-recipes (4 recipe
 | `guides/creating-recipes.md` | (none) | link only — advanced topic for recipe authors |
 | `guides/creating-templates.md` | (none) | link only — advanced topic for template authors |
 | **Reference** | | |
-| `reference/cli.md` | guides/tools/overview | link — always link to https://dfinity.github.io/icp-cli/ |
+| `reference/cli.md` | guides/tools/overview | link — always link to https://cli.internetcomputer.org/ |
 | `reference/configuration.md` | getting-started/project-structure | link — icp.yaml schema reference |
 | `reference/canister-settings.md` | guides/canister-management/settings | link — all canister settings |
 | `reference/environment-variables.md` | guides/canister-calls/onchain-calls, guides/frontends/asset-canister | link — env vars for build and runtime |
@@ -287,7 +287,7 @@ These icp-cli docs pages are strong candidates for syncing content into develope
 8. **`guides/deploying-to-mainnet.md`** → `guides/canister-management/cycles-management` — Identity setup, ICP acquisition, cycles minting, and deployment workflow. Rewrite the cycles/deployment portion.
 
 Pages that should be **link-only** (not synced):
-- `reference/cli.md` — Always link to https://dfinity.github.io/icp-cli/
+- `reference/cli.md` — Always link to https://cli.internetcomputer.org/
 - `reference/configuration.md` — Link to icp-cli site
 - `reference/canister-settings.md` — Link to icp-cli site
 - `reference/environment-variables.md` — Link to icp-cli site

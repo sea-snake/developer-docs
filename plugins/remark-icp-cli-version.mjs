@@ -2,10 +2,10 @@
  * Remark plugin that rewrites icp-cli doc links to include the current version.
  *
  * Authors write unversioned links:
- *   https://dfinity.github.io/icp-cli/guides/deploying-to-mainnet/
+ *   https://cli.internetcomputer.org/guides/deploying-to-mainnet/
  *
  * The plugin rewrites them at build time to:
- *   https://dfinity.github.io/icp-cli/0.2/guides/deploying-to-mainnet/
+ *   https://cli.internetcomputer.org/0.2/guides/deploying-to-mainnet/
  *
  * The version is read from src/versions.json.
  */
@@ -19,7 +19,7 @@ const versions = JSON.parse(
   readFileSync(join(__dirname, "../src/versions.json"), "utf-8"),
 );
 const ICP_CLI_VERSION = versions["icp-cli"];
-const BASE = "https://dfinity.github.io/icp-cli/";
+const BASE = "https://cli.internetcomputer.org/";
 
 function rewriteUrl(url) {
   if (!url || !url.startsWith(BASE)) return url;

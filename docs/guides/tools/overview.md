@@ -14,7 +14,7 @@ Overview of the ICP developer toolchain. Cover icp-cli (project management, depl
 <!-- Source Material -->
 - Portal: building-apps/developer-tools/dev-tools-overview.mdx, cdks/index.mdx, icp-ninja.mdx
 - icskills: icp-cli
-- icp-cli docs: https://dfinity.github.io/icp-cli/
+- icp-cli docs: https://cli.internetcomputer.org/
 - Rust CDK: https://docs.rs/ic-cdk/latest/ic_cdk/
 
 <!-- Writing Note -->

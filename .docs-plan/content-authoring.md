@@ -63,7 +63,7 @@ When drafting a new docs page:
 
 | Content type | Link to |
 |-------------|---------|
-| CLI commands | https://dfinity.github.io/icp-cli/ |
+| CLI commands | https://cli.internetcomputer.org/ |
 | Motoko standard library | https://mops.one/core/docs (core supersedes base) |
 | Rust CDK API (`ic-cdk`) | https://docs.rs/ic-cdk/latest/ic_cdk/ |
 | Rust stable structures (`ic-stable-structures`) | https://docs.rs/ic-stable-structures/latest/ic_stable_structures/ |
@@ -78,7 +78,7 @@ When drafting a new docs page:
 
 | Resource | URL |
 |----------|-----|
-| icp-cli | https://dfinity.github.io/icp-cli/ |
+| icp-cli | https://cli.internetcomputer.org/ |
 | JS SDK | https://js.icp.build |
 | icskills | https://skills.internetcomputer.org |
 | Learn Hub | https://learn.internetcomputer.org |

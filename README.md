@@ -117,7 +117,7 @@ See [AGENTS.md](AGENTS.md) for the full workflow: orientation, rules, content au
 
 | Resource | URL |
 |----------|-----|
-| icp-cli docs | https://dfinity.github.io/icp-cli/ |
+| icp-cli docs | https://cli.internetcomputer.org/ |
 | JS SDK docs | https://js.icp.build |
 | icskills | https://skills.internetcomputer.org |
 | Learn Hub | https://learn.internetcomputer.org |

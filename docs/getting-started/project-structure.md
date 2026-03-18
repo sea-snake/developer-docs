@@ -71,7 +71,7 @@ Beyond canisters, `icp.yaml` can also define **networks** (where to deploy) and 
 | `local` | `local` (managed, localhost:8000) | Local development |
 | `ic` | `ic` (connected, https://icp-api.io) | Mainnet production |
 
-You only need to add custom networks or environments when you have staging environments, testnets, or other deployment targets. See the [icp-cli configuration reference](https://dfinity.github.io/icp-cli/) for the full schema.
+You only need to add custom networks or environments when you have staging environments, testnets, or other deployment targets. See the [icp-cli configuration reference](https://cli.internetcomputer.org/) for the full schema.
 
 ## Canister configuration (canister.yaml)
 
@@ -141,7 +141,7 @@ icp project show
 
 This outputs the effective configuration, including all expanded recipe steps and implicit defaults.
 
-Recipes are Handlebars templates hosted at [dfinity/icp-cli-recipes](https://github.com/dfinity/icp-cli-recipes). You can also create local or remote recipes for custom build patterns. See the [icp-cli recipes documentation](https://dfinity.github.io/icp-cli/) for details.
+Recipes are Handlebars templates hosted at [dfinity/icp-cli-recipes](https://github.com/dfinity/icp-cli-recipes). You can also create local or remote recipes for custom build patterns. See the [icp-cli recipes documentation](https://cli.internetcomputer.org/) for details.
 
 ## The .icp/ directory
 
@@ -239,6 +239,6 @@ For a deep dive on binding generation, see [Binding generation](../guides/canist
 - [Binding generation](../guides/canister-calls/binding-generation.md) -- deep dive on generating type-safe client code
 - [Asset canister](../guides/frontends/asset-canister.md) -- how the frontend recipe and asset upload work
 - [Canister lifecycle](../guides/canister-management/lifecycle.md) -- build, deploy, upgrade, and manage canisters
-- [icp-cli reference](https://dfinity.github.io/icp-cli/) -- full CLI and configuration documentation
+- [icp-cli reference](https://cli.internetcomputer.org/) -- full CLI and configuration documentation
 
 <!-- Upstream: informed by dfinity/icp-cli docs/concepts/project-model.md, docs/concepts/recipes.md, docs/concepts/binding-generation.md, docs/concepts/canister-discovery.md -->

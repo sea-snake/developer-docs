@@ -6,18 +6,111 @@ sidebar:
 icskills: []
 ---
 
-TODO: Write content for this page. This is the landing page for the Motoko section. Actual Motoko documentation pages are synced from the caffeinelabs/motoko repository.
+Motoko is a high-level programming language designed specifically for building canisters on the Internet Computer. It combines a familiar syntax (drawing from JavaScript, Rust, Swift, and Java) with features that map directly to how ICP works: an actor-based programming model, orthogonal persistence, async/await for inter-canister messaging, and compilation to WebAssembly.
 
-<!-- Content Brief -->
-Landing page for Motoko documentation. Brief overview of Motoko as a language designed specifically for ICP: actor model, orthogonal persistence, async/await for inter-canister calls, and strong typing. Link to synced sections (Fundamentals, ICP Features, Reference) and external resources. Always recommend the `core` library (supersedes `base`). Include a note about the base→core migration guide (synced from Motoko repo).
+If you want a language where ICP concepts are first-class citizens rather than library abstractions, Motoko is a strong choice.
 
-<!-- Source Material -->
-- Synced from caffeinelabs/motoko (52+ pages in fundamentals/, icp-features/, reference/)
-- Motoko core library (standard): https://mops.one/core/docs
-- Motoko base library (legacy, superseded by core): https://mops.one/base/docs
-- Base→core migration guide: synced from caffeinelabs/motoko (doc/md/12-base-core-migration.md)
+## Key features
 
-<!-- Cross-Links -->
-- getting-started/quickstart -- Motoko quickstart path
-- guides/backends/data-persistence -- Motoko persistence patterns
-- languages/rust/index -- alternative language
+**Actor model.** Every Motoko canister is an actor — an isolated unit of state and behavior that communicates with other actors through asynchronous messages. This maps directly to how canisters work on ICP: each canister has private state and a public interface.
+
+**Orthogonal persistence.** Variables declared in a `persistent actor` survive canister upgrades automatically. There is no database layer, no serialization code, and no pre/post-upgrade hooks needed for most use cases. See [Orthogonal persistence](../../concepts/orthogonal-persistence.md) for how this works at the platform level.
+
+**Async/await messaging.** Inter-canister calls use `async`/`await`, making sequential message flows read like synchronous code. The compiler and runtime handle the underlying callback mechanics.
+
+**Strong typing.** Motoko has a sound type system with generics, variant types, pattern matching, and option types (`?T`) that prevent null-pointer errors at compile time.
+
+**WebAssembly compilation.** Motoko compiles to Wasm, the execution format for all ICP canisters. The compiler handles ICP-specific concerns (Candid serialization, system API bindings, memory management) so you don't have to.
+
+## Quick example
+
+A minimal Motoko canister with a query method and an update method:
+
+```motoko
+persistent actor Counter {
+  var count : Nat = 0;
+
+  public query func get() : async Nat {
+    return count;
+  };
+
+  public func increment() : async () {
+    count += 1;
+  };
+};
+```
+
+The `persistent actor` declaration means `count` survives canister upgrades. The `query` keyword marks `get` as a fast, read-only call. The `increment` function is an update call that modifies state and goes through consensus.
+
+## Getting started
+
+Create a new Motoko project with icp-cli:
+
+```bash
+icp new my-project --subfolder motoko
+```
+
+This generates a Motoko canister project with an `icp.yaml` build configuration and a source file. The build configuration uses the Motoko recipe:
+
+```yaml
+canisters:
+  - name: backend
+    recipe:
+      type: "@dfinity/motoko@<version>"
+      configuration:
+        main: src/main.mo
+        shrink: true
+```
+
+Start a local network and deploy:
+
+```bash
+icp network start -d
+icp deploy
+```
+
+For a guided walkthrough, see the [Quickstart](../../getting-started/quickstart.md).
+
+## Standard library: `core`
+
+The **`core`** package ([mops.one/core](https://mops.one/core)) is the standard library for Motoko. It supersedes the older `base` library with a cleaner API, consistent naming conventions, and data structures that work directly with stable memory.
+
+Add it to your project's `mops.toml`:
+
+```toml
+[dependencies]
+core = "2.2.0" # Check the latest version at https://mops.one/core
+
+[toolchain]
+moc = "1.3.0" # Check the latest version at https://github.com/caffeinelabs/motoko/releases
+```
+
+Then import modules:
+
+```motoko
+import Map "mo:core/Map";
+import Text "mo:core/Text";
+import List "mo:core/List";
+```
+
+Key improvements in `core` over `base`:
+
+- All data structures can be stored in stable memory without pre/post-upgrade hooks
+- Clear separation between mutable (`Map`, `Set`, `List`) and immutable (`pure/Map`, `pure/Set`, `pure/List`) data structures
+- Hash-based collections removed in favor of ordered maps and sets (better security against collision attacks)
+- Consistent naming: `values()` instead of `vals()`, `Cycles` instead of `ExperimentalCycles`
+
+If you have an existing project using `base`, you can migrate incrementally — both libraries can coexist in the same project. See the [base to core migration guide](base-core-migration.md) for detailed instructions.
+
+`core` and all other Motoko packages are managed with [Mops](https://mops.one), which handles dependency resolution, compiler toolchain management, and publishing. Browse community packages at [mops.one](https://mops.one).
+
+## Further reading
+
+- [Quickstart](../../getting-started/quickstart.md) — Create and deploy your first canister
+- [Motoko documentation](https://docs.motoko.org) — Full language reference (fundamentals, ICP features, error codes)
+- [core library API docs](https://mops.one/core/docs) — Standard library reference
+- [Data persistence](../../guides/backends/data-persistence.md) — Persistence patterns for Motoko and Rust canisters
+- [Rust](../rust/index.md) — Alternative language for ICP development using the Rust CDK
+- [Motoko GitHub](https://github.com/caffeinelabs/motoko) — Compiler source and issue tracker
+
+<!-- Upstream: hand-written -->

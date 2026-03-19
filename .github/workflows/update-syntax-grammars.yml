@@ -1,0 +1,114 @@
+name: Update syntax grammars
+
+on:
+  schedule:
+    - cron: "0 9 * * 1" # every Monday at 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-grammars:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch latest vscode-motoko release
+        id: release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(gh api repos/dfinity/vscode-motoko/releases/latest --jq '.tag_name')
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "Latest vscode-motoko release: $tag"
+
+      - name: Check if PR already exists for this release
+        id: existing
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ steps.release.outputs.tag }}"
+          branch="chore/update-syntax-grammars-${tag}"
+          count=$(gh pr list --head "$branch" --state all --json number --jq 'length')
+          if [ "$count" -gt 0 ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "PR already exists for ${tag}, skipping."
+          else
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download and convert grammars
+        if: steps.existing.outputs.skip == 'false'
+        run: |
+          tag="${{ steps.release.outputs.tag }}"
+
+          for file in Major.tmLanguage Candid.tmLanguage; do
+            curl -fsSL "https://raw.githubusercontent.com/dfinity/vscode-motoko/${tag}/syntaxes/${file}" \
+              -o "/tmp/${file}"
+          done
+
+          python3 <<'PYEOF'
+          import plistlib, json, pathlib
+
+          for src, dest in [
+              ("/tmp/Major.tmLanguage", "syntaxes/motoko.tmLanguage.json"),
+              ("/tmp/Candid.tmLanguage", "syntaxes/candid.tmLanguage.json"),
+          ]:
+              with open(src, "rb") as f:
+                  data = plistlib.load(f)
+              pathlib.Path(dest).write_text(
+                  json.dumps(data, indent=2, ensure_ascii=False) + "\n"
+              )
+              print(f"Converted {src} -> {dest}")
+          PYEOF
+
+      - name: Check for changes
+        if: steps.existing.outputs.skip == 'false'
+        id: diff
+        run: |
+          if git diff --quiet syntaxes/; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No grammar changes detected."
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            echo "Grammar changes detected:"
+            git diff --stat syntaxes/
+          fi
+
+      - name: Create pull request
+        if: steps.existing.outputs.skip == 'false' && steps.diff.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag="${{ steps.release.outputs.tag }}"
+          branch="chore/update-syntax-grammars-${tag}"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$branch"
+          git add syntaxes/
+          git commit -m "chore: update Motoko and Candid grammars to vscode-motoko ${tag}"
+          git push -u origin "$branch"
+
+          body=$(cat <<EOF
+          ## Summary
+
+          Updates Motoko and Candid TextMate grammars to [vscode-motoko ${tag}](https://github.com/dfinity/vscode-motoko/releases/tag/${tag}).
+
+          These grammars power syntax highlighting for \`\`\`motoko\`\`\` and \`\`\`candid\`\`\` code blocks via Shiki / Expressive Code.
+
+          **Source:** \`dfinity/vscode-motoko\` → \`syntaxes/Major.tmLanguage\` and \`syntaxes/Candid.tmLanguage\`
+          **Transformation:** plist XML → JSON (automated by this workflow)
+
+          ## Test plan
+
+          - [ ] Verify \`npm run build\` passes
+          - [ ] Spot-check Motoko syntax highlighting on a page with code blocks (e.g., timers guide)
+          EOF
+          )
+
+          gh pr create \
+            --title "chore: update syntax grammars to vscode-motoko ${tag}" \
+            --body "$body"

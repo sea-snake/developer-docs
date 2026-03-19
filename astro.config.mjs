@@ -24,6 +24,17 @@ export default defineConfig({
         EditLink: "./src/components/EditLink.astro",
         Banner: "./src/components/AgentSignaling.astro",
       },
+      head: [
+        {
+          tag: "link",
+          attrs: {
+            rel: "llms",
+            href: "/llms.txt",
+            type: "text/plain",
+            title: "LLM-friendly documentation index",
+          },
+        },
+      ],
       customCss: [
         "@fontsource/inter/400.css",
         "@fontsource/inter/500.css",

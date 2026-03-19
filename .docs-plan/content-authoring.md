@@ -19,7 +19,8 @@ When drafting a new docs page:
    - **Verify all internal links** — every `[text](path.md)` must point to a file that exists. Run `ls <target-path>` before submitting. If the target page doesn't exist, either link to an existing page that covers the topic, or file a page proposal issue and note the missing link in your PR description. Never link to a path that doesn't exist.
    - **Verify all external URLs** — use the linking rules table in AGENTS.md for known resources. For any URL not in the table (crate docs, npm packages, GitHub repos), verify it is correct. Do not guess or generalize from similar URLs (e.g., `docs.rs/ic-cdk` is NOT the same as `docs.rs/ic-stable-structures`).
    - **Self-consistency check** — before submitting, re-read your frontmatter description and body opening paragraph. They must not contradict each other (e.g., different time estimates, different scope claims).
-   - Use plain markdown (never JSX/MDX)
+   - Use `.md` by default. Use `.mdx` only when the page needs interactive components like `<Tabs syncKey="lang">` (see `.docs-plan/decisions.md`). In `.mdx` files, use `{/* */}` for comments instead of `<!-- -->`.
+   - **Stub → `.mdx` rename:** All stubs are `.md` files. If your page needs tabs (e.g., Motoko/Rust examples in the same section), rename the stub from `.md` to `.mdx`, delete the old `.md` file, add `import { Tabs, TabItem } from '@astrojs/starlight/components';` after the frontmatter, and convert any `<!-- -->` comments to `{/* */}`. Internal links pointing to `<page>.md` do not need updating — Astro resolves both extensions.
    - Ensure complete frontmatter (see CONTRIBUTING.md)
    - Code examples: <30 lines inline, >30 lines link to `dfinity/examples`
    - Link to external docs per linking rules in AGENTS.md
@@ -27,14 +28,19 @@ When drafting a new docs page:
    - **Hand-written** — original content, no upstream equivalent
    - **Synced** — upstream repo has authoritative content that should be auto-synced (like Motoko docs)
    - **Upstream-informed** — hand-written but closely tracks an upstream source that should be monitored for changes
-   Record your recommendation as an HTML comment at the bottom of the page:
+   Record your recommendation as a comment at the bottom of the page. Use `<!-- -->` in `.md` files and `{/* */}` in `.mdx` files:
    ```markdown
    <!-- Upstream: hand-written -->
    <!-- Upstream: sync from dfinity/icp-cli docs/guides/canister-migration.md -->
    <!-- Upstream: informed by dfinity/portal docs/building-apps/canister-management/settings.mdx -->
    ```
+   In `.mdx` files, use JSX comment syntax instead:
+   ```mdx
+   {/* Upstream: hand-written */}
+   {/* Upstream: informed by dfinity/portal — ...; dfinity/icskills — ... */}
+   ```
    Consider syncing when the upstream content is comprehensive, well-maintained, and a close fit. Prefer hand-writing when the page synthesizes multiple sources or serves a different audience than the upstream.
-   **This must appear in two places:** (1) as an HTML comment in the page file, and (2) as a "Sync recommendation" section in the PR body (see the PR template in "Submitting" in AGENTS.md). Both are required.
+   **This must appear in two places:** (1) as a comment in the page file, and (2) as a "Sync recommendation" section in the PR body (see the PR template in "Submitting" in AGENTS.md). Both are required.
 6. **Propose missing pages:** If source material reveals topics that aren't covered by any existing page in the plan (e.g., a canister migration guide in icp-cli with no corresponding docs page), create a GitHub Issue with the `page-proposal` label. Include: what the page would cover, where it would live in the structure, and which upstream source it would draw from. Reference the issue in your PR description. Do not create the page — just flag it for human discussion.
 7. Submit: push branch, create PR, update Beads status to `draft` (see "Multi-agent workflow" in AGENTS.md)
 8. Review by the relevant team (see `.github/CODEOWNERS` and CONTRIBUTING.md review ownership table)
@@ -47,11 +53,12 @@ When drafting a new docs page:
 - Synced content must not be edited directly — edits must go to the source repo
 - All code examples must be self-contained and copy-pasteable
 - Code examples: <30 lines inline, >30 lines link to `dfinity/examples`
-- No `.mdx` files. No JSX. Plain markdown only.
+- Default to `.md`. Use `.mdx` only for pages with interactive components (e.g., language-synced tabs). See `.docs-plan/decisions.md` for when `.mdx` is appropriate.
 - Use relative paths with `.md` extension for internal links (e.g., `[Quickstart](../getting-started/quickstart.md)`). Never use absolute paths like `/getting-started/quickstart/` — they break on GitHub.
 - Max sidebar nesting: 3 levels
 - Images go in `src/assets/images/` organized by section (see CONTRIBUTING.md for details)
 - When writing a page, decide case-by-case whether portal images are worth carrying over. Keep the existing hand-drawn visual style.
+- **No headings inside `<TabItem>` blocks** — Starlight generates the "On this page" TOC at build time from all headings, regardless of which tab is active. A heading inside a `<TabItem>` always appears in the TOC even when its tab is hidden. Use **bold text** (`**Title**`) instead of markdown headings (`###`) for sub-labels inside tabs.
 - **Motoko standard library:** Always use `core` (`mops.one/core`), never `base`. The `core` library supersedes `base`. Link to the synced base→core migration guide for developers still on `base`.
 - **Diataxis content types** — match content to its section:
   - `concepts/` — Explanations only. Describe *what* and *why*. No CLI commands, no step-by-step procedures. Link to the relevant guide for practical steps.

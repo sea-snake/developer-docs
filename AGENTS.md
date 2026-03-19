@@ -1,7 +1,7 @@
 # ICP Developer Docs — Agent & Contributor Instructions
 
 ICP developer documentation built with Astro + Starlight.
-All content is plain `.md` files. No `.mdx`. No JSX.
+Content is `.md` by default. Pages that need interactive components (e.g., language-synced tabs) use `.mdx` — see `.docs-plan/decisions.md` for the policy.
 Goal: get developers (human and AI) building on the IC as fast as possible.
 
 This file is the single source of truth for all agents (Claude Code, Codex, Cursor, etc.) and contributors. `CLAUDE.md` symlinks here.
@@ -342,7 +342,8 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Read `.docs-plan/decisions.md` before proposing structural changes
 - **Ensure all required skills are accessible** before starting any work (see "Skills (required)" section). Skills are pre-installed as symlinks — if they appear broken, run `git submodule update --init --depth 1`. Do not start content or review work if skills are inaccessible.
 - Use icp-cli commands in all CLI examples — never `dfx`
-- Write plain `.md` files only — never `.mdx` or JSX
+- Write `.md` by default. Use `.mdx` only when a page needs interactive components (e.g., `<Tabs syncKey="lang">` for multi-language sections). Always use `syncKey="lang"` for language tabs. **Tab order:** For implementation/code tabs, list Motoko first, then Rust, then other languages (JavaScript). For type-mapping tabs where Candid is the canonical definition (e.g., Records, Variants), list Candid first, then Motoko, then Rust. Use `{/* */}` for comments in `.mdx` files (not `<!-- -->`). See `.docs-plan/decisions.md` for the full policy.
+- **When converting a stub to `.mdx`:** all stubs are `.md` files. If the page needs tabs, rename the stub from `.md` to `.mdx`, delete the old `.md`, add `import { Tabs, TabItem } from '@astrojs/starlight/components';` after frontmatter, and convert `<!-- -->` comments to `{/* */}`. Internal links to `<page>.md` still work — Astro resolves both extensions.
 - Include complete frontmatter (see CONTRIBUTING.md for schema)
 - Make code examples self-contained and copy-pasteable
 - Flag uncertainty with `<!-- Needs human verification: [reason] -->` rather than guessing — it is always better to flag than to be silently wrong
@@ -374,7 +375,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 
 - Offer, suggest, or perform PR reviews unless a human explicitly asks — reviews are a developer decision, not an agent initiative
 - Reference `dfx` — it is deprecated and banned
-- Create `.mdx` files or use JSX components
+- Create `.mdx` files without a clear need for interactive components (tabs, etc.) — default to `.md`
 - Duplicate content that lives in external docs (icp-cli, JS SDK, icskills, Learn Hub)
 - Edit synced files directly (`docs/languages/motoko/`, `docs/guides/tools/migrating-from-dfx.md`)
 - Nest sidebar items more than 3 levels deep
@@ -581,7 +582,9 @@ The site implements the [Agent-Friendly Documentation Spec](https://agentdocsspe
 
 **Build output:**
 - `/llms.txt` — discovery index listing all pages with links to `.md` endpoints, plus the IC skills registry URL
-- `/<path>.md` — clean markdown for every page (frontmatter and HTML comments stripped)
+- `/<path>.md` — clean markdown for every page (frontmatter, HTML comments, and MDX artifacts stripped)
+
+**MDX stripping:** `.mdx` sources are automatically converted to clean `.md` for agent consumption. The `stripMdx()` function in the plugin removes ESM imports, converts `<TabItem label="X">` to headings, strips wrapper tags (`<Tabs>`, `</Tabs>`, etc.), and removes JSX comments. A build-time validation pass (`validateAgentMarkdown()`) checks for leftover JSX, broken heading hierarchy, and other issues.
 
 ### SECTIONS array (keep in sync)
 

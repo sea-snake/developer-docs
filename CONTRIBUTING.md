@@ -12,7 +12,7 @@ npm run build    # Production build
 
 ## Content format
 
-All documentation is plain Markdown (`.md`). No `.mdx` files. No JSX components.
+Documentation is Markdown (`.md`) by default. Pages that need interactive components — such as `<Tabs syncKey="lang">` for multi-language sections — use `.mdx`. See `.docs-plan/decisions.md` for the full policy.
 
 Files live in `docs/` (project root) and follow the site map defined in `astro.config.mjs`. Astro reads them via a symlink at `src/content/docs/`.
 
@@ -60,7 +60,7 @@ Each top-level section has a specific purpose. Match your content accordingly:
 
 ### Don't
 - Reference `dfx` — it is deprecated. CI will reject it.
-- Use `.mdx` files or JSX components
+- Use `.mdx` without a clear need for interactive components (default to `.md`)
 - Duplicate content that lives in external docs (icp-cli, JS SDK, icskills)
 - Nest sidebar items more than 3 levels deep
 - Add images without alt text
@@ -131,7 +131,7 @@ Currently synced:
 Before submitting a PR, manually verify:
 
 1. **No dfx references** — `dfx` is banned (except in `guides/tools/migrating-from-dfx.md`)
-2. **No .mdx files** — only `.md` allowed
+2. **`.mdx` only where needed** — default to `.md`; use `.mdx` only for interactive components (tabs)
 3. **Valid frontmatter** — required fields present, valid values
 4. **`npm run build`** — Site builds without errors
 

@@ -1,6 +1,6 @@
 ---
 title: "ICP Developer Docs"
-description: "Build full-stack web applications, DeFi protocols, and cross-chain integrations on the Internet Computer"
+description: "Build tamperproof full-stack applications on the Internet Computer -- no cloud, no bridges, no external dependencies"
 sidebar:
   order: 0
 icskills: []
@@ -8,11 +8,25 @@ icskills: []
 
 # Build on the Internet Computer
 
-The Internet Computer (ICP) is a blockchain that runs at web speed, serves web content, and provides a complete execution environment for smart contracts called **canisters**. No cloud servers, no bridges, no external dependencies.
+Build full-stack applications that run entirely onchain -- frontend, backend, and data -- with no cloud dependencies. The Internet Computer (ICP) is a network of independent nodes that provides tamperproof execution, certified storage, and native cross-chain integration.
+
+Your code runs as **canisters**: smart contracts that serve HTTP responses, hold persistent state, sign transactions for Bitcoin and Ethereum, and pay for their own compute so your users never see a gas fee.
 
 ## Get started in under 10 minutes
 
 [Start the quickstart](getting-started/quickstart.md) to install icp-cli, create a project, and deploy your first canister.
+
+## When to build on ICP
+
+ICP is a strong fit when your application needs:
+
+- **Tamperproof execution** -- code runs exactly as deployed, verifiable by anyone
+- **Censorship resistance** -- no single entity can take your app offline
+- **No vendor lock-in** -- no cloud account, no API keys, no terms of service changes
+- **Cross-chain interop** -- native Bitcoin/Ethereum signing without bridges
+- **User-friendly onboarding** -- no wallet or gas fees required for end users
+
+For workloads that prioritize raw throughput, sub-millisecond latency, or very large data storage, a traditional cloud may be more appropriate -- or consider a hybrid architecture where ICP handles the trust-critical layer.
 
 ## What makes ICP different
 
@@ -24,6 +38,9 @@ Canister memory survives across executions and upgrades. No databases, no serial
 
 ### Reverse gas model
 Users never pay gas. Canisters pay for their own compute, storage, and bandwidth using **cycles**. [Learn more](concepts/reverse-gas-model.md)
+
+### Autonomous execution
+Canisters can schedule their own execution with timers -- no external cron jobs, keepers, or off-chain bots. [Learn more](concepts/timers.md)
 
 ### Web-native smart contracts
 Canisters serve HTTP responses directly. Host full web applications -- frontend and backend -- entirely onchain. [Learn more](concepts/app-architecture.md)

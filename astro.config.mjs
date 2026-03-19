@@ -22,6 +22,7 @@ export default defineConfig({
       title: "ICP Developer Docs",
       components: {
         EditLink: "./src/components/EditLink.astro",
+        Banner: "./src/components/AgentSignaling.astro",
       },
       head: [
         {

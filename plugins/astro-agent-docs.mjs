@@ -80,12 +80,186 @@ const SECTIONS = deriveSections(sidebar);
 // a charset=utf-8 in the Content-Type header.
 const BOM = "\uFEFF";
 
-/** Strip YAML frontmatter and HTML comments, prepend title heading. */
-function cleanMarkdown(raw) {
+/** Strip YAML frontmatter, HTML comments, and MDX artifacts; prepend title heading. */
+function cleanMarkdown(raw, isMdx = false) {
   const { data, content } = matter(raw);
-  const body = content.replace(/<!--[\s\S]*?-->/g, "").trim();
+  let body = content.replace(/<!--[\s\S]*?-->/g, "");
+  if (isMdx) {
+    body = stripMdx(body);
+  }
+  body = body.replace(/\n{3,}/g, "\n\n").trim();
   const title = data.title ? `# ${data.title}\n\n` : "";
   return BOM + title + body + "\n";
+}
+
+/**
+ * Strip MDX artifacts from content while preserving readable structure.
+ *
+ * - ESM imports (top-of-file `import ... from '...'`) are removed
+ * - `<TabItem label="X">` becomes a `#### X` heading (agent-readable label)
+ * - `<Tabs>`, `</Tabs>`, `</TabItem>` wrapper tags are removed
+ * - Other JSX self-closing tags on their own line are removed
+ * - JSX comments are removed
+ * - Motoko `import` statements inside code fences are preserved
+ */
+function stripMdx(body) {
+  const lines = body.split("\n");
+  const out = [];
+  let inCodeFence = false;
+  let tabHeadingLevel = 0; // heading level for TabItem labels within current <Tabs>
+
+  for (const line of lines) {
+    // Track code fences so we never touch content inside them
+    if (/^```/.test(line.trimStart())) {
+      inCodeFence = !inCodeFence;
+      out.push(line);
+      continue;
+    }
+
+    if (inCodeFence) {
+      out.push(line);
+      continue;
+    }
+
+    // Strip ESM import statements (e.g. `import { Tabs } from '...'`)
+    if (/^\s*import\s+.+\s+from\s+['"]/.test(line)) {
+      continue;
+    }
+
+    // When <Tabs> opens, determine the heading level for all its TabItems
+    // by finding the nearest parent heading and nesting one level below.
+    if (/^\s*<Tabs\b/.test(line)) {
+      let parentLevel = 1; // default: assume # parent
+      for (let j = out.length - 1; j >= 0; j--) {
+        const hm = out[j].match(/^(#{1,6})\s/);
+        if (hm) {
+          parentLevel = hm[1].length;
+          break;
+        }
+      }
+      tabHeadingLevel = Math.min(parentLevel + 1, 6);
+      continue;
+    }
+
+    // Convert <TabItem label="X"> to a heading at the level set by <Tabs>
+    const tabItemMatch = line.match(
+      /^\s*<TabItem\s+label=["']([^"']+)["']\s*>\s*$/
+    );
+    if (tabItemMatch) {
+      out.push(`${"#".repeat(tabHeadingLevel)} ${tabItemMatch[1]}`);
+      out.push("");
+      continue;
+    }
+
+    // Strip closing </TabItem>, </Tabs>, and other wrapper tags
+    if (/^\s*<\/?(?:Tabs|TabItem)\b[^>]*>\s*$/.test(line)) {
+      continue;
+    }
+
+    // Strip JSX comments {/* ... */} (single-line)
+    if (/^\s*\{\/\*.*\*\/\}\s*$/.test(line)) {
+      continue;
+    }
+
+    out.push(line);
+  }
+
+  // Strip remaining multi-line JSX comments
+  return out.join("\n").replace(/\{\/\*[\s\S]*?\*\/\}/g, "");
+}
+
+/**
+ * Validate generated agent markdown for common issues.
+ * Returns an array of { file, line, message } warnings.
+ */
+function validateAgentMarkdown(file, content) {
+  const warnings = [];
+  const lines = content.split("\n");
+  let inCodeFence = false;
+  let lastHeadingLevel = 0;
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
+    const lineNum = i + 1;
+
+    // Track code fences
+    if (/^```/.test(line.trimStart())) {
+      // Check for missing language tag on opening fences
+      if (!inCodeFence && /^\s*```\s*$/.test(line)) {
+        warnings.push({
+          file,
+          line: lineNum,
+          message: "Code fence without language tag",
+        });
+      }
+      inCodeFence = !inCodeFence;
+      continue;
+    }
+
+    if (inCodeFence) continue;
+
+    // Check for leftover JSX tags (< followed by uppercase = component)
+    // Skip table rows (start with |) — generics like <T> cause false positives
+    if (!line.trimStart().startsWith("|") && /<\/?[A-Z]\w*[\s>]/.test(line)) {
+      warnings.push({
+        file,
+        line: lineNum,
+        message: `Leftover JSX component: ${line.trim()}`,
+      });
+    }
+
+    // Check for leftover JSX expressions { ... }
+    if (/\{\/\*/.test(line) || /^\s*\{[A-Z]/.test(line)) {
+      warnings.push({
+        file,
+        line: lineNum,
+        message: `Possible JSX artifact: ${line.trim()}`,
+      });
+    }
+
+    // Check for ESM import statements
+    if (/^\s*import\s+.+\s+from\s+['"]/.test(line)) {
+      warnings.push({
+        file,
+        line: lineNum,
+        message: `ESM import outside code fence: ${line.trim()}`,
+      });
+    }
+
+    // Check heading hierarchy (no jumps of more than 1 level)
+    const headingMatch = line.match(/^(#{1,6})\s/);
+    if (headingMatch) {
+      const level = headingMatch[1].length;
+      if (lastHeadingLevel > 0 && level > lastHeadingLevel + 1) {
+        warnings.push({
+          file,
+          line: lineNum,
+          message: `Heading hierarchy skip: h${lastHeadingLevel} → h${level}`,
+        });
+      }
+      lastHeadingLevel = level;
+    }
+
+    // Check for triple+ blank lines (should have been collapsed)
+    if (i >= 2 && line === "" && lines[i - 1] === "" && lines[i - 2] === "") {
+      warnings.push({
+        file,
+        line: lineNum,
+        message: "Three or more consecutive blank lines",
+      });
+    }
+  }
+
+  // Check for unclosed code fence
+  if (inCodeFence) {
+    warnings.push({
+      file,
+      line: lines.length,
+      message: "Unclosed code fence",
+    });
+  }
+
+  return warnings;
 }
 
 /** Find the best matching section for a file path (longest prefix wins). */
@@ -173,22 +347,25 @@ export default function agentDocs() {
         const outDir = fileURLToPath(dir);
         const docsDir = path.resolve("docs");
 
-        const files = await glob("**/*.md", { cwd: docsDir });
+        const files = await glob("**/*.{md,mdx}", { cwd: docsDir });
         const pages = [];
 
         // 1. Generate markdown endpoints
         for (const file of files) {
           const raw = fs.readFileSync(path.join(docsDir, file), "utf-8");
           const { data: frontmatter } = matter(raw);
+          const isMdx = file.endsWith(".mdx");
+          const ext = path.extname(file);
 
-          // Write cleaned .md to build output
-          const outFile = path.join(outDir, file);
+          // Write cleaned .md to build output (always as .md, even for .mdx sources)
+          const outFile = path.join(outDir, file.replace(ext, ".md"));
           fs.mkdirSync(path.dirname(outFile), { recursive: true });
-          fs.writeFileSync(outFile, cleanMarkdown(raw));
+          fs.writeFileSync(outFile, cleanMarkdown(raw, isMdx));
 
+          const mdFile = file.replace(ext, ".md");
           pages.push({
-            file,
-            title: frontmatter.title || path.basename(file, ".md"),
+            file: mdFile,
+            title: frontmatter.title || path.basename(file, ext),
             description: frontmatter.description || "",
             order: frontmatter.sidebar?.order ?? 999,
           });
@@ -196,7 +373,26 @@ export default function agentDocs() {
 
         logger.info(`Generated ${pages.length} markdown endpoints`);
 
-        // 2. Generate llms.txt
+        // 2. Validate agent markdown
+        let totalWarnings = 0;
+        for (const page of pages) {
+          const mdContent = fs.readFileSync(
+            path.join(outDir, page.file),
+            "utf-8"
+          );
+          const warnings = validateAgentMarkdown(page.file, mdContent);
+          for (const w of warnings) {
+            logger.warn(`${w.file}:${w.line} — ${w.message}`);
+          }
+          totalWarnings += warnings.length;
+        }
+        if (totalWarnings > 0) {
+          logger.warn(
+            `Agent markdown validation: ${totalWarnings} warning(s) found`
+          );
+        }
+
+        // 3. Generate llms.txt
         const llmsTxt = generateLlmsTxt(pages, siteUrl);
         fs.writeFileSync(path.join(outDir, "llms.txt"), llmsTxt);
         logger.info(

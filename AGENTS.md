@@ -258,6 +258,12 @@ Three outcomes:
 
 **Parallel reviews use worktrees** — reviews need to check out the PR branch (to read the full page, verify links with `ls`, run `npm run build`). For parallel reviews, launch worktree agents the same way as for content writing. Each agent must run `git submodule update --init --depth 1` first (see "Submodule initialization in worktrees" above) to access skills and `.sources/`.
 
+**Presenting and posting review results:** When a subagent completes a review, the parent agent must:
+1. Present the **full detailed findings** to the user — not a condensed summary. The user needs the complete review (must-fix issues, suggestions, verified items) to make informed decisions.
+2. **Post the review as a PR comment** (`gh pr comment`) before any fixes are attempted. This ensures the review is visible on the PR even if the agent session ends or the dev wants to fix issues manually.
+
+For non-review subagents (content writing, infrastructure), a brief summary is sufficient since the user can inspect the PR/diff directly.
+
 ### Submitting
 
 **Fresh task:**

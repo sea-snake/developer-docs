@@ -5,19 +5,16 @@ sidebar:
   order: 3
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Canisters can schedule code to run automatically after a delay or on a repeating interval — no external cron job required. This guide covers the timer APIs for Rust and Motoko, how system time works, upgrade handling, and when to use heartbeats instead.
 
 ## System time
 
 The IC exposes system time as nanoseconds since `1970-01-01` (Unix timestamp). The value is monotonically increasing, even across canister upgrades.
 
-**Rust:**
-
-```rust
-let now_ns: u64 = ic_cdk::api::time();
-```
-
-**Motoko:**
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 ```motoko
 import Time "mo:core/Time";
@@ -25,13 +22,39 @@ import Time "mo:core/Time";
 let now_ns : Int = Time.now();
 ```
 
+</TabItem>
+<TabItem label="Rust">
+
+```rust
+let now_ns: u64 = ic_cdk::api::time();
+```
+
+</TabItem>
+</Tabs>
+
 System time is constant within a single message execution — it does not advance mid-call. Different messages in the same round may observe different timestamps.
 
 ## One-shot timers
 
 Schedule a function to run once after a delay.
 
-**Rust** — add `ic-cdk-timers` to `Cargo.toml`:
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+
+```motoko
+import Timer "mo:core/Timer";
+
+func sendReminder() : async () {
+    // ...
+};
+
+let timerId : Timer.TimerId = Timer.setTimer<system>(#seconds 60, sendReminder);
+```
+
+</TabItem>
+<TabItem label="Rust">
+
+Add `ic-cdk-timers` to `Cargo.toml`:
 
 ```rust
 use ic_cdk_timers::TimerId;
@@ -45,23 +68,30 @@ let timer_id: TimerId = ic_cdk_timers::set_timer(
 
 `set_timer` takes a future directly — no closure or `ic_cdk::spawn` wrapper needed.
 
-**Motoko:**
-
-```motoko
-import Timer "mo:core/Timer";
-
-func sendReminder() : async () {
-    // ...
-};
-
-let timerId : Timer.TimerId = Timer.setTimer<system>(#seconds 60, sendReminder);
-```
+</TabItem>
+</Tabs>
 
 ## Recurring timers
 
 Schedule a function to run repeatedly at a fixed interval.
 
-**Rust:**
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+
+```motoko
+import Timer "mo:core/Timer";
+
+func cleanup() : async () {
+    // periodic cleanup logic
+};
+
+let timerId : Timer.TimerId = Timer.recurringTimer<system>(#seconds 3600, cleanup);
+```
+
+A duration of `0` in Motoko will only expire once, not repeatedly (see [Timer.mo](https://github.com/caffeinelabs/motoko-core/blob/v2.1.0/src/Timer.mo#L53)).
+
+</TabItem>
+<TabItem label="Rust">
 
 ```rust
 use ic_cdk_timers::TimerId;
@@ -75,19 +105,8 @@ let timer_id: TimerId = ic_cdk_timers::set_timer_interval(
 
 `set_timer_interval` takes a closure that returns a future (`|| async { ... }`), not a plain closure.
 
-**Motoko:**
-
-```motoko
-import Timer "mo:core/Timer";
-
-func cleanup() : async () {
-    // periodic cleanup logic
-};
-
-let timerId : Timer.TimerId = Timer.recurringTimer<system>(#seconds 3600, cleanup);
-```
-
-A duration of `0` in Motoko will only expire once, not repeatedly (see [Timer.mo](https://github.com/caffeinelabs/motoko-core/blob/v2.1.0/src/Timer.mo#L53)).
+</TabItem>
+</Tabs>
 
 For recurring tasks that mutate state, use `set_timer_interval_serial` in Rust to prevent concurrent invocations — if the interval fires while the previous invocation is still running, the new one is skipped:
 
@@ -104,17 +123,22 @@ ic_cdk_timers::set_timer_interval_serial(
 
 Both one-shot and recurring timers can be canceled before they fire. Canceling an already-expired or unrecognized ID is a no-op.
 
-**Rust:**
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+
+```motoko
+Timer.cancelTimer(timerId);
+```
+
+</TabItem>
+<TabItem label="Rust">
 
 ```rust
 ic_cdk_timers::clear_timer(timer_id);
 ```
 
-**Motoko:**
-
-```motoko
-Timer.cancelTimer(timerId);
-```
+</TabItem>
+</Tabs>
 
 ## Common patterns
 
@@ -147,20 +171,8 @@ See [Canister lifecycle](../canister-management/lifecycle.md) for init and upgra
 
 To resume timers after an upgrade, re-register them in `post_upgrade`:
 
-**Rust:**
-
-```rust
-#[ic_cdk_macros::post_upgrade]
-fn post_upgrade() {
-    // Re-register the same timers as in init
-    ic_cdk_timers::set_timer_interval(
-        std::time::Duration::from_secs(3600),
-        || async { ic_cdk::println!("Hourly task") },
-    );
-}
-```
-
-**Motoko:**
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 Motoko's `Timer` module handles the scheduling mechanism. If you need state from before the upgrade to configure timers (such as a stored interval), read it from stable variables in `postupgrade`:
 
@@ -175,6 +187,23 @@ persistent actor {
     };
 };
 ```
+
+</TabItem>
+<TabItem label="Rust">
+
+```rust
+#[ic_cdk_macros::post_upgrade]
+fn post_upgrade() {
+    // Re-register the same timers as in init
+    ic_cdk_timers::set_timer_interval(
+        std::time::Duration::from_secs(3600),
+        || async { ic_cdk::println!("Hourly task") },
+    );
+}
+```
+
+</TabItem>
+</Tabs>
 
 > Pre- and post-upgrade hooks are error-prone. Avoid them when possible. If your timer interval is fixed, simply re-register it unconditionally in `postupgrade` rather than saving timer IDs to stable memory.
 
@@ -252,4 +281,4 @@ For a complete working example with cycle tracking and multiple timers:
 - [Timers (concept)](../../concepts/timers.md) — how the IC protocol timer works
 - [Cycles and costs](../../reference/cycles-costs.md) — current pricing
 
-<!-- Upstream: informed by dfinity/portal docs/building-apps/network-features/periodic-tasks-timers.mdx, docs/building-apps/network-features/time-and-timestamps.mdx, dfinity/cdk-rs ic-cdk-timers/src/lib.rs, and caffeinelabs/motoko-core src/Timer.mo -->
+{/* Upstream: informed by dfinity/portal docs/building-apps/network-features/periodic-tasks-timers.mdx, docs/building-apps/network-features/time-and-timestamps.mdx, dfinity/cdk-rs ic-cdk-timers/src/lib.rs, and caffeinelabs/motoko-core src/Timer.mo */}

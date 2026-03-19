@@ -5,6 +5,8 @@ sidebar:
   order: 1
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Candid is the interface description language for the Internet Computer. Every canister exposes its public API through a Candid `.did` file that describes which methods it offers, what arguments they accept, and what they return. Because Candid is language-agnostic, a Motoko canister, a Rust canister, and a JavaScript frontend can all communicate through the same interface without any manual serialization code.
 
 Candid handles the binary encoding and decoding transparently. You work with native types in your language — `String` in Rust, `Text` in Motoko, `string` in JavaScript — and Candid maps them to a common type system for transport.
@@ -96,7 +98,8 @@ For the complete type reference, including subtyping rules, see the [Candid spec
 
 ## Generating `.did` files
 
-### Motoko
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 The Motoko compiler generates Candid descriptions automatically from your actor's type signature. When you build with icp-cli, the `.did` file is placed in the build output directory — no manual authoring needed.
 
@@ -114,7 +117,8 @@ canisters:
 
 If `candid` is omitted, the Motoko recipe auto-generates the interface from the source.
 
-### Rust
+</TabItem>
+<TabItem label="Rust">
 
 Rust canisters require a `.did` file, but you can generate it from your code instead of writing it manually. Add the `export_candid!` macro at the end of your `lib.rs`:
 
@@ -163,13 +167,17 @@ canisters:
 
 As with Motoko, the Rust recipe can also auto-extract the Candid interface from the compiled Wasm using `candid-extractor` if you omit the `candid` field. Providing an explicit file is recommended for stable APIs.
 
+</TabItem>
+</Tabs>
+
 ## Type mapping in practice
 
 ### Records
 
 Candid records map to structs in Rust and object-like types in Motoko:
 
-**Candid:**
+<Tabs syncKey="lang">
+<TabItem label="Candid">
 
 ```candid
 type UserProfile = record {
@@ -179,7 +187,8 @@ type UserProfile = record {
 };
 ```
 
-**Motoko:**
+</TabItem>
+<TabItem label="Motoko">
 
 ```motoko no-repl
 type UserProfile = {
@@ -189,7 +198,8 @@ type UserProfile = {
 };
 ```
 
-**Rust:**
+</TabItem>
+<TabItem label="Rust">
 
 ```rust
 use candid::CandidType;
@@ -203,11 +213,15 @@ struct UserProfile {
 }
 ```
 
+</TabItem>
+</Tabs>
+
 ### Variants
 
 Candid variants model enumerations or tagged unions:
 
-**Candid:**
+<Tabs syncKey="lang">
+<TabItem label="Candid">
 
 ```candid
 type Result = variant {
@@ -216,7 +230,8 @@ type Result = variant {
 };
 ```
 
-**Motoko:**
+</TabItem>
+<TabItem label="Motoko">
 
 ```motoko no-repl
 type Result = {
@@ -225,7 +240,8 @@ type Result = {
 };
 ```
 
-**Rust:**
+</TabItem>
+<TabItem label="Rust">
 
 ```rust
 use candid::CandidType;
@@ -239,6 +255,9 @@ enum MyResult {
     Err(String),
 }
 ```
+
+</TabItem>
+</Tabs>
 
 ## Interacting with canister interfaces
 
@@ -335,7 +354,8 @@ Using `reserved` prevents future developers from accidentally reusing the field'
 
 Once you have a `.did` file, generate type-safe client bindings so callers get compile-time type checking instead of working with raw Candid values.
 
-### JavaScript / TypeScript
+<Tabs syncKey="lang">
+<TabItem label="JavaScript">
 
 [`@icp-sdk/bindgen`](https://js.icp.build/bindgen) generates TypeScript declarations from `.did` files. It supports both a CLI and a Vite plugin for automatic regeneration during development.
 
@@ -362,9 +382,10 @@ npx @icp-sdk/bindgen
 ```
 
 By default, the CLI reads `icp.yaml` and generates bindings for all canisters. See the [`@icp-sdk/bindgen` documentation](https://js.icp.build/bindgen) for configuration options.
-<!-- Needs human verification: verify @icp-sdk/bindgen Vite plugin import path (icpBindgen from "@icp-sdk/bindgen/vite") and CLI invocation (npx @icp-sdk/bindgen with no subcommand) -->
+{/* Needs human verification: verify @icp-sdk/bindgen Vite plugin import path (icpBindgen from "@icp-sdk/bindgen/vite") and CLI invocation (npx @icp-sdk/bindgen with no subcommand) */}
 
-### Rust
+</TabItem>
+<TabItem label="Rust">
 
 [`ic-cdk-bindgen`](https://crates.io/crates/ic-cdk-bindgen) generates Rust bindings from `.did` files at build time via a Cargo build script. This gives you typed functions for inter-canister calls.
 
@@ -400,9 +421,12 @@ async fn invoke_callee() {
 ```
 
 The `.dynamic_callee("PUBLIC_CANISTER_ID:callee")` mode reads the canister ID from a canister environment variable at runtime — the same `PUBLIC_CANISTER_ID:<name>` variables that `icp deploy` injects (see [canister discovery](onchain-calls.md#canister-discovery)). For canisters with fixed IDs, use `.static_callee(principal)` instead.
-<!-- Needs human verification: the upstream ic-cdk-bindgen README uses ICP_CANISTER_ID: in its example, but icp-cli sets PUBLIC_CANISTER_ID:. We use PUBLIC_CANISTER_ID: here to match icp-cli. An issue has been filed on dfinity/cdk-rs to align the upstream README. -->
+{/* Needs human verification: the upstream ic-cdk-bindgen README uses ICP_CANISTER_ID: in its example, but icp-cli sets PUBLIC_CANISTER_ID:. We use PUBLIC_CANISTER_ID: here to match icp-cli. An issue has been filed on dfinity/cdk-rs to align the upstream README. */}
 
 For type selector configuration and advanced options, see the [`ic-cdk-bindgen` documentation](https://crates.io/crates/ic-cdk-bindgen).
+
+</TabItem>
+</Tabs>
 
 ## Candid tools
 
@@ -423,4 +447,4 @@ For type selector configuration and advanced options, see the [`ic-cdk-bindgen` 
 - [Offchain calls](offchain-calls.md) — call canisters from JavaScript frontends and agents
 - [Candid specification](../../reference/candid-spec.md) — full type reference and subtyping rules
 
-<!-- Upstream: informed by dfinity/portal docs/building-apps/interact-with-canisters/candid/ (3 files), docs/building-apps/developer-tools/cdks/rust/generating-candid.mdx, icp-cli concepts/binding-generation.md, ic-cdk-bindgen README, and @icp-sdk/bindgen. Type mappings verified against .sources/candid (spec), .sources/motoko (IDL-Motoko.md), and .sources/cdk-rs. -->
+{/* Upstream: informed by dfinity/portal docs/building-apps/interact-with-canisters/candid/ (3 files), docs/building-apps/developer-tools/cdks/rust/generating-candid.mdx, icp-cli concepts/binding-generation.md, ic-cdk-bindgen README, and @icp-sdk/bindgen. Type mappings verified against .sources/candid (spec), .sources/motoko (IDL-Motoko.md), and .sources/cdk-rs. */}

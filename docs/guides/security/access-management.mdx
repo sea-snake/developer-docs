@@ -5,6 +5,8 @@ sidebar:
   order: 1
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Every canister method is callable by anyone on the internet. Without explicit access checks, any user or canister can invoke any of your public functions. This guide covers the patterns you need to restrict access.
 
 ## Checklist
@@ -37,7 +39,8 @@ Every principal is one of these types:
 
 Any endpoint that requires authentication must reject the anonymous principal. Without this check, unauthenticated callers can invoke protected methods. If your canister uses the caller principal as an identity key (for balances, ownership, etc.), the anonymous principal becomes a shared identity anyone can use.
 
-**Motoko:**
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 ```motoko
 import Principal "mo:core/Principal";
@@ -57,7 +60,8 @@ import Runtime "mo:core/Runtime";
   };
 ```
 
-**Rust:**
+</TabItem>
+<TabItem label="Rust">
 
 ```rust
 use ic_cdk::update;
@@ -86,11 +90,15 @@ fn admin_action() {
 }
 ```
 
+</TabItem>
+</Tabs>
+
 ## Owner and role-based access control
 
 There is no built-in role system on ICP. You implement it yourself by tracking principals in your canister state.
 
-### Motoko
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 The `shared(msg)` pattern on an actor class captures the deployer's principal atomically — no separate init call, no front-running risk. Use `transient` for the owner since it gets recomputed from `msg.caller` on each install/upgrade.
 
@@ -139,7 +147,8 @@ shared(msg) persistent actor class MyCanister() {
 };
 ```
 
-### Rust
+</TabItem>
+<TabItem label="Rust">
 
 ```rust
 use ic_cdk::{init, update};
@@ -204,11 +213,17 @@ fn admin_action() {
 }
 ```
 
+</TabItem>
+</Tabs>
+
 Always include admin revocation (`removeAdmin`). Missing revocation is a common source of bugs — once granted, admin access should be removable.
 
 ## Controller checks
 
 Controllers are the principals authorized to manage a canister (install code, change settings, stop/delete). The controller list is managed at the IC level, not inside your canister code.
+
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 **Motoko** provides `Principal.isController` to check if a principal is a controller of the current canister:
 
@@ -226,7 +241,13 @@ import Runtime "mo:core/Runtime";
   };
 ```
 
+</TabItem>
+<TabItem label="Rust">
+
 In Rust, there is no built-in `is_controller` function — checking controllers requires an async call to the management canister. See [onchain calls](../canister-calls/onchain-calls.md) for inter-canister call patterns.
+
+</TabItem>
+</Tabs>
 
 **Managing controllers with icp-cli:**
 
@@ -252,7 +273,8 @@ Always add a backup controller. If you lose the private key of the only controll
 
 Always duplicate real access checks inside each method. Use `inspect_message` only to reduce cycle waste from spam.
 
-**Motoko:**
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 ```motoko
 import Principal "mo:core/Principal";
@@ -281,7 +303,8 @@ import Principal "mo:core/Principal";
   };
 ```
 
-**Rust:**
+</TabItem>
+<TabItem label="Rust">
 
 ```rust
 use ic_cdk::api::{accept_message, msg_caller, msg_method_name};
@@ -302,11 +325,15 @@ fn inspect_message() {
 }
 ```
 
+</TabItem>
+</Tabs>
+
 ## Debugging identity
 
 When troubleshooting access control issues, it helps to know which principal your canister sees. A simple `whoami` endpoint returns the caller's identity:
 
-**Motoko:**
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 ```motoko
 // Inside persistent actor { ... }
@@ -316,7 +343,8 @@ When troubleshooting access control issues, it helps to know which principal you
   };
 ```
 
-**Rust:**
+</TabItem>
+<TabItem label="Rust">
 
 ```rust
 use ic_cdk::query;
@@ -328,6 +356,9 @@ fn whoami() -> Principal {
     msg_caller()
 }
 ```
+
+</TabItem>
+</Tabs>
 
 Call it to verify which identity is being used:
 
@@ -341,4 +372,4 @@ icp canister call backend whoami
 - [Canister settings](../canister-management/settings.md) — configure controllers and freezing thresholds
 - [DoS prevention](dos-prevention.md) — rate limiting as an access control mechanism
 
-<!-- Upstream: informed by dfinity/icskills — skills/canister-security/SKILL.md, dfinity/portal — docs/building-apps/best-practices/general.mdx -->
+{/* Upstream: informed by dfinity/icskills — skills/canister-security/SKILL.md, dfinity/portal — docs/building-apps/best-practices/general.mdx */}

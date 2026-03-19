@@ -5,6 +5,8 @@ sidebar:
   order: 1
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Every canister on ICP goes through a predictable lifecycle: creation, code installation, upgrades, and eventually deletion. Understanding this lifecycle is essential for managing your application in development and production.
 
 This guide walks through each phase with practical icp-cli commands and explains how state is preserved (or reset) at each step.
@@ -164,7 +166,8 @@ Stopping before the upgrade prevents data inconsistencies from messages being pr
 
 The approach to state persistence differs between Motoko and Rust.
 
-#### Motoko: persistent actors
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 In Motoko, declare your actor as `persistent` to automatically persist all top-level variables across upgrades:
 
@@ -194,7 +197,8 @@ persistent actor Cache {
 
 > **Tip:** `persistent actor` is the recommended pattern. Avoid `pre_upgrade`/`post_upgrade` hooks in Motoko when possible — if `pre_upgrade` traps, the canister becomes permanently non-upgradeable.
 
-#### Rust: stable structures
+</TabItem>
+<TabItem label="Rust">
 
 In Rust, use `ic-stable-structures` to store data directly in stable memory. Data in stable structures persists automatically across upgrades:
 
@@ -238,6 +242,9 @@ fn post_upgrade() {
 ```
 
 > **Warning:** Serializing large state in `pre_upgrade` can hit the instruction limit and brick the canister. Prefer stable structures for data that grows over time.
+
+</TabItem>
+</Tabs>
 
 For a deeper dive into persistence strategies, see [Data persistence](../backends/data-persistence.md).
 
@@ -299,9 +306,10 @@ Both approaches use [canister snapshots](snapshots.md) to transfer state. For th
 
 Canisters can manage other canisters by calling the [management canister](../../reference/management-canister.md) (`aaaaa-aa`). This enables patterns like canister factories that create and manage child canisters dynamically.
 
-### Motoko: create and install a canister
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
-<!-- Source: .sources/examples/motoko/canister_factory/src/backend/Main.mo -->
+{/* Source: .sources/examples/motoko/canister_factory/src/backend/Main.mo */}
 
 ```motoko
 import Principal "mo:core/Principal";
@@ -330,9 +338,10 @@ persistent actor Factory {
 };
 ```
 
-### Rust: create a canister
+</TabItem>
+<TabItem label="Rust">
 
-<!-- Source: .sources/cdk-rs/ic-management-canister-types/src/lib.rs -->
+{/* Source: .sources/cdk-rs/ic-management-canister-types/src/lib.rs */}
 
 ```rust
 use candid::Principal;
@@ -354,6 +363,9 @@ async fn create_child() -> Principal {
 }
 ```
 
+</TabItem>
+</Tabs>
+
 For a complete canister factory example, see the [canister factory example](https://github.com/dfinity/examples/tree/master/motoko/canister_factory).
 
 ## Canister history
@@ -362,7 +374,7 @@ Every canister maintains a history of at least its most recent 20 changes — in
 
 ### Query history from Rust
 
-<!-- Source: .sources/examples/rust/canister-info/src/lib.rs -->
+{/* Source: .sources/examples/rust/canister-info/src/lib.rs */}
 
 ```rust
 use ic_cdk::api::management_canister::main::{
@@ -429,4 +441,4 @@ The IC decompresses the module automatically during installation. For strategies
 - [Upgrade safety](../security/canister-upgrades.md) — security considerations for safe upgrades
 - [Testing strategies](../testing/strategies.md) — test lifecycle operations locally
 
-<!-- Upstream: informed by dfinity/portal — docs/building-apps/canister-management/, docs/building-apps/developing-canisters/ — dfinity/icp-cli — docs/concepts/build-deploy-sync.md, docs/guides/canister-migration.md -->
+{/* Upstream: informed by dfinity/portal — docs/building-apps/canister-management/, docs/building-apps/developing-canisters/ — dfinity/icp-cli — docs/concepts/build-deploy-sync.md, docs/guides/canister-migration.md */}

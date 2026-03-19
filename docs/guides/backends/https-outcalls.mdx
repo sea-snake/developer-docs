@@ -5,6 +5,8 @@ sidebar:
   order: 2
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Canisters can make HTTP requests to external web services using HTTPS outcalls. This lets your canister fetch offchain data, call REST APIs, or send notifications — all from onchain code.
 
 HTTPS outcalls are available through the [IC management canister](../../reference/management-canister.md) (`aaaaa-aa`) via the `http_request` method. The `GET`, `HEAD`, and `POST` methods are supported. `HEAD` works identically to `GET` but returns only headers — useful for checking resource availability without downloading the body. Only HTTPS (not plain HTTP) is supported.
@@ -23,7 +25,8 @@ Because a canister runs on a subnet of multiple replica nodes, every node indepe
 
 A minimal example that fetches a JSON price feed:
 
-**Motoko**
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 ```motoko
 import Blob "mo:core/Blob";
@@ -60,7 +63,10 @@ persistent actor {
 };
 ```
 
-**Rust**
+For a complete working project, see the [Motoko send_http_get example](https://github.com/dfinity/examples/tree/master/motoko/send_http_get).
+
+</TabItem>
+<TabItem label="Rust">
 
 ```rust
 use ic_cdk::api::canister_self;
@@ -105,7 +111,10 @@ ic-cdk = "0.19"
 candid = "0.10"
 ```
 
-For a complete working project, see the [send_http_get example](https://github.com/dfinity/examples/tree/master/rust/send_http_get) (Rust) or [Motoko version](https://github.com/dfinity/examples/tree/master/motoko/send_http_get).
+For a complete working project, see the [Rust send_http_get example](https://github.com/dfinity/examples/tree/master/rust/send_http_get).
+
+</TabItem>
+</Tabs>
 
 ## POST request
 
@@ -176,7 +185,7 @@ Unused cycles are refunded. See [Cycles Costs](../../reference/cycles-costs.md) 
 - **`Host` header may be required.** Some API endpoints require the `Host` header to be explicitly set. The IC does not automatically set it from the URL — add it to your headers if the server requires it.
 - **~30-second timeout.** If the external server does not respond within the timeout, the call traps. Design for failure and handle errors gracefully.
 
-> **Non-replicated outcalls** are available as an experimental feature. Setting `is_replicated` to `false` in the request causes only a single replica to make the HTTP call. This avoids idempotency concerns but currently uses the same pricing as replicated outcalls. **Flexible outcalls** — with dedicated pricing and additional capabilities — are under development. <!-- See dfinity/portal#5890 for the upstream tracking PR. -->
+> **Non-replicated outcalls** are available as an experimental feature. Setting `is_replicated` to `false` in the request causes only a single replica to make the HTTP call. This avoids idempotency concerns but currently uses the same pricing as replicated outcalls. **Flexible outcalls** — with dedicated pricing and additional capabilities — are under development. {/* See dfinity/portal#5890 for the upstream tracking PR. */}
 
 ## Testing locally
 
@@ -197,4 +206,4 @@ HTTPS outcalls work on the local replica — icp-cli proxies requests through th
 - [Chain Fusion: Ethereum](../chain-fusion/ethereum.md) — the EVM RPC canister uses HTTPS outcalls under the hood
 - [Cycles Costs](../../reference/cycles-costs.md) — outcall pricing details
 
-<!-- Upstream: informed by dfinity/portal docs/building-apps/network-features/using-http/https-outcalls/ -->
+{/* Upstream: informed by dfinity/portal docs/building-apps/network-features/using-http/https-outcalls/ */}

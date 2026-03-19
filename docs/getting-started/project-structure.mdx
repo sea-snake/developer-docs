@@ -5,6 +5,8 @@ sidebar:
   order: 2
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 After running `icp new`, you have a complete project ready to build and deploy. This page explains every file and directory that `icp new` creates, how they fit together, and the key concepts behind the project model.
 
 ## Prerequisites
@@ -78,6 +80,20 @@ Each canister has its own `canister.yaml` that defines how to build and deploy i
 
 ### Backend canister
 
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+The Motoko backend uses the `@dfinity/motoko` recipe:
+
+```yaml
+name: backend
+recipe:
+  type: "@dfinity/motoko@v4.1.0"
+  configuration:
+    main: src/main.mo
+    candid: backend.did
+```
+</TabItem>
+<TabItem label="Rust">
 The Rust backend uses the `@dfinity/rust` recipe:
 
 ```yaml
@@ -89,17 +105,8 @@ recipe:
     shrink: true
     candid: backend.did
 ```
-
-The Motoko backend uses the `@dfinity/motoko` recipe:
-
-```yaml
-name: backend
-recipe:
-  type: "@dfinity/motoko@v4.1.0"
-  configuration:
-    main: src/main.mo
-    candid: backend.did
-```
+</TabItem>
+</Tabs>
 
 ### Frontend canister
 
@@ -194,18 +201,8 @@ const env = getCanisterEnv<CanisterEnv>();
 
 Backend canisters read the injected variables directly:
 
-**Rust:**
-
-```rust
-use candid::Principal;
-
-let backend_id = Principal::from_text(
-    &ic_cdk::api::env_var_value("PUBLIC_CANISTER_ID:other_canister")
-).unwrap();
-```
-
-**Motoko:**
-
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 ```motoko
 import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
@@ -215,6 +212,17 @@ switch (Runtime.envVar("PUBLIC_CANISTER_ID:other_canister")) {
   case null { /* handle missing */ };
 };
 ```
+</TabItem>
+<TabItem label="Rust">
+```rust
+use candid::Principal;
+
+let backend_id = Principal::from_text(
+    &ic_cdk::api::env_var_value("PUBLIC_CANISTER_ID:other_canister")
+).unwrap();
+```
+</TabItem>
+</Tabs>
 
 ## Binding generation
 
@@ -240,4 +248,4 @@ For a deep dive on binding generation, see [Binding generation](../guides/canist
 - [Canister lifecycle](../guides/canister-management/lifecycle.md) -- build, deploy, upgrade, and manage canisters
 - [icp-cli reference](https://cli.internetcomputer.org/) -- full CLI and configuration documentation
 
-<!-- Upstream: informed by dfinity/icp-cli docs/concepts/project-model.md, docs/concepts/recipes.md, docs/concepts/binding-generation.md, docs/concepts/canister-discovery.md -->
+{/* Upstream: informed by dfinity/icp-cli docs/concepts/project-model.md, docs/concepts/recipes.md, docs/concepts/binding-generation.md, docs/concepts/canister-discovery.md */}

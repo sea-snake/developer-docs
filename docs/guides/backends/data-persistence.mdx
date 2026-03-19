@@ -5,13 +5,18 @@ sidebar:
   order: 1
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Canister state lives in two places: **heap memory** and **stable memory** (persistent, survives upgrades). In Rust and most languages, heap memory is wiped on upgrade — any data you care about must be stored in stable memory. In Motoko, the `persistent actor` pattern automatically preserves all actor state across upgrades without any additional work.
 
 This guide shows how to store data durably in both Motoko and Rust. For a conceptual explanation of why stable memory works this way, see [Orthogonal Persistence](../../concepts/orthogonal-persistence.md).
 
-## Motoko: persistent actor
+## Store data durably
 
-In Motoko, use `persistent actor`. All `let` and `var` declarations inside the actor body are automatically persisted across upgrades — no `stable` keyword, no upgrade hooks.
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+
+Use `persistent actor`. All `let` and `var` declarations inside the actor body are automatically persisted across upgrades — no `stable` keyword, no upgrade hooks.
 
 ```motoko
 import Map "mo:core/Map";
@@ -62,7 +67,7 @@ persistent actor {
 }
 ```
 
-**Rules for Motoko persistent actors:**
+**Key rules:**
 
 - `let` for collections (`Map`, `List`, `Set`) — auto-persisted, no serialization needed
 - `var` for simple values (`Nat`, `Text`, `Bool`) — auto-persisted
@@ -70,7 +75,7 @@ persistent actor {
 - No `pre_upgrade` / `post_upgrade` hooks needed — the runtime handles persistence
 - Do not write `stable let` or `stable var` — redundant in `persistent actor` and produces compiler warnings
 
-### mops.toml
+**mops.toml:**
 
 ```toml
 [package]
@@ -81,24 +86,12 @@ version = "0.1.0"
 core = "2.0.0"
 ```
 
-### Schema evolution rules
-
-When upgrading a Motoko canister, the type of every persistent field must be compatible with its stored value. Violating this causes the upgrade to trap — the canister continues running on the old Wasm with its data intact, but cannot be upgraded until the type conflict is resolved.
-
-**Safe changes (always OK):**
-- Add new `let` or `var` fields with initial values
-- Add new optional record fields (e.g., change `{ name : Text }` to `{ name : Text; email : ?Text }`)
-
-**Unsafe changes (will trap on upgrade):**
-- Remove or rename a persistent field
-- Change a field's type (e.g., `Nat` → `Int`)
-- Change a non-optional field to a different type
-
-## Rust: stable structures
+</TabItem>
+<TabItem label="Rust">
 
 Rust canisters use [`ic-stable-structures`](https://docs.rs/ic-stable-structures/latest/ic_stable_structures/) for persistent storage. The `MemoryManager` partitions stable memory into virtual memories, each backing a separate data structure. Data lives in stable memory from the start — no serialization on upgrade.
 
-### Cargo.toml
+**Cargo.toml:**
 
 ```toml
 [package]
@@ -117,7 +110,7 @@ serde = { version = "1", features = ["derive"] }
 ciborium = "0.2"
 ```
 
-### Implementing Storable for custom types
+**Implementing Storable for custom types:**
 
 `StableBTreeMap` keys must implement `Storable + Ord`, values must implement `Storable`. Primitive types (`u64`, `bool`, `String`, `Vec<u8>`, `Principal`) already implement `Storable`. For custom structs, implement it manually using CBOR serialization:
 
@@ -154,7 +147,7 @@ impl Storable for User {
 }
 ```
 
-### MemoryManager and stable structures
+**MemoryManager and stable structures:**
 
 ```rust
 use ic_stable_structures::{
@@ -235,11 +228,40 @@ fn get_user_count() -> u64 {
 ic_cdk::export_candid!();
 ```
 
-### Multiple stable structures
+**Key rules:**
+
+- Each structure gets a unique `MemoryId` — reusing IDs corrupts both structures
+- `StableBTreeMap` for keyed collections; keys need `Storable + Ord`
+- `StableCell` for single values (counters, config flags)
+- `StableLog` for append-only logs — requires two `MemoryId`s (index + data)
+- `thread_local! { RefCell<StableBTreeMap<...>> }` is the correct pattern — `RefCell` wraps the stable structure, not a heap `HashMap`
+- No `pre_upgrade`/`post_upgrade` serialization needed — data is already in stable memory
+
+</TabItem>
+</Tabs>
+
+## Schema evolution
+
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+
+When upgrading a Motoko canister, the type of every persistent field must be compatible with its stored value. Violating this causes the upgrade to trap — the canister continues running on the old Wasm with its data intact, but cannot be upgraded until the type conflict is resolved.
+
+**Safe changes (always OK):**
+- Add new `let` or `var` fields with initial values
+- Add new optional record fields (e.g., change `{ name : Text }` to `{ name : Text; email : ?Text }`)
+
+**Unsafe changes (will trap on upgrade):**
+- Remove or rename a persistent field
+- Change a field's type (e.g., `Nat` → `Int`)
+- Change a non-optional field to a different type
+
+</TabItem>
+<TabItem label="Rust">
 
 When using more than one stable structure, give each a unique `MemoryId`. `StableLog` requires two memory regions (index + data).
 
-This example extends the [MemoryManager and stable structures](#memorymanager-and-stable-structures) snippet above — it reuses the same `Memory` type alias, `MemoryManager`, `DefaultMemoryImpl`, `RefCell`, and `User` struct defined there, and adds `Post` and `AUDIT_LOG`:
+This example extends the snippet above — it reuses the same `Memory` type alias, `MemoryManager`, `DefaultMemoryImpl`, `RefCell`, and `User` struct, and adds `Post` and `AUDIT_LOG`:
 
 ```rust
 use ic_stable_structures::{
@@ -293,16 +315,7 @@ thread_local! {
 }
 ```
 
-**Rules for Rust stable structures:**
-
-- Each structure gets a unique `MemoryId` — reusing IDs corrupts both structures
-- `StableBTreeMap` for keyed collections; keys need `Storable + Ord`
-- `StableCell` for single values (counters, config flags)
-- `StableLog` for append-only logs — requires two `MemoryId`s (index + data)
-- `thread_local! { RefCell<StableBTreeMap<...>> }` is the correct pattern — `RefCell` wraps the stable structure, not a heap `HashMap`
-- No `pre_upgrade`/`post_upgrade` serialization needed — data is already in stable memory
-
-## Anti-pattern: pre_upgrade serialization (Rust)
+**Anti-pattern: pre_upgrade serialization**
 
 Avoid serializing heap data to stable memory in `pre_upgrade` hooks. This pattern is fragile and will brick the canister under load:
 
@@ -329,6 +342,9 @@ fn post_upgrade() {
 
 Use `StableBTreeMap` and other stable structures instead. Data lives in stable memory from the start, so no serialization step is needed on upgrade.
 
+</TabItem>
+</Tabs>
+
 ## Idempotency for safe data mutation
 
 When an update call's result is unknown (network interruption, ingress expiry), callers may retry. Without idempotency, retries can cause double-writes, double-spends, or duplicate records. Two patterns handle this:
@@ -337,8 +353,10 @@ When an update call's result is unknown (network interruption, ingress expiry), 
 
 Track a per-caller counter. A call is only accepted if it carries the next expected sequence number:
 
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+
 ```motoko
-// Motoko example — persistent actor
 import Map "mo:core/Map";
 import Nat "mo:core/Nat";
 import Principal "mo:core/Principal";
@@ -362,14 +380,56 @@ public shared(msg) func transferWithSeq(amount : Nat, seq : Nat) : async Bool {
 }
 ```
 
+</TabItem>
+<TabItem label="Rust">
+
+```rust
+use ic_stable_structures::{StableBTreeMap, memory_manager::{MemoryId, MemoryManager, VirtualMemory}, DefaultMemoryImpl};
+use ic_cdk::{caller, update};
+use candid::Principal;
+use std::cell::RefCell;
+
+type Memory = VirtualMemory<DefaultMemoryImpl>;
+
+thread_local! {
+    static MEMORY_MANAGER: RefCell<MemoryManager<DefaultMemoryImpl>> =
+        RefCell::new(MemoryManager::init(DefaultMemoryImpl::default()));
+
+    static CALLER_SEQ: RefCell<StableBTreeMap<Principal, u64, Memory>> =
+        RefCell::new(StableBTreeMap::init(
+            MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(10)))
+        ));
+}
+
+#[update]
+fn transfer_with_seq(amount: u64, seq: u64) -> bool {
+    let caller = caller();
+    CALLER_SEQ.with(|s| {
+        let mut map = s.borrow_mut();
+        let expected = map.get(&caller).unwrap_or(0);
+        if seq != expected {
+            return false; // reject out-of-order or duplicate calls
+        }
+        // ... perform transfer ...
+        map.insert(caller, seq + 1);
+        true
+    })
+}
+```
+
+</TabItem>
+</Tabs>
+
 Best for low-throughput, per-account flows (similar to Ethereum nonces). Limits concurrency to one in-flight call per caller.
 
 ### ID deduplication
 
 Callers attach a unique ID per operation. The canister rejects duplicates within a time window:
 
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+
 ```motoko
-// Motoko example — persistent actor
 import Map "mo:core/Map";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
@@ -396,13 +456,60 @@ public func transferWithId(amount : Nat, idempotency_key : Text) : async Bool {
 }
 ```
 
+</TabItem>
+<TabItem label="Rust">
+
+```rust
+use ic_stable_structures::{StableBTreeMap, memory_manager::{MemoryId, MemoryManager, VirtualMemory}, DefaultMemoryImpl};
+use ic_stable_structures::storable::{Bound, Storable};
+use ic_cdk::{api::time, update};
+use std::borrow::Cow;
+use std::cell::RefCell;
+
+type Memory = VirtualMemory<DefaultMemoryImpl>;
+
+const WINDOW_NS: u64 = 24 * 60 * 60 * 1_000_000_000; // 24 hours in nanoseconds
+
+thread_local! {
+    static MEMORY_MANAGER: RefCell<MemoryManager<DefaultMemoryImpl>> =
+        RefCell::new(MemoryManager::init(DefaultMemoryImpl::default()));
+
+    static EXECUTED: RefCell<StableBTreeMap<String, u64, Memory>> =
+        RefCell::new(StableBTreeMap::init(
+            MEMORY_MANAGER.with(|m| m.borrow().get(MemoryId::new(11)))
+        ));
+}
+
+#[update]
+fn transfer_with_id(amount: u64, idempotency_key: String) -> bool {
+    let now = time();
+    EXECUTED.with(|s| {
+        let mut map = s.borrow_mut();
+        if let Some(executed_at) = map.get(&idempotency_key) {
+            if now - executed_at < WINDOW_NS {
+                return true; // already done
+            }
+        }
+        // ... perform transfer ...
+        map.insert(idempotency_key, now);
+        true
+    })
+}
+```
+
+</TabItem>
+</Tabs>
+
 Supports higher throughput and concurrent callers. Requires bounded storage — expire entries after the deduplication window.
 
 ## Verify persistence across upgrades
 
 The definitive test: deploy, write data, upgrade, confirm data survived.
 
-**Motoko backend** (method names are camelCase):
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+
+Method names are camelCase in Motoko:
 
 ```bash
 icp network start -d
@@ -431,7 +538,10 @@ icp canister call backend getRequestCount '()'
 # Returns: (0 : nat) — expected, transient var resets on upgrade
 ```
 
-**Rust backend** (method names are snake_case):
+</TabItem>
+<TabItem label="Rust">
+
+Method names are snake_case in Rust:
 
 ```bash
 icp network start -d
@@ -456,6 +566,9 @@ icp canister call backend get_user '(0 : nat64)'
 # Returns: (opt record { id = 0 : nat64; name = "Alice"; created = ... })
 ```
 
+</TabItem>
+</Tabs>
+
 If the count drops to 0 after upgrade, the data is not in stable memory. Review your storage declarations.
 
 ## Related
@@ -465,4 +578,4 @@ If the count drops to 0 after upgrade, the data is not in stable memory. Review 
 - [Stable Structures (Rust)](../../languages/rust/stable-structures.md) — deep dive into `ic-stable-structures`
 - [Motoko](../../languages/motoko/index.md) — Motoko language overview and persistence model
 
-<!-- Upstream: informed by dfinity/portal docs/building-apps/canister-management/storage.mdx, docs/building-apps/best-practices/storage.mdx, docs/building-apps/best-practices/idempotency.mdx -->
+{/* Upstream: informed by dfinity/portal docs/building-apps/canister-management/storage.mdx, docs/building-apps/best-practices/storage.mdx, docs/building-apps/best-practices/idempotency.mdx */}

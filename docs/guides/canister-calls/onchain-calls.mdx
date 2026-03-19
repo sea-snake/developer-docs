@@ -5,6 +5,8 @@ sidebar:
   order: 3
 ---
 
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
 Canisters on the Internet Computer communicate by calling each other's functions. A caller canister sends a request message containing the method name, arguments, and optionally attached cycles. The callee executes the method and returns a response. If the callee cannot be reached or a resource limit is hit, the system produces a reject response instead.
 
 This guide covers making inter-canister calls in both Motoko and Rust, choosing between query and update calls, handling errors, and avoiding common pitfalls. For the messaging model behind these calls, see [Canisters](../../concepts/canisters.md).
@@ -27,7 +29,10 @@ There are two types of canister methods, and the choice affects latency, cost, a
 
 To make query responses verifiable without the cost of update calls, see [Certified Variables](../backends/certified-variables.md). For running multiple query calls in parallel, see [Parallel Calls and Composite Queries](parallel-calls.md).
 
-## Making calls in Motoko
+## Making calls
+
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 Import another canister by name and call its methods with `await`:
 
@@ -48,7 +53,34 @@ persistent actor {
 };
 ```
 
-### Error handling in Motoko
+</TabItem>
+<TabItem label="Rust">
+
+The Rust CDK provides `Call::unbounded_wait` and `Call::bounded_wait` to call other canisters. Both return a builder that lets you attach arguments, cycles, and timeout settings.
+
+```rust
+use candid::{Nat, Principal};
+use ic_cdk::call::Call;
+use ic_cdk::update;
+
+#[update]
+pub async fn call_get_and_set(counter: Principal, new_value: Nat) -> Nat {
+    Call::unbounded_wait(counter, "get_and_set")
+        .with_arg(&new_value)
+        .await
+        .expect("Failed to get the old value")
+        .candid::<Nat>()
+        .expect("Candid decoding failed")
+}
+```
+
+</TabItem>
+</Tabs>
+
+## Error handling
+
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 Wrap inter-canister calls in `try`/`catch` to handle rejects:
 
@@ -72,29 +104,29 @@ persistent actor {
 
 In Motoko, `public shared ({ caller })` binds the original caller at method entry, so `caller` remains valid after `await` points.
 
-## Making calls in Rust
+**Cleanup with `finally`**
 
-The Rust CDK provides `Call::unbounded_wait` and `Call::bounded_wait` to call other canisters. Both return a builder that lets you attach arguments, cycles, and timeout settings.
+Use `try/finally` (with or without `catch`) to guarantee cleanup code runs — even if code after an `await` traps. This is useful for releasing locks or rolling back temporary state:
 
-### Basic call
+```motoko
+var locked = false;
 
-```rust
-use candid::{Nat, Principal};
-use ic_cdk::call::Call;
-use ic_cdk::update;
-
-#[update]
-pub async fn call_get_and_set(counter: Principal, new_value: Nat) -> Nat {
-    Call::unbounded_wait(counter, "get_and_set")
-        .with_arg(&new_value)
-        .await
-        .expect("Failed to get the old value")
-        .candid::<Nat>()
-        .expect("Candid decoding failed")
-}
+public shared func guarded() : async () {
+  assert not locked;
+  locked := true;
+  try {
+    await Counter.increment();
+    // ... more work
+  } finally {
+    locked := false; // Always runs, even on trap after await
+  };
+};
 ```
 
-### Error handling in Rust
+The `finally` block must be effect-free: no `await`, no `throw`, no async calls. It must return `()` and should not trap — a trapping `finally` block can prevent future upgrades.
+
+</TabItem>
+<TabItem label="Rust">
 
 The call returns a `Result` where the error type distinguishes **clean rejects** (the call definitively did not execute) from **non-clean rejects** (the outcome is unknown):
 
@@ -122,6 +154,9 @@ The distinction matters for correctness:
 - **Clean reject** -- the callee never executed the method. Safe to retry.
 - **Non-clean reject** -- the callee may or may not have executed. Use idempotent APIs or provide a separate endpoint to query the outcome.
 
+</TabItem>
+</Tabs>
+
 ## Canister discovery
 
 Before making an inter-canister call, your canister needs the `Principal` of the target canister. Canister IDs are assigned at deployment time and differ between environments (local, staging, mainnet), so hardcoding them creates portability problems.
@@ -130,17 +165,8 @@ Before making an inter-canister call, your canister needs the `Principal` of the
 
 `icp deploy` automatically injects `PUBLIC_CANISTER_ID:<name>` environment variables into every canister in the environment. This means each canister can discover any other canister's ID at runtime without hardcoding:
 
-**Rust:**
-
-```rust
-use candid::Principal;
-
-let counter_id = Principal::from_text(
-    &ic_cdk::api::env_var_value("PUBLIC_CANISTER_ID:counter")
-).unwrap();
-```
-
-**Motoko:**
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
 ```motoko
 import Runtime "mo:core/Runtime";
@@ -151,6 +177,20 @@ let ?counterIdText = Runtime.envVar<system>("PUBLIC_CANISTER_ID:counter") else {
 };
 let counterId = Principal.fromText(counterIdText);
 ```
+
+</TabItem>
+<TabItem label="Rust">
+
+```rust
+use candid::Principal;
+
+let counter_id = Principal::from_text(
+    &ic_cdk::api::env_var_value("PUBLIC_CANISTER_ID:counter")
+).unwrap();
+```
+
+</TabItem>
+</Tabs>
 
 Deployment order does not matter — `icp deploy` creates all canisters first, then injects variables, then installs code. Variables are only updated for the canisters being deployed, so run `icp deploy` (without arguments) when adding new canisters to update all of them.
 
@@ -168,31 +208,57 @@ icp deploy my_canister --argument "(principal \"$TARGET_ID\")"
 **Hardcoded principal.** Acceptable for well-known system canisters (like the management canister `aaaaa-aa` or the NNS ledger). Avoid for application canisters.
 
 > **Motoko named imports:** Motoko's `import Counter "canister:counter"` syntax resolves canister IDs at compile time. This syntax is currently being redesigned to work with icp-cli's environment-based discovery model. Use environment variables for now if you are building with icp-cli.
-<!-- Needs human verification: check back with Motoko team on the status of canister:name redesign -->
+{/* Needs human verification: check back with Motoko team on the status of canister:name redesign */}
 
 ## Bounded vs unbounded wait
 
-Every inter-canister call must choose a wait strategy:
+Every inter-canister call must choose a wait strategy. By default, calls use **unbounded wait** — the caller waits indefinitely until the callee responds. **Bounded wait** (also called best-effort messaging) adds a timeout: if the callee hasn't responded by the deadline, the system returns a `SYS_UNKNOWN` response.
 
-### Unbounded wait
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
 
-```rust
-Call::unbounded_wait(callee, "method")
+By default, `await` uses unbounded wait. Add a `timeout` parenthetical (in seconds) to use bounded wait:
+
+```motoko
+// Unbounded wait (default) — guaranteed response
+let result = await Counter.get();
+
+// Bounded wait — best-effort response with 25-second deadline
+let result = await (with timeout = 25) Counter.get();
+
+// Reusable timeout configuration
+let boundedWait = { timeout = 25 };
+let result = await (boundedWait) Counter.get();
+
+// Combine timeout with cycles
+let result = await (boundedWait with cycles = 1_000_000) Counter.get();
 ```
 
-The caller waits until the callee produces a response. Response delivery (including rejects) is guaranteed. Use this for calls to canisters you control, where you trust the callee to respond in a timely manner.
+</TabItem>
+<TabItem label="Rust">
 
-### Bounded wait
+The Rust CDK provides separate constructors for each strategy:
 
 ```rust
 use ic_cdk::call::Call;
 
+// Unbounded wait — guaranteed response
+Call::unbounded_wait(callee, "method")
+    .await
+
+// Bounded wait — best-effort response with 5-second timeout
 Call::bounded_wait(callee, "method")
     .change_timeout(5) // timeout in seconds
     .await
 ```
 
-The caller may receive a `SYS_UNKNOWN` response after the timeout expires or if the subnet runs low on resources. Response delivery is best-effort. Use this for calls to third-party or untrusted canisters.
+</TabItem>
+</Tabs>
+
+**When to use each:**
+
+- **Unbounded wait** — the callee is guaranteed to respond (including rejects). Use for calls to canisters you control and trust to respond promptly.
+- **Bounded wait** — the caller may receive `SYS_UNKNOWN` after the timeout or if the subnet runs low on resources. Use for calls to third-party or untrusted canisters.
 
 **Upgrade safety:** unbounded wait calls may prevent your canister from upgrading until the callee responds. If the callee is unresponsive or malicious, your canister could be stuck indefinitely. Prefer bounded wait when calling canisters you do not control.
 
@@ -202,7 +268,10 @@ The caller may receive a `SYS_UNKNOWN` response after the timeout expires or if 
 
 The publisher/subscriber pattern is a natural fit for inter-canister communication on ICP. A publisher canister maintains a list of subscribers and notifies them when events occur. Unlike traditional pub/sub systems, ICP's reliable message delivery means subscribers are guaranteed to receive notifications (as long as both canisters have sufficient cycles).
 
-### Publisher
+<Tabs syncKey="lang">
+<TabItem label="Motoko">
+
+**Publisher**
 
 The publisher stores subscriber callbacks and invokes them when publishing:
 
@@ -234,7 +303,7 @@ persistent actor Publisher {
 };
 ```
 
-### Subscriber
+**Subscriber**
 
 The subscriber registers a callback with the publisher using an inter-canister call:
 
@@ -266,7 +335,16 @@ The key mechanism is passing a **shared function reference** (`callback`) across
 
 > **Note:** The subscriber uses `canister:pub` to import the publisher. See [Canister discovery](#canister-discovery) for the note on this syntax and the recommended environment variable alternative.
 
-<!-- TODO: Create a Rust pub/sub example in dfinity/examples — Rust currently has no equivalent of this Motoko pattern in the examples repo -->
+</TabItem>
+<TabItem label="Rust">
+
+The same pattern works in Rust using Candid's `Func` type to pass callback references between canisters. The publisher stores `candid::Func` values and invokes them with `Call::unbounded_wait`; the subscriber registers its own method as a callback.
+
+A Rust pub/sub example is not yet available in the [examples repo](https://github.com/dfinity/examples). See the Motoko tab for the full pattern — the architecture is identical.
+{/* TODO: Create a Rust pub/sub example in dfinity/examples */}
+
+</TabItem>
+</Tabs>
 
 ## Important caveats
 
@@ -325,4 +403,4 @@ Calls between canisters on the same subnet complete within a single round. Cross
 - [Certified Variables](../backends/certified-variables.md) -- make query responses verifiable without update call overhead
 - [Inter-Canister Call Security](../security/inter-canister-calls.md) -- reentrancy guards, async safety patterns, and trust considerations
 
-<!-- Upstream: informed by dfinity/portal docs/building-apps/interact-with-canisters/advanced-calls.mdx, docs/building-apps/developer-tools/cdks/rust/intercanister.mdx, multi-canister icskill, icp-cli icskill, dfinity/icp-cli docs/concepts/canister-discovery.md, and dfinity/examples motoko/pub-sub -->
+{/* Upstream: informed by dfinity/portal docs/building-apps/interact-with-canisters/advanced-calls.mdx, docs/building-apps/developer-tools/cdks/rust/intercanister.mdx, multi-canister icskill, icp-cli icskill, dfinity/icp-cli docs/concepts/canister-discovery.md, dfinity/examples motoko/pub-sub, and caffeinelabs/motoko doc/md/fundamentals/2-actors/1-actors-async.md (timeout parenthetical syntax, try/finally cleanup pattern) */}

@@ -98,7 +98,7 @@ Combined with the NNS governance system, this enables **autonomous protocol upgr
 
 For more on how upgrades work at the protocol level, see the [Chain Evolution](https://learn.internetcomputer.org/hc/en-us/articles/34210120121748) article on the Learn Hub.
 
-## What's next
+## Next steps
 
 - [Chain Fusion](chain-fusion.md) — how canisters use chain-key signatures to interact with other blockchains
 - [Ethereum integration](../guides/chain-fusion/ethereum.md) — using threshold ECDSA with Ethereum and EVM chains

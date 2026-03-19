@@ -117,7 +117,7 @@ Not every ICP application needs the default asset canister. Your options:
 
 Start with the simplest architecture that meets your requirements. You can always split a canister into multiple canisters later — it is much harder to merge canisters that were split prematurely.
 
-## What's next
+## Next steps
 
 - [Quickstart](../getting-started/quickstart.md) — deploy your first application
 - [Onchain calls](../guides/canister-calls/onchain-calls.md) — inter-canister communication patterns

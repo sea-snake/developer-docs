@@ -191,7 +191,7 @@ HTTPS outcalls work on the local replica — icp-cli proxies requests through th
 
 > **Note:** The local replica runs a single node, so all responses reach consensus automatically — even without a transform function. Make sure to verify your transform produces identical output for varying inputs (different headers, timestamps) before deploying to a multi-node subnet, where mismatches cause "no consensus" errors.
 
-## What's next
+## Next steps
 
 - [Concepts: HTTPS Outcalls](../../concepts/https-outcalls.md) — how consensus works for outcalls
 - [Exchange Rate Canister (XRC)](https://github.com/dfinity/exchange-rate-canister) — a production service powered by HTTPS outcalls that fetches cryptocurrency and fiat exchange rates

@@ -319,7 +319,7 @@ The `canister_inspect_message` hook is only called for ingress messages (calls f
 
 Calls between canisters on the same subnet complete within a single round. Cross-subnet calls require 2-3 consensus rounds and are noticeably slower. Keep this in mind when designing multi-canister architectures.
 
-## What's next
+## Next steps
 
 - [Parallel Calls and Composite Queries](parallel-calls.md) -- make multiple calls concurrently and use composite queries for efficient read patterns
 - [Candid](candid.md) -- define the interface your canister exposes for inter-canister calls

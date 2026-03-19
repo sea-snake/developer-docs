@@ -84,7 +84,7 @@ The network is governed by the **Network Nervous System (NNS)**, a DAO implement
 
 Individual applications can also be governed by a **Service Nervous System (SNS)**, which applies the same DAO model at the application level. See [Governance](governance.md) for details.
 
-## What's next
+## Next steps
 
 - [Canisters](canisters.md) — what runs on the network
 - [App architecture](app-architecture.md) — how applications use subnets and canisters

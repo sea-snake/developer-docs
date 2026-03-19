@@ -233,7 +233,7 @@ In the hello-world template, the frontend's build step runs `npm run generate --
 
 For a deep dive on binding generation, see [Binding generation](../guides/canister-calls/binding-generation.md).
 
-## What's next
+## Next steps
 
 - [What next?](what-next.md) -- explore paths for building on ICP
 - [Binding generation](../guides/canister-calls/binding-generation.md) -- deep dive on generating type-safe client code

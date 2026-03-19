@@ -247,7 +247,7 @@ For a complete working example with cycle tracking and multiple timers:
 
 - [Rust periodic tasks example](https://github.com/dfinity/examples/tree/master/rust/periodic_tasks)
 
-## What's next
+## Next steps
 
 - [Canister lifecycle](../canister-management/lifecycle.md) — init, pre/post-upgrade hooks
 - [Timers (concept)](../../concepts/timers.md) — how the IC protocol timer works

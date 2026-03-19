@@ -126,7 +126,7 @@ Under the hood, each canister maintains several components:
 - **Controllers list** — the set of principals authorized to manage the canister.
 - **Settings** — configurable parameters like compute allocation, memory allocation, and the freezing threshold (the cycles balance below which the canister stops accepting new messages to avoid running out).
 
-## What's next
+## Next steps
 
 - [Reverse gas model](reverse-gas-model.md) — how canisters pay for computation
 - [App architecture](app-architecture.md) — how canisters fit into application design

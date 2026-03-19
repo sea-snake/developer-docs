@@ -118,7 +118,7 @@ Chain Fusion enables application patterns that are difficult or impossible with 
 - **Cross-chain DeFi.** A lending protocol that accepts Bitcoin as collateral (held in a canister-controlled BTC address) and issues stablecoins as ICRC-2 tokens.
 - **Decentralized oracle.** A canister fetches real-world data via HTTPS outcalls and posts it to a smart contract on another chain — replacing centralized oracle networks.
 
-## What's next
+## Next steps
 
 - [Bitcoin integration](../guides/chain-fusion/bitcoin.md) — build with BTC on ICP
 - [Ethereum integration](../guides/chain-fusion/ethereum.md) — interact with Ethereum and EVM chains

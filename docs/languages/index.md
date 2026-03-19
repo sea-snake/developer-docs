@@ -1,14 +1,14 @@
 ---
-title: "Overview"
+title: "Languages & CDKs"
 description: "Languages and CDKs for building ICP canisters"
 sidebar:
   order: 0
 icskills: []
 ---
 
-ICP canisters compile to WebAssembly, so any language that targets Wasm can be used. These docs cover the two officially supported languages in depth, plus community CDKs for additional languages.
+ICP canisters compile to WebAssembly, so any language that targets Wasm can be used. There are two approaches: **Motoko** is a language purpose-built for IC -- its compiler handles system API bindings, Candid serialization, and persistence natively. For other languages, a **Canister Development Kit (CDK)** provides the glue between the language and the IC system API -- type-safe bindings for system calls, macros for exposing canister methods, and utilities for stable memory and inter-canister calls.
 
-## Official CDKs
+## Official languages
 
 ### [Motoko](motoko/index.md)
 

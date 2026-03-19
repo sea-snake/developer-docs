@@ -7,19 +7,19 @@ sidebar:
 
 ICP canisters compile to WebAssembly, so any language that targets Wasm can be used. There are two approaches: **Motoko** is a language purpose-built for IC -- its compiler handles system API bindings, Candid serialization, and persistence natively. For other languages, a **Canister Development Kit (CDK)** provides the glue between the language and the IC system API -- type-safe bindings for system calls, macros for exposing canister methods, and utilities for stable memory and inter-canister calls.
 
-## Official languages
+## Officially supported
 
 ### [Motoko](motoko/index.md)
 
-Purpose-built for the Internet Computer. Built-in actor model, orthogonal persistence, and async/await for inter-canister calls. Compiles directly to Wasm with no external toolchain.
+A language purpose-built for the Internet Computer by DFINITY. Built-in actor model, orthogonal persistence, and async/await for inter-canister calls. Compiles directly to Wasm with no external CDK needed.
 
 ### [Rust](rust/index.md)
 
-Use the `ic-cdk` canister development kit with the full Rust ecosystem -- any crate that compiles to `wasm32-unknown-unknown` works. Ideal when leveraging existing Rust libraries or integrating with Rust-based tooling.
+Use the `ic-cdk` canister development kit, maintained by DFINITY, with the full Rust ecosystem. Any crate that compiles to `wasm32-unknown-unknown` works.
 
-## Community CDKs
+## Community-maintained CDKs
 
-These CDKs are built and maintained by the community. They enable ICP development in additional languages.
+These CDKs are built and maintained by the community, enabling ICP development in additional languages.
 
 | Language | CDK | Repository |
 |----------|-----|------------|

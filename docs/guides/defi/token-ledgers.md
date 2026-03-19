@@ -14,13 +14,13 @@ This guide covers the most common token operations: transfers, approvals, subacc
 
 The table below lists a few well-known ledgers used throughout this guide. Many more tokens exist on ICP — see the [ICP Dashboard token list](https://dashboard.internetcomputer.org/tokens) for a broader overview. Anyone can deploy an ICRC-1 compliant ledger.
 
-| Token | Ledger canister ID | Decimals |
-|-------|-------------------|----------|
-| ICP | `ryjl3-tyaaa-aaaaa-aaaba-cai` | 8 |
-| ckBTC | `mxzaz-hqaaa-aaaar-qaada-cai` | 8 |
-| ckETH | `ss2fx-dyaaa-aaaar-qacoq-cai` | 18 |
+| Token | Ledger canister ID |
+|-------|-------------------|
+| ICP | `ryjl3-tyaaa-aaaaa-aaaba-cai` |
+| ckBTC | `mxzaz-hqaaa-aaaar-qaada-cai` |
+| ckETH | `ss2fx-dyaaa-aaaar-qacoq-cai` |
 
-> Fees can change at any time. Always call `icrc1_fee` to get the current fee rather than hardcoding values.
+> Query `icrc1_fee` and `icrc1_decimals` at runtime rather than hardcoding values.
 
 Index canisters (for transaction history):
 

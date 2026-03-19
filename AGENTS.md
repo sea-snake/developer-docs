@@ -493,11 +493,11 @@ Some files are copied from `.sources/` into the docs repo because they need to b
 
 | Local file | Source | Affects |
 |-----------|--------|---------|
-| `docs/reference/_attachments/ic.did` | `.sources/portal/docs/references/_attachments/ic.did` | Management canister reference — new/changed methods require updating `docs/reference/management-canister.md` and any guides that reference affected methods |
+| `public/reference/ic.did` | `.sources/portal/docs/references/_attachments/ic.did` | Management canister reference — new/changed methods require updating `docs/reference/management-canister.md` and any guides that reference affected methods |
 
 **Portal bump checklist for `ic.did`:**
-1. Diff: `diff docs/reference/_attachments/ic.did .sources/portal/docs/references/_attachments/ic.did`
-2. If changed, copy: `cp .sources/portal/docs/references/_attachments/ic.did docs/reference/_attachments/ic.did`
+1. Diff: `diff public/reference/ic.did .sources/portal/docs/references/_attachments/ic.did`
+2. If changed, copy: `cp .sources/portal/docs/references/_attachments/ic.did public/reference/ic.did`
 3. Review the diff for new methods, changed signatures, or removed methods
 4. Update `docs/reference/management-canister.md` to reflect any interface changes
 5. Check guides that reference affected methods (chain-fusion, canister-management, backends)

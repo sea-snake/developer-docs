@@ -597,9 +597,9 @@ Methods that require explicit cycle attachment (`create_canister`, `sign_with_ec
 
 ## Candid interface
 
-The complete Candid interface definition for the management canister is available at [`ic.did`](_attachments/ic.did). This file defines all types and method signatures in machine-readable Candid format and can be used for binding generation and type checking.
+The complete Candid interface definition for the management canister is available at [`ic.did`](/reference/ic.did). This file defines all types and method signatures in machine-readable Candid format and can be used for binding generation and type checking.
 
-<!-- sync from .sources/portal/docs/references/_attachments/ic.did -->
+<!-- sync public/reference/ic.did from .sources/portal/docs/references/_attachments/ic.did -->
 
 ## Next steps
 

@@ -29,6 +29,13 @@
     }
   },
   {
+    // Candid interface files (e.g., ic.did) — plain text
+    "match": "**/*.did",
+    "headers": {
+      "Content-Type": "text/plain; charset=utf-8"
+    }
+  },
+  {
     // Hashed assets — cache forever
     "match": "_astro/**/*",
     "headers": {

@@ -28,9 +28,13 @@ public/docs-manifest.json
 # macOS-specific files
 .DS_Store
 
-# Claude Code (local-only files; .claude/settings.json is committed)
+# Claude Code (local-only files; .claude/settings.json and .claude/skills/ are committed)
 .claude/settings.local.json
 .claude/worktrees/
+
+# Skills install artifacts (npx skills add writes here; committed skills live in .agents/skills/)
+/skills/
+skills-lock.json
 
 # Dolt database files (added by bd init)
 .dolt/

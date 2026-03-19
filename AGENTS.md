@@ -324,7 +324,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 ## Always (do these without asking)
 
 - Read `.docs-plan/decisions.md` before proposing structural changes
-- **Ensure all required skills are loaded** before starting any work (see "Skills (required)" section). This is a hard prerequisite — if skills fail to install, do not create content or review PRs. Report the failure to the user and work on non-content tasks only (rebasing, housekeeping, infrastructure).
+- **Ensure all required skills are accessible** before starting any work (see "Skills (required)" section). Skills are pre-installed as symlinks — if they appear broken, run `git submodule update --init --depth 1`. Do not start content or review work if skills are inaccessible.
 - Use icp-cli commands in all CLI examples — never `dfx`
 - Write plain `.md` files only — never `.mdx` or JSX
 - Include complete frontmatter (see CONTRIBUTING.md for schema)
@@ -373,6 +373,8 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - `docs/guides/tools/migrating-from-dfx.md` — Synced from `dfinity/icp-cli` (do not edit directly)
 - `.docs-plan/` — Analysis artifacts, decisions, and progress tracking (see `.docs-plan/README.md`)
 - `.sources/` — **Pinned submodules of upstream source repos** (see "Source material repos" below)
+- `.agents/skills/` — Shared agent skills. All entries are symlinks: `technical-documentation` → `.sources/dotskills/skills/technical-documentation`, icskills → `.sources/icskills/skills/`. Requires submodules to be initialized (`git submodule update --init --depth 1`).
+- `.claude/skills/` — Symlinks to `.agents/skills/` for Claude Code. Same skills, Claude-specific path.
 - `.claude/settings.json` — Shared Claude Code permissions (committed to git). Ensures worktree/background agents can run without interactive approval.
 - `plugins/` — Astro build plugins (rehype/remark transforms and the agent-docs integration)
 - `icp.yaml` — icp-cli project config (asset canister recipe)
@@ -419,6 +421,7 @@ All upstream source repos are pinned as **git submodules** under `.sources/`. Th
 | `.sources/cdk-rs` | `dfinity/cdk-rs` | `timers-1.0.0` / `executor-2.0.0` | Rust CDK (`ic-cdk`, `ic-cdk-timers`, `ic-cdk-macros`) — API signatures, management canister types |
 | `.sources/candid` | `dfinity/candid` | `2025-12-18` | Candid spec, type system, `didc` tool source |
 | `.sources/response-verification` | `dfinity/response-verification` | `v3.1.0` (latest release) | Response verification, certified variables, certificate trees |
+| `.sources/dotskills` | `vincentkoc/dotskills` | `main` | Technical documentation skill (AGPL-3.0 — kept as submodule to avoid license mixing) |
 
 ### Submodule initialization
 
@@ -489,18 +492,21 @@ Read `.docs-plan/content-authoring.md` before writing any page. It covers the fu
 
 ## Skills (required)
 
-Skills are a **hard prerequisite** — do not start any content work, review, or ICP-related task without them. At session start, verify skills are loaded. If not, install them:
+Skills are a **hard prerequisite** — do not start any content work, review, or ICP-related task without them. All skills are pre-installed in the repo:
 
+- `.agents/skills/` — agent-agnostic location (canonical)
+- `.claude/skills/` — symlinks to `.agents/skills/` for Claude Code
+
+**Prerequisite:** All skills are symlinks into `.sources/` submodules (icskills → `.sources/icskills/skills/`, technical-documentation → `.sources/dotskills/skills/technical-documentation`). Run `git submodule update --init --depth 1` if skills appear as broken symlinks.
+
+At session start, verify skills are accessible:
 ```bash
-# Technical documentation skill (drafting and reviewing docs quality)
-npx skills add https://github.com/vincentkoc/dotskills --skill technical-documentation
-
-# ICP development skills (canister IDs, code patterns, common pitfalls)
-npx skills add .sources/icskills
+ls .agents/skills/icp-cli/SKILL.md .agents/skills/technical-documentation/SKILL.md
+# Both should resolve (not "No such file"). If broken, run: git submodule update --init --depth 1
 ```
 
 - **`technical-documentation`** — Load before drafting or reviewing any docs page
-- **icskills** (17 skills) — Load the relevant skill before writing any feature-specific content. Skills are in `.sources/icskills/` (pinned submodule). Use the skill that matches the page topic (e.g., `ckbtc` for Bitcoin guides, `multi-canister` for architecture pages, `icp-cli` for CLI guides).
+- **icskills** (16 skills) — Load the relevant skill before writing any feature-specific content. Use the skill that matches the page topic (e.g., `ckbtc` for Bitcoin guides, `multi-canister` for architecture pages, `icp-cli` for CLI guides).
 
 ## Frontmatter schema
 

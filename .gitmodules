@@ -40,3 +40,6 @@
 [submodule ".sources/response-verification"]
 	path = .sources/response-verification
 	url = git@github.com:dfinity/response-verification.git
+[submodule ".sources/dotskills"]
+	path = .sources/dotskills
+	url = git@github.com:vincentkoc/dotskills.git

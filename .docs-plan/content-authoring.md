@@ -54,7 +54,7 @@ When drafting a new docs page:
 - All code examples must be self-contained and copy-pasteable
 - Code examples: <30 lines inline, >30 lines link to `dfinity/examples`
 - Default to `.md`. Use `.mdx` only for pages with interactive components (e.g., language-synced tabs). See `.docs-plan/decisions.md` for when `.mdx` is appropriate.
-- Use relative paths with `.md` extension for internal links (e.g., `[Quickstart](../getting-started/quickstart.md)`). Never use absolute paths like `/getting-started/quickstart/` — they break on GitHub.
+- **Always use `.md` extension in internal links**, even when linking to a `.mdx` file (e.g., `[Canister lifecycle](lifecycle.md)` not `lifecycle.mdx`). Astro resolves links by slug, so `.md` works regardless of the target's actual extension. Use relative paths (e.g., `[Quickstart](../getting-started/quickstart.md)`). Never use absolute paths like `/getting-started/quickstart/` — they break on GitHub.
 - Max sidebar nesting: 3 levels
 - Images go in `src/assets/images/` organized by section (see CONTRIBUTING.md for details)
 - When writing a page, decide case-by-case whether portal images are worth carrying over. Keep the existing hand-drawn visual style.

@@ -54,13 +54,16 @@
 	--sl-hue-purple: 259;
 }
 
-/* Widen content only when screen has room for sidebar + content + TOC */
-@media (min-width: 90rem) {
+/* Widen content only when screen has room for left sidebar + content + TOC.
+   Formula: viewport ≥ content-width + 2 × sidebar-width (18.75rem each) + margin.
+   - 65rem content needs ~105rem viewport
+   - 75rem content needs ~115rem viewport */
+@media (min-width: 105rem) {
 	:root {
 		--sl-content-width: 65rem;
 	}
 }
-@media (min-width: 110rem) {
+@media (min-width: 115rem) {
 	:root {
 		--sl-content-width: 75rem;
 	}

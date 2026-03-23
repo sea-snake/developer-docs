@@ -4,6 +4,8 @@
  *
  * 1. Markdown endpoints — serves a clean .md file alongside every HTML page
  * 2. llms.txt — discovery index listing all pages with links to .md endpoints
+ * 3. Agent signaling — injects a hidden llms.txt directive right after <body>
+ *    in every HTML page so agents discover it early (before nav/sidebar)
  *
  * Runs in the astro:build:done hook so it operates on the final build output.
  */
@@ -412,6 +414,43 @@ export default function agentDocs() {
         logger.info(
           `Generated llms.txt (${llmsTxt.length} chars, ${pages.length} pages)`
         );
+
+        // 4. Inject agent signaling directive into HTML pages
+        // Places a visually-hidden blockquote right after <body> so it appears
+        // early in the document (within the first ~15%), before nav/sidebar.
+        // Uses CSS clip-rect (not display:none) so it survives HTML-to-markdown
+        // conversion. See: https://agentdocsspec.com
+        const directive =
+          `<blockquote class="agent-signaling" data-pagefind-ignore>` +
+          `<p>For AI agents: Documentation index at ` +
+          `<a href="/llms.txt">/llms.txt</a></p></blockquote>`;
+        const htmlFiles = await glob("**/*.html", { cwd: outDir });
+        let injected = 0;
+        for (const file of htmlFiles) {
+          const filePath = path.join(outDir, file);
+          const html = fs.readFileSync(filePath, "utf-8");
+          const bodyIdx = html.indexOf("<body");
+          if (bodyIdx === -1) continue;
+          const closeIdx = html.indexOf(">", bodyIdx);
+          if (closeIdx === -1) continue;
+          const insertAt = closeIdx + 1;
+          fs.writeFileSync(
+            filePath,
+            html.slice(0, insertAt) + directive + html.slice(insertAt)
+          );
+          injected++;
+        }
+        logger.info(`Injected agent signaling into ${injected} HTML pages`);
+
+        // 5. Alias sitemap-index.xml → sitemap.xml
+        // Astro's sitemap integration outputs sitemap-index.xml, but crawlers
+        // and the agentdocsspec checker expect /sitemap.xml by convention.
+        const sitemapIndex = path.join(outDir, "sitemap-index.xml");
+        const sitemapAlias = path.join(outDir, "sitemap.xml");
+        if (fs.existsSync(sitemapIndex) && !fs.existsSync(sitemapAlias)) {
+          fs.copyFileSync(sitemapIndex, sitemapAlias);
+          logger.info("Copied sitemap-index.xml → sitemap.xml");
+        }
       },
     },
   };

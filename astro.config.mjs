@@ -17,12 +17,10 @@ export default defineConfig({
     remarkPlugins: [remarkIcpCliVersion],
   },
   integrations: [
-    agentDocs(),
     starlight({
       title: "ICP Developer Docs",
       components: {
         EditLink: "./src/components/EditLink.astro",
-        Banner: "./src/components/AgentSignaling.astro",
       },
       head: [
         {
@@ -55,5 +53,8 @@ export default defineConfig({
       },
       sidebar,
     }),
+    // Generate .md endpoints, llms.txt, and agent signaling for agent-friendly docs.
+    // Listed after starlight() so the astro:build:done hook runs after sitemap generation.
+    agentDocs(),
   ],
 });

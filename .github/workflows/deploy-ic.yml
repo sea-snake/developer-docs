@@ -25,7 +25,9 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Initialize examples submodule
-        run: git submodule update --init --depth 1 .sources/examples
+        run: |
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git submodule update --init --depth 1 .sources/examples
 
       - uses: actions/setup-node@v4
         with:

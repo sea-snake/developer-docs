@@ -1,36 +1,15 @@
 {
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true,
+    "failIfUnavailable": true,
+    "filesystem": {
+      "denyRead": ["~/.ssh", "~/.gnupg", "~/.aws", "~/.config/gh"]
+    }
+  },
   "permissions": {
     "allow": [
-      "Bash(git fetch *)",
-      "Bash(git checkout *)",
-      "Bash(git pull *)",
-      "Bash(git stash*)",
-      "Bash(git rebase *)",
-      "Bash(git add *)",
-      "Bash(git commit *)",
-      "Bash(git push *)",
-      "Bash(git status*)",
-      "Bash(git diff*)",
-      "Bash(git log *)",
-      "Bash(git log)",
-      "Bash(git ls-remote *)",
-      "Bash(git branch *)",
-      "Bash(git submodule *)",
-      "Bash(git worktree *)",
-      "Bash(git -C *)",
-      "Bash(npm run *)",
-      "Bash(ls *)",
-      "Bash(bd *)",
-      "Bash(gh pr *)",
-      "Bash(gh api *)",
-      "Bash(gh issue create *)",
-      "Bash(npx skills *)",
-      "Bash(jq *)",
-      "Bash(grep *)",
-      "Bash(head *)",
-      "Bash(tail *)",
-      "Bash(wc *)",
-      "Bash(cat *)",
+      "Bash",
       "Edit(**)",
       "Write(**)",
       "Read(**)",
@@ -46,17 +25,7 @@
       "Write(.claude/settings.local.json)"
     ],
     "deny": [
-      "Bash(git push --force *)",
-      "Bash(git reset *)",
-      "Bash(git clean *)",
-      "Bash(git config *)",
-      "Bash(rm -rf *)",
-      "Edit(~/**)",
-      "Edit(//**)",
-      "Write(~/**)",
-      "Write(//**)",
-      "Read(~/**)",
-      "Read(//**)"
+      "Bash(git push --force *)"
     ]
   }
 }

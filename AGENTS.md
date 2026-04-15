@@ -47,7 +47,7 @@ Without `bd`/`dolt` you can still write docs — check `.docs-plan/migration-pla
 For batch operations like addressing PR feedback across multiple PRs, Claude Code can launch background agents in isolated git worktrees. Each agent works on a separate branch without conflicts.
 
 **Prerequisites:**
-- `.claude/settings.json` (committed to git) pre-approves tools that agents need (Bash, Edit, Read, etc.). Without this, background agents block waiting for interactive permission approval that never comes.
+- `.claude/settings.json` (committed to git) enables the sandbox and pre-approves tools. The sandbox runs agents with OS-level filesystem isolation and auto-approves all Bash commands — no interactive permission prompts mid-task.
 - `.claude/settings.local.json` and `.claude/worktrees/` are gitignored (local-only).
 
 **How it works:**
@@ -68,7 +68,7 @@ git submodule update --init --depth 1
 ```
 The parent agent must include this as the mandatory first step in every worktree agent's prompt.
 
-**If agents fail with permission errors:** Check that `.claude/settings.json` exists and includes all required tools. The shared settings file is the authoritative source — per-user `~/.claude/projects/` settings don't apply to worktree agents (different path). **Important:** Permission patterns use prefix matching, so chained commands like `git stash && git rebase` won't match a `git stash*` pattern — the `&&` makes it a single shell string. Worktree agents should run git commands as **separate sequential tool calls**, not chained with `&&`.
+**If agents fail with permission errors:** Check that `.claude/settings.json` exists and the sandbox is active (run `/sandbox` in a session to verify). The shared settings file is the authoritative source — per-user `~/.claude/projects/` settings don't apply to worktree agents (different path). With the sandbox active, all Bash commands are auto-approved; no allowlist patterns are needed.
 
 **Beads safety:** Worktree agents share the parent's `.beads/` directory and Dolt server. Concurrent `bd` commands can corrupt the Dolt journal.
 - **Only the parent agent** may run `bd` commands (claim, update, push, pull)
@@ -375,7 +375,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - `.sources/` — **Pinned submodules of upstream source repos** (see "Source material repos" below)
 - `.agents/skills/` — Shared agent skills. All entries are symlinks: `technical-documentation` → `.sources/dotskills/skills/technical-documentation`, icskills → `.sources/icskills/skills/`. Requires submodules to be initialized (`git submodule update --init --depth 1`).
 - `.claude/skills/` — Symlinks to `.agents/skills/` for Claude Code. Same skills, Claude-specific path.
-- `.claude/settings.json` — Shared Claude Code permissions (committed to git). Ensures worktree/background agents can run without interactive approval.
+- `.claude/settings.json` — Shared Claude Code sandbox config and permissions (committed to git). Enables OS-level filesystem isolation and auto-approves Bash for worktree/background agents. Run `/sandbox` in a session to verify the sandbox is active.
 - `plugins/` — Astro build plugins (rehype/remark transforms and the agent-docs integration)
 - `icp.yaml` — icp-cli project config (asset canister recipe)
 - `.icp/data/` — Canister ID mappings (committed to git). `.icp/cache/` is gitignored.

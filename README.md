@@ -106,7 +106,7 @@ bd show <id>           # task details
 ./scripts/setup.sh    # submodules, deps, Beads, build check
 ```
 
-Then open Claude Code (or your preferred agent tool) in the repo root. The agent reads `AGENTS.md` automatically.
+Then open Claude Code (or your preferred agent tool) in the repo root. The agent reads `AGENTS.md` automatically. The sandbox is pre-configured in `.claude/settings.json` — run `/sandbox` inside a session to confirm it's active.
 
 ## For AI agents
 

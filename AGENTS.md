@@ -501,7 +501,8 @@ Only the project maintainer bumps submodule refs. When bumped, follow this check
 1. Identify what changed: `git -C .sources/<repo> log --oneline <old-ref>..<new-ref>`
 2. Grep docs pages for content derived from that submodule (code examples, API references, CLI flags, canister IDs, etc.) and update any affected pages
 3. Check open PRs — for each open `docs/*` or `infra/*` PR, check if the pages it touches use content from the bumped submodule. If yes, post a targeted comment flagging what's potentially outdated (see comment format below)
-4. Note the bump in the PR description
+4. **For release-pinned repos:** update `.sources/VERSIONS` — version label, hash, and any crate-version annotations. See the notes in that file for repo-specific guidance (cdk-rs multi-crate, candid version lookup commands, motoko shallow-clone caveat).
+5. Note the bump in the PR description
 
 **PR comment format** (targeted, not generic):
 ```

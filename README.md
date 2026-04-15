@@ -23,12 +23,17 @@ docs/                   # All documentation (.md only)
 ├── concepts/           # Explanations
 ├── languages/          # Motoko (synced) + Rust
 └── reference/          # Specs and reference
+.sources/               # Pinned upstream repos (read-only source material for agents)
+├── VERSIONS            # Current pinned release versions for versioned submodules
+└── ...                 # portal, icp-cli, motoko, cdk-rs, icskills, examples, ...
 .docs-plan/             # Planning artifacts and progress tracking
 AGENTS.md               # Agent and contributor instructions
 CONTRIBUTING.md         # Contribution guidelines
 ```
 
 Documentation lives in `docs/` at the project root. Astro reads it via a symlink at `src/content/docs/`.
+
+`.sources/` contains pinned git submodules that agents use as ground truth when writing and verifying content — CLI references, API signatures, skill files, code examples. **Do not edit files in `.sources/` directly.** See `.sources/VERSIONS` for current pinned release versions and `AGENTS.md` for the bump procedure.
 
 ## Contributing
 

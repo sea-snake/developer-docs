@@ -102,6 +102,17 @@ The build generates `/llms.txt` and per-page `.md` endpoints from your content. 
 - **Frontmatter `description`** is used as the page summary in `llms.txt` — write clear, useful descriptions
 - **Adding a new sidebar section** in `astro.config.mjs` requires updating the `SECTIONS` array in `plugins/astro-agent-docs.mjs` to match, otherwise pages in that section won't appear in `llms.txt`
 
+## Source material
+
+`.sources/` contains pinned git submodules that agents use as ground truth when writing and reviewing content — CLI references, API signatures, skill files, code examples, and the old portal docs.
+
+**Do not edit files in `.sources/` directly.** They are read-only references; changes go to the upstream repos.
+
+Current pinned release versions are in [`.sources/VERSIONS`](.sources/VERSIONS). Bumping a submodule is a maintainer task — follow the procedure in `AGENTS.md` "Bumping submodules". The two pinning strategies are:
+
+- **Release-pinned** (`icp-cli`, `motoko`, `motoko-core`, `cdk-rs`, `candid`, `response-verification`) — pinned to the latest release tag so docs reflect what users actually have installed. Never pin past the latest release.
+- **main/master-tracked** (`portal`, `examples`, `icskills`, and others) — track the default branch; the branch tip is the canonical source.
+
 ## Synced content
 
 Some files are auto-synced from other repositories.

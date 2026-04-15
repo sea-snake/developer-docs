@@ -1,0 +1,54 @@
+# Pinned submodule versions (release-pinned repos only)
+# -------------------------------------------------------
+# Repos that track main/master are NOT listed here — they have no fixed release
+# version. Those repos are: portal, examples, icskills, dotskills,
+# icp-cli-recipes, icp-cli-templates, icp-js-sdk-docs.
+#
+# FORMAT: <submodule>   <version label>   <7-char hash>
+#
+# The hash is the authoritative ref — it is what .gitmodules pins and what
+# git checks out. The version label is the human-readable release name.
+# Verify with: git -C .sources/<repo> rev-parse HEAD
+#
+# -------------------------------------------------------
+# AGENTS — when bumping a release-pinned submodule:
+#   1. Find the latest release tag:
+#        git -C .sources/<repo> ls-remote --tags origin
+#   2. Fetch and pin to that tag's commit (NOT the tip of main):
+#        git -C .sources/<repo> fetch origin refs/tags/<tag>
+#        git -C .sources/<repo> checkout FETCH_HEAD
+#   3. Update the version label and hash in this file
+#   4. Follow the full checklist in AGENTS.md "Bumping submodules"
+#
+# Do NOT pin past the latest release — unreleased changes must not
+# appear in docs before they ship to users.
+# -------------------------------------------------------
+# REPO-SPECIFIC NOTES
+#
+# cdk-rs — monorepo with per-crate tags using different prefixes:
+#   ic-cdk:          plain semver tags (0.19.0, 0.18.x, ...)
+#   ic-cdk-timers:   timers-1.0.0, timers-0.12.x, ...
+#   ic-cdk-executor: executor-2.0.0, executor-1.0.x, ...
+#   Releases are usually batched: a single merge commit releases all crates
+#   together. Individual crate tags may point to slightly earlier commits within
+#   the release PR branch. Pin to the combined release merge commit for
+#   coherence, and list all crate versions explicitly below.
+#   When bumping: check if timers/executor also released alongside ic-cdk.
+#
+# candid — uses date-based release tags (no semver git tags exist).
+#   The candid crate, candid_parser, and didc tool each have their own semver
+#   in Cargo.toml. Check these after bumping:
+#     find .sources/candid -name "Cargo.toml" | xargs grep -l "^name = \"candid\"$" | xargs grep "^version"
+#     find .sources/candid -name "Cargo.toml" | xargs grep -l "name = \"didc\""    | xargs grep "^version"
+#
+# motoko — the release tag commit may not resolve in a shallow clone.
+#   The merge commit of the release PR represents the same state and is used
+#   instead. This is expected behaviour with --depth 1 submodule init.
+# -------------------------------------------------------
+
+icp-cli               v0.2.3                                                    caeac37
+motoko                v1.5.1  # tag 8e4c02d not in shallow clone                395ce0b
+motoko-core           v2.4.0                                                    cd37dbf
+cdk-rs                ic-cdk v0.19.0 / ic-cdk-timers v1.0.0 / ic-cdk-executor v2.0.0  80d8234
+candid                2025-12-18  # candid v0.10.20, didc v0.5.4                2e4a2cf
+response-verification v3.1.0                                                    18c5a37

@@ -62,13 +62,15 @@ else
 fi
 
 if $has_bd && $has_dolt; then
-  if [ -d ".beads/dolt" ]; then
+  # A fresh clone has .beads/dolt/ with only config.yaml — no actual database.
+  # .bd-dolt-ok is written by Beads after a successful bootstrap and is absent on a bare clone.
+  if [ -f ".beads/dolt/.bd-dolt-ok" ]; then
     echo "Syncing task state from remote..."
     bd dolt start 2>/dev/null || true
     bd dolt pull
     ok "Task state synced"
   else
-    echo "Bootstrapping task database..."
+    echo "Bootstrapping task database (fresh clone)..."
     if bd bootstrap; then
       ok "Task database bootstrapped"
     else

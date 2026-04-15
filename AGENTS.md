@@ -40,7 +40,7 @@ All tasks (content pages, infrastructure, tooling) are coordinated through [Bead
 ./scripts/setup.sh    # submodules, npm deps, Beads task DB, Dolt server, build check
 ```
 
-> **Running from Claude Code:** `setup.sh` starts the Dolt server (requires binding a TCP port). Run it with `dangerouslyDisableSandbox: true` — you will be prompted once for approval. Subsequent session starts and all `bd dolt` operations run without prompts (`bd dolt start`, `bd dolt pull`, `bd dolt push` are all pre-approved). Only `bd init --force` will ever prompt — it destroys local database state and should only occur on initialization.
+> **Running from Claude Code:** `setup.sh` starts the Dolt server (requires binding a TCP port). Run it with `dangerouslyDisableSandbox: true` — you will be prompted once for approval. `bd dolt start`, `bd dolt pull`, `bd dolt push`, and `gh *` are all pre-approved (no permission prompts), but `bd dolt start` and `gh` still require `dangerouslyDisableSandbox: true` every session (`bd dolt start` binds a TCP port; `gh` needs macOS keychain). Claude Code remembers the sandbox bypass for the rest of the session after the first use.
 
 Without `bd`/`dolt` you can still write docs — check `.docs-plan/migration-plan.md` for tasks manually.
 
@@ -49,14 +49,14 @@ Without `bd`/`dolt` you can still write docs — check `.docs-plan/migration-pla
 For batch operations like addressing PR feedback across multiple PRs, Claude Code can launch background agents in isolated git worktrees. Each agent works on a separate branch without conflicts.
 
 **Prerequisites:**
-- `.claude/settings.json` (committed to git) enables the sandbox and pre-approves tools. The sandbox runs agents with OS-level filesystem isolation. Sandboxed Bash commands run automatically via `autoAllowBashIfSandboxed`. Pre-approved commands (`git submodule update`, `bd dolt start/pull/push`) also run without prompts. Worktree agents never run `bd dolt push` (parent only), so they operate fully uninterrupted.
+- `.claude/settings.json` (committed to git) enables the sandbox and pre-approves tools. The sandbox runs agents with OS-level filesystem isolation. Sandboxed Bash commands are auto-approved via `autoAllowBashIfSandboxed` — no per-command permission prompts in worktrees. Worktree agents never run `gh` or `bd`; those stay in the parent session.
 - `.claude/settings.local.json` and `.claude/worktrees/` are gitignored (local-only).
 
 **How it works:**
 1. The parent agent claims tasks in Beads, then launches one background agent per PR/task using `isolation: "worktree"`
-2. Each agent gets its own git worktree (isolated copy of the repo), checks out its branch, makes edits, and commits
+2. Each agent gets its own git worktree (isolated copy of the repo), checks out its branch, makes edits, commits, and **pushes its branch** (`git push` uses outbound SSH, which works in the sandbox)
 3. **Each worktree agent must initialize submodules as its first step** (see "Submodule initialization in worktrees" below)
-4. The parent agent collects results, pushes branches from worktrees (`git -C <worktree-path> push`), and posts feedback-addressed comments
+4. The parent agent collects results and handles all `gh` and `bd` operations: creates PRs (`gh pr create`), posts comments (`gh pr comment`), and updates Beads (`bd update`). Worktrees never run `gh` or `bd`.
 5. The parent agent cleans up worktrees after all work is done:
    ```bash
    git worktree remove --force <path>           # for each worktree (--force needed due to submodules)
@@ -75,28 +75,63 @@ The parent agent must include this as the mandatory first step in every worktree
 For **content creation**, every worktree prompt must include:
 1. `git submodule update --init --depth 1` as the first command
 2. Branch name (`docs/<slug>`) and page path (`docs/<slug>.md`)
-3. Instruction to read `.docs-plan/content-authoring.md` before writing anything
-4. Instruction to read the relevant entry in `.docs-plan/migration-plan.md` for source material and dependencies
-5. Instruction to load the `technical-documentation` skill: `.agents/skills/technical-documentation/SKILL.md`
-6. Instruction to load the relevant icskill from `.agents/skills/` based on the page topic
-7. Instruction to follow all rules in `CLAUDE.md` (already in project context, but worth stating explicitly)
-8. **Never run `bd` commands** — the parent handles all Beads operations
+3. The specific icskill to load — the **parent must determine this before launching** (see "Mapping tasks to icskills" below) and pass it as e.g. `"load .agents/skills/timers/SKILL.md"`
+4. Instruction to read `.docs-plan/content-authoring.md` before writing anything
+5. Instruction to read `.docs-plan/migration-plan.md` for the task entry — dependencies, effort, source material pointers
+6. Instruction to read the stub file at `docs/<path>` — it contains `<!-- Source Material -->` comments listing exact portal pages and files to read
+7. Instruction to load the `technical-documentation` skill: `.agents/skills/technical-documentation/SKILL.md`
+8. Instruction to follow all rules in `CLAUDE.md`
+9. Instruction to run `npm run build` to verify the page builds, then **commit and push the branch** (`git push -u origin docs/<slug>`) — this is where the worktree's work ends. Return the branch name to the parent.
+10. **Never run `gh` commands** — parent handles `gh pr create` and all GitHub API calls
+11. **Never run `bd` commands** — parent handles all Beads operations
+
+**Mapping tasks to icskills** — the parent must identify the right skill before launching each worktree. Run `ls .agents/skills/` to see all available skills. Quick topic map:
+
+| Page topic | icskill to load |
+|---|---|
+| Bitcoin / ckBTC | `ckbtc` |
+| Ethereum / ckETH | `cketh` |
+| Chain-key tokens (general) | `chain-key-tokens` |
+| Timers | `timers` |
+| Randomness / VRF | `randomness` |
+| Certified variables / certified data | `certified-variables` |
+| HTTP outcalls | `http-outcalls` |
+| On-chain AI / AI inference | `on-chain-ai` |
+| SNS / governance | `sns` |
+| Identity / authentication | `internet-identity` |
+| Multi-canister / architecture | `multi-canister` |
+| ICP ledger / tokens | `icp-ledger` |
+| CLI / tooling | `icp-cli` |
+| Frontend / asset canister | `asset-canister` |
+| Candid | `candid` |
+
+If no skill exactly matches, load the closest one and `technical-documentation` is always required in addition.
 
 For **PR reviews**, every worktree prompt must include:
 1. `git submodule update --init --depth 1` as the first command
-2. PR number and branch name
-3. Instruction to read `.docs-plan/review-guidelines.md`
-4. Instruction to load the `technical-documentation` skill and the relevant icskill
-5. Instruction to check out the PR branch, read the full page, and run the review checklist from `review-guidelines.md`
-6. Instruction to post full findings directly as a `gh pr comment` after completing the review — do not wait for the parent; post autonomously
-7. Instruction to return a brief summary to the parent (pass/fail + key issues) after posting the comment
+2. PR number and branch name to check out
+3. The specific icskill to load — **parent determines this** from the PR's page topic (see "Mapping tasks to icskills" above) and passes it explicitly
+4. Instruction to read `.docs-plan/review-guidelines.md` for the full checklist before starting
+5. Instruction to load the `technical-documentation` skill: `.agents/skills/technical-documentation/SKILL.md`
+6. Instruction to check out the PR branch, read the full page at `docs/<path>`, and work through every item in the review checklist from `review-guidelines.md` — do not skip sections
+7. Instruction to write findings to `$(pwd)/.claude/reviews/pr-<PR#>.md` using `mkdir -p .claude/reviews`, following the output format in `review-guidelines.md`, then **return the absolute file path** to the parent — do not return findings inline
 8. **Never run `bd` commands**
+9. **Never run `gh` commands** — `gh` requires macOS Security framework for TLS; blocked in sandbox background agents
 
-**If agents fail with permission errors:** Check that `.claude/settings.json` exists and the sandbox is active (run `/sandbox` in a session to verify). The shared settings file is the authoritative source — per-user `~/.claude/projects/` settings don't apply to worktree agents (different path). With the sandbox active, all sandboxed Bash commands are auto-approved via `autoAllowBashIfSandboxed`. `git submodule update --init` is additionally pre-approved for sandbox bypass. `bd dolt *` commands will prompt for approval in the main session (they need network access) — worktree agents never run these.
+**Batch limit for reviews: 8–10 per wave** — same as content. Review findings go to disk (not inline results), so per-worktree context cost is the same ~5–7k tokens. Use the same wave state file pattern as content batches (see above) for compaction-safe resumption between waves.
+
+**GitHub API in worktrees:** Worktree agents cannot use `gh` (Go binary, macOS Security framework required for TLS — blocked in sandbox). Worktrees write output to files; the parent reads them and calls `gh` in the main session. Review findings go to `<worktree-absolute-path>/.claude/reviews/pr-<PR#>.md`; the worktree returns the absolute path, and the parent posts with:
+```bash
+gh pr comment <PR#> --body-file <absolute-path-returned-by-worktree>
+rm <absolute-path-returned-by-worktree>   # clean up after posting
+```
+This keeps review content off the parent's context entirely (no context bloat), and is robust to compaction — the file survives even if earlier messages are compressed.
+
+**If agents fail with permission errors:** Check that `.claude/settings.json` exists and the sandbox is active (run `/sandbox` in a session to verify). The shared settings file is the authoritative source — per-user `~/.claude/projects/` settings don't apply to worktree agents (different path). With the sandbox active, all sandboxed Bash commands are auto-approved via `autoAllowBashIfSandboxed`. `git submodule update --init` is additionally pre-approved for sandbox bypass. `bd dolt *` and `gh *` commands require OS sandbox bypass — worktree agents must never run these; only the parent runs `bd` and `gh`.
 
 **Beads safety:** Worktree agents share the parent's `.beads/` directory and Dolt server. Concurrent `bd` commands can corrupt the Dolt journal.
 - **Only the parent agent** may run `bd` commands (claim, update, push, pull)
-- **Worktree agents must NEVER run `bd`** — they only write content, build, and commit
+- **Worktree agents must NEVER run `bd`** — they only write content, build, commit, and push
 - **Serialize all `bd` calls** — never run `bd update` for multiple tasks in parallel; always wait for one to complete before starting the next
 - Auto-backup is enabled (`.beads/config.yaml`) — JSONL snapshots go to `.beads/backup/` every 15 min as a local safety net
 - **NEVER run `bd init --force`** without explicit user confirmation — this can destroy the database
@@ -109,29 +144,55 @@ For **PR reviews**, every worktree prompt must include:
 
 ### Session start
 
-> **Sandbox note:** `bd dolt start`, `bd dolt pull`, and `bd dolt push` are all pre-approved in `.claude/settings.json` and run without prompts. Only `bd init --force` will prompt — it destroys local database state. All other `bd` commands (`bd list`, `bd update`, etc.) connect to the already-running Dolt server on localhost and run within the sandbox without prompts. `gh` commands work within the sandbox (no bypass needed).
+> **Sandbox note:** `bd dolt start`, `bd dolt pull`, `bd dolt push`, and `gh *` are all pre-approved (no permission prompts). However, `bd dolt start` and `gh` still require `dangerouslyDisableSandbox: true` every session — `bd dolt start` binds a TCP port; `gh` needs macOS keychain. Claude Code remembers the bypass for the rest of the session after the first use. All other `bd` commands connect to the already-running Dolt server on localhost and run within the sandbox without bypass.
+
+**Step 1 — Fresh clone check:**
 
 ```bash
-bd dolt start   # ensure Dolt server is running (no-op if already up) — pre-approved, no prompt
-bd dolt pull    # sync task state from remote — pre-approved, no prompt
+ls .beads/dolt/.bd-dolt-ok 2>/dev/null || echo "FRESH CLONE"
+```
+If **FRESH CLONE**: run `./scripts/setup.sh` (`dangerouslyDisableSandbox: true`) and wait for it to complete before proceeding.
+
+**Step 2 — Start Dolt and sync:**
+
+```bash
+bd dolt start   # dangerouslyDisableSandbox — port binding; pre-approved, no permission prompt
+bd dolt pull    # no sandbox bypass needed
 ```
 
-**Fresh clone:** If `.beads/dolt/` is missing or contains only `config.yaml`, the database has never been bootstrapped. `bd dolt pull` will fail with "database not found". Use the clean recovery procedure below to initialize it from the remote.
+> **Orphaned Dolt process:** If `bd dolt status` shows "Expected port: 0" after start, a stale process holds the lock. Fix: `pkill -9 -f dolt && bd dolt start` (both need `dangerouslyDisableSandbox`).
 
-**Verify the pull worked:** Another agent may have updated task state from a different environment since your last session. After pulling, cross-reference Beads against GitHub to catch stale local state:
+**Step 3 — Verify skills:**
+
+```bash
+ls .agents/skills/icp-cli/SKILL.md .agents/skills/technical-documentation/SKILL.md
+```
+If either is missing (broken symlink): `git submodule update --init --depth 1`. Do not start any content or review work until skills resolve.
+
+**Step 4 — Resume interrupted wave (if applicable):**
+
+Check for `.claude/wave-state.json`. If it exists, a previous wave was interrupted by compaction or a crash. Read the file and complete any unfinished steps for each task before proceeding to the Priority scan:
+- `done` → skip
+- `pr_created` → `bd update --status draft && bd dolt push`
+- `pushed` → `gh pr create` + `bd update` (verify branch exists first: `git ls-remote origin <branch>`)
+- `launched` → check `git ls-remote origin <branch>`: if present treat as `pushed`; if not, re-launch the worktree
+
+After all tasks are resolved, delete `.claude/wave-state.json`.
+
+**Step 5 — Verify Beads state:**
 ```bash
 bd list --status draft --limit 0    # should match open PRs
-gh pr list --state open --json number,title
+gh pr list --state open --json number,title   # dangerouslyDisableSandbox — first gh call of session
 ```
-If open PRs exist but no corresponding `draft` tasks appear (or tasks that should be `draft` still show `open`), the local DB is stale and the pull did not merge correctly. **Also use the clean recovery if `bd dolt pull` fails with "database not found" (fresh clone — DB not yet bootstrapped).** Do not make any `bd update` calls against a stale DB — this will cause merge conflicts on push. Instead, do a clean recovery:
+If open PRs exist but no corresponding `draft` tasks appear, the local DB is stale. Do not make any `bd update` calls against a stale DB. Run a clean recovery:
 ```bash
-pkill -9 -f dolt
+pkill -9 -f dolt                           # dangerouslyDisableSandbox — kills background processes
 rm -rf .beads/dolt
-bd dolt start
-bd init --force --prefix developer-docs   # safe: only destroys local, pulls from remote
+bd dolt start                              # dangerouslyDisableSandbox — port binding
+bd init --force --prefix developer-docs   # dangerouslyDisableSandbox — may emit "embedded Dolt requires CGO" error; ignore it, the bootstrap still succeeds
 # restart server after init (init may not reconnect automatically)
-pkill -9 -f dolt
-bd dolt start
+pkill -9 -f dolt                           # dangerouslyDisableSandbox
+bd dolt start                              # dangerouslyDisableSandbox
 bd dolt pull
 bd list --limit 5                          # verify data is correct
 ```
@@ -245,7 +306,31 @@ Three outcomes:
 ### Doing the work
 
 - **Fresh task:** Follow the "Content authoring workflow" below (for content pages) or task-specific instructions in `migration-plan.md` (for infrastructure). Every content page must include an `<!-- Upstream: -->` comment (see "Always" section) and the PR must include a `## Sync recommendation` section.
-- **Batch content creation (multiple unblocked tasks):** Use parallel worktree agents — one per task. Claim all tasks sequentially first (see "Claiming multiple tasks"), then launch all worktrees in parallel. See "Worktree agent prompt structure" in the "Parallel agents" section for exactly what each worktree prompt must contain. Do not do the content research in the parent — each worktree does its own full research.
+- **Batch content creation (multiple unblocked tasks):** Use parallel worktree agents — one per task. Claim all tasks sequentially first (see "Claiming multiple tasks"), then launch all worktrees in parallel. **Batch limit: 8–10 content worktrees per wave.** Process each worktree result as it arrives (run `gh pr create` + `bd update` + worktree cleanup immediately) rather than collecting all results first — if automatic compaction fires mid-wave, only the in-flight result is at risk, not the entire batch.
+
+  **Compaction safety — write a wave state file.** Each completed wave leaves ~60–70k tokens of dead context. Automatic compaction will eventually fire mid-session, potentially mid-wave. Rather than asking the user to `/compact` (that breaks autonomous operation), make the parent resumable after compaction by persisting wave state to disk:
+
+  - **Before launching a wave:** write `.claude/wave-state.json` with the task IDs, branch names, and per-task progress for that wave
+  - **After each step per task:** update the status field (`launched` → `pushed` → `pr_created` → `done`) — write after each step so the file is always current
+  - **After the wave fully completes** (all tasks `done`): delete the file
+  - **On any session start or post-compaction resume:** check for `.claude/wave-state.json`. If it exists, resume: for each task, check its status field, verify against Beads + `git ls-remote origin <branch>`, and complete any unfinished steps. Only then proceed to the next wave.
+
+  Example wave state file:
+  ```json
+  {
+    "wave": 2,
+    "tasks": [
+      {"id": "developer-docs-4kj.10", "branch": "docs/guides-testing-pocket-ic", "status": "done"},
+      {"id": "developer-docs-4kj.11", "branch": "docs/guides-cycles-management", "status": "pushed"},
+      {"id": "developer-docs-4kj.7",  "branch": "docs/guides-reproducible-builds", "status": "launched"}
+    ]
+  }
+  ```
+  Status meanings: `launched` = worktree started; `pushed` = branch on remote, worktree done; `pr_created` = PR exists, `bd update` pending; `done` = PR created and Beads updated.
+
+  Recovery logic after compaction: `done` → skip; `pr_created` → just `bd update`; `pushed` → `gh pr create` + `bd update`; `launched` → check `git ls-remote origin <branch>`: if branch exists, treat as `pushed`; if not, re-launch the worktree.
+
+  See "Worktree agent prompt structure" in the "Parallel agents" section for exactly what each worktree prompt must contain. Do not do the content research in the parent — each worktree does its own full research.
 - **PR feedback (formal reviews or comments):**
   1. **Claim the task(s)** — set Beads status from `draft` to `in_progress` and push. This prevents other agents from picking up the same feedback. **When handling multiple PRs:** claim ALL tasks sequentially (see "Claiming multiple tasks" above) before launching any worktree agents or starting any fixes.
      ```bash
@@ -253,18 +338,32 @@ Three outcomes:
      bd show <id> --json | jq -r .status   # MUST print "in_progress"
      ```
   2. Read all feedback from **all three sources** (see Priority A above): review body, top-level comments, and inline review comments. Do not start fixing until you have read all three.
-  3. **Evaluate each feedback item** — cross-check claims against `.sources/`. Is the reviewer's suggestion technically correct? Does the proposed fix actually improve the page? Flag any feedback you disagree with and explain why.
-  4. **Present a summary of the feedback to the user** — list each actionable item with your assessment: agree (with proposed fix), partially agree (with alternative), or disagree (with reasoning). The user makes the final call.
-  5. **Wait for the user to confirm** which changes to make. Do not apply changes autonomously.
-  6. After confirmation, check out the branch and apply the fixes. **When fixing multiple PRs:** launch parallel worktree agents with specific instructions per PR (the parent has already done the analysis and gotten user confirmation — agents just execute).
-  7. **Post-fix verification** — before pushing:
+  3. **Evaluate and apply autonomously** — cross-check every claim against `.sources/` and the current page:
+     - **Apply** items that are factually correct and improve the page
+     - **Skip** items that conflict with CLAUDE.md rules, source material, or project conventions — add an `<!-- agent-note: skipped "<quote>" because <reason> -->` HTML comment in the PR comment so reviewers know why
+     - **Apply your best judgment** on style/wording suggestions — you don't need permission for these
+  4. Apply the fixes:
+     - **Single PR:** check out the branch and apply directly in the main session (proceed to steps 7–10 below)
+     - **Multiple PRs:** launch parallel worktree agents — one per PR — with specific fix instructions. Each worktree agent does steps 7–8 only (verify, build, commit, push) then returns a summary. The parent does steps 9–10 for each PR after collecting results.
+  7. **Post-fix verification** — before pushing (done by the worktree agent if using worktrees, otherwise by the parent):
      1. Re-read the full page — does it still flow and make sense as a whole?
      2. `ls` any new or changed link targets to confirm they exist
      3. If the fix moves content elsewhere, confirm the target page covers it (or flag with `<!-- TODO -->`)
-     4. **Update the `<!-- Upstream: -->` comment** if new source material was referenced — every `.sources/` repo or upstream doc used must be listed. This comment is checked by CI.
-  8. Push to the existing branch
-  9. **Update the PR description** to reflect the current state of the page. The description is used as the squash-merge commit message, so it must accurately describe what the PR delivers — not what the original draft contained. Update **both** the "Summary" (to reflect new/changed content) **and** "Sync recommendation" (to match the in-page `<!-- Upstream: -->` comment). Use `gh pr edit <PR#> --body "..."` to update it.
-  10. Submit using the "Changes requested fix" flow in "Submitting" below (build, push, post feedback-addressed comment, return task to `draft`).
+     4. **Update the `<!-- Upstream: -->` comment** if new source material was referenced
+     5. Run `npm run build` — must pass before pushing
+  8. Commit and push to the existing branch (worktree agents stop here and return to parent)
+  9. **Update the PR description** — done by the parent (requires `gh`, blocked in worktrees). Use `gh pr edit <PR#> --body "..."` to update both the Summary and Sync recommendation to reflect the current state of the page.
+  10. **Submit** — done by the parent only (requires `gh` and `bd`):
+      ```bash
+      gh pr comment <PR#> --body "$(cat <<'EOF'
+      <!-- feedback-addressed -->
+      Feedback addressed:
+      - <bullet list of what was fixed>
+      EOF
+      )"
+      bd update <id> --status draft && bd dolt push
+      bd show <id> --json | jq -r .status   # MUST print "draft"
+      ```
 
 ### Reviewing PRs
 
@@ -272,11 +371,13 @@ Three outcomes:
 
 **Parallel reviews use worktrees** — reviews need to check out the PR branch (to read the full page, verify links with `ls`, run `npm run build`). For parallel reviews, launch worktree agents the same way as for content writing. Each agent must run `git submodule update --init --depth 1` first (see "Submodule initialization in worktrees" above) to access skills and `.sources/`.
 
-**Posting review results:** Each review worktree agent posts its full findings directly as a PR comment (`gh pr comment`) before returning — do not wait for the parent to present findings to the user. The PR comment is the record. The parent receives only a brief summary (pass/fail + key issues) to know whether to flag the PR as needing changes.
+**Posting review results:** Review worktree agents write findings to `<worktree-absolute-path>/.claude/reviews/pr-<PR#>.md` and **return the absolute file path** to the parent. The parent posts using `gh pr comment <PR#> --body-file <absolute-path>` then deletes the file. This keeps review content off the parent's context and is safe under compaction.
 
 ### Submitting
 
-**Fresh task:**
+> **Worktree agents:** These flows are for a **single agent** running in the main session. Worktree agents stop after `git push` and return to the parent — they never run `gh` or `bd`. The parent then runs the `gh pr create` / `gh pr comment` and `bd update` steps.
+
+**Fresh task (single agent):**
 ```bash
 npm run build                         # must pass before submitting
 git rebase origin/main                # prevent merge conflicts
@@ -294,7 +395,15 @@ bd show <id> --json | jq -r .status   # MUST print "draft" — do not proceed un
 git checkout main                     # return to main so the workspace is clean for the next task
 ```
 
-**Changes requested fix** (also used after PR feedback fixes)**:**
+**Fresh task (worktree agent — stops here, parent handles the rest):**
+```bash
+npm run build                         # must pass before pushing
+git rebase origin/main
+git push -u origin docs/<slug>
+# Return branch name to parent. Parent runs: gh pr create + bd update
+```
+
+**Changes requested fix (single agent):**
 ```bash
 npm run build                                      # must pass before pushing
 git push
@@ -307,6 +416,13 @@ EOF
 bd update <id> --status draft && bd dolt push
 bd show <id> --json | jq -r .status   # MUST print "draft" — do not proceed until verified
 git checkout main
+```
+
+**Changes requested fix (worktree agent — stops here, parent handles the rest):**
+```bash
+npm run build                         # must pass before pushing
+git push
+# Return summary of fixes to parent. Parent runs: gh pr comment + gh pr edit + bd update
 ```
 
 **Rebase approved PR (Priority B):**
@@ -694,12 +810,18 @@ The "Submitting" section above handles the normal flow (build → push → PR �
 2. **Clean up worktrees** — remove any worktrees created during the session:
    ```bash
    git worktree list                    # check for leftover worktrees
-   git worktree remove <path>           # remove each one
+   git worktree remove --force <path>   # remove each one (--force needed due to submodules)
    git worktree prune                   # clean up stale references
+   git branch -D $(git branch | grep worktree-agent)  # delete backing branches
    ```
-3. **File issues** for discovered work with `bd create`
-4. **Beads is synced** — every status change was followed by `bd dolt push` and verified
-5. **On `main`** — you should already be on `main` from the submit step. If not: `git checkout main`
+3. **Clean up ephemeral files:**
+   ```bash
+   rm -f .claude/wave-state.json        # delete if session ended cleanly mid-wave
+   rm -rf .claude/reviews/              # delete any leftover review files
+   ```
+4. **File issues** for discovered work with `bd create`
+5. **Beads is synced** — every status change was followed by `bd dolt push` and verified
+6. **On `main`** — you should already be on `main` from the submit step. If not: `git checkout main`
 
 Work is NOT complete until all changes are pushed and Beads is synced. Never stop before pushing — that leaves work stranded locally.
 <!-- END BEADS INTEGRATION -->

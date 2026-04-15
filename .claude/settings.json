@@ -13,6 +13,8 @@
       "Bash(bd dolt start*)",
       "Bash(bd dolt pull*)",
       "Bash(bd dolt push*)",
+      "Bash(gh *)",
+      "Bash(pkill*dolt*)",
       "Edit(**)",
       "Write(**)",
       "Read(**)",

@@ -370,7 +370,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Modifying the sidebar configuration in `astro.config.mjs`
 - Changing decisions recorded in `.docs-plan/decisions.md`
 - Adding new external doc sources to the linking rules
-- Adding a new entry to `.sources/` (new submodule) — flag the need and the source repo, don't add it autonomously
+- Adding a new entry to `.sources/` (new submodule) — flag the need and the source repo, don't add it autonomously; also propose which pinning strategy applies (latest release vs. main/master)
 
 ## Never (do not do these under any circumstances)
 
@@ -432,21 +432,26 @@ docs/                       # All documentation (.md only) — src/content/docs/
 
 All upstream source repos are pinned as **git submodules** under `.sources/`. This ensures every agent reads the exact same content, regardless of when they run.
 
-| Submodule | Repo | Pinned to | What it provides |
-|-----------|------|-----------|-----------------|
-| `.sources/portal` | `dfinity/portal` | `master` | Old docs content referenced in stub `<!-- Source Material -->` comments |
-| `.sources/icp-cli` | `dfinity/icp-cli` | `v0.2.1` (latest release) | CLI reference, command syntax verification |
-| `.sources/icp-cli-recipes` | `dfinity/icp-cli-recipes` | `main` | Recipe examples for CLI guides |
-| `.sources/icp-cli-templates` | `dfinity/icp-cli-templates` | `main` | Project templates for getting-started |
-| `.sources/icskills` | `dfinity/icskills` | `main` | Skill files with canister IDs and code patterns |
-| `.sources/examples` | `dfinity/examples` | `master` | Code examples (link to for >30 line snippets) |
-| `.sources/icp-js-sdk-docs` | `dfinity/icp-js-sdk-docs` | `main` | JS SDK documentation |
-| `.sources/motoko` | `caffeinelabs/motoko` | `v1.3.0` (latest release) | Motoko compiler — language spec, system function names, syntax verification |
-| `.sources/motoko-core` | `caffeinelabs/motoko-core` | `v2.2.0` (latest release) | Motoko core library (`mo:core`) — API signatures, module docs |
-| `.sources/cdk-rs` | `dfinity/cdk-rs` | `timers-1.0.0` / `executor-2.0.0` | Rust CDK (`ic-cdk`, `ic-cdk-timers`, `ic-cdk-macros`) — API signatures, management canister types |
-| `.sources/candid` | `dfinity/candid` | `2025-12-18` | Candid spec, type system, `didc` tool source |
-| `.sources/response-verification` | `dfinity/response-verification` | `v3.1.0` (latest release) | Response verification, certified variables, certificate trees |
-| `.sources/dotskills` | `vincentkoc/dotskills` | `main` | Technical documentation skill (AGPL-3.0 — kept as submodule to avoid license mixing) |
+**Two pinning strategies** — which one applies determines the bump procedure (see "Bumping submodules"):
+
+- **Track latest release** — repos that publish versioned releases users install. Pin to the latest release tag so docs describe what users actually have, not unreleased development.
+- **Track main/master** — content repos and tools where the default branch *is* the canonical source (no user-installed release artifact).
+
+| Submodule | Repo | Pinned to | Strategy | What it provides |
+|-----------|------|-----------|----------|-----------------|
+| `.sources/portal` | `dfinity/portal` | `master` | main/master | Old docs content referenced in stub `<!-- Source Material -->` comments |
+| `.sources/icp-cli` | `dfinity/icp-cli` | `v0.2.3` (latest release) | latest release | CLI reference, command syntax verification |
+| `.sources/icp-cli-recipes` | `dfinity/icp-cli-recipes` | `main` | main/master | Recipe examples for CLI guides |
+| `.sources/icp-cli-templates` | `dfinity/icp-cli-templates` | `main` | main/master | Project templates for getting-started |
+| `.sources/icskills` | `dfinity/icskills` | `main` | main/master | Skill files with canister IDs and code patterns (skills site serves main directly) |
+| `.sources/examples` | `dfinity/examples` | `master` | main/master | Code examples (link to for >30 line snippets) |
+| `.sources/icp-js-sdk-docs` | `dfinity/icp-js-sdk-docs` | `main` | main/master | JS SDK documentation |
+| `.sources/motoko` | `caffeinelabs/motoko` | `v1.5.1` (latest release) | latest release | Motoko compiler — language spec, system function names, syntax verification |
+| `.sources/motoko-core` | `caffeinelabs/motoko-core` | `v2.4.0` (latest release) | latest release | Motoko core library (`mo:core`) — API signatures, module docs |
+| `.sources/cdk-rs` | `dfinity/cdk-rs` | `ic-cdk v0.19.0` (latest release) | latest release | Rust CDK (`ic-cdk`, `ic-cdk-timers`, `ic-cdk-macros`) — API signatures, management canister types |
+| `.sources/candid` | `dfinity/candid` | `2025-12-18` (latest release) | latest release | Candid spec, type system, `didc` tool source |
+| `.sources/response-verification` | `dfinity/response-verification` | `v3.1.0` (latest release) | latest release | Response verification, certified variables, certificate trees |
+| `.sources/dotskills` | `vincentkoc/dotskills` | `main` | main/master | Technical documentation skill (AGPL-3.0 — kept as submodule to avoid license mixing) |
 
 ### Submodule initialization
 
@@ -486,6 +491,11 @@ Some submodules (`portal`, `examples`) contain **nested submodules** of their ow
 ### Bumping submodules
 
 Only the project maintainer bumps submodule refs. When bumped, follow this checklist:
+
+**Step 0 — Determine the new ref (strategy-dependent):**
+
+- **latest release repos:** Find the latest release tag, not the tip of main. Use `git ls-remote --tags origin` to list tags without needing them locally, then identify the highest version. Pin to the commit the tag resolves to (`git -C .sources/<repo> fetch origin refs/tags/<tag> && git -C .sources/<repo> checkout FETCH_HEAD`). Never pin past the latest release — unreleased changes must not appear in docs.
+- **main/master repos:** Fetch and checkout `origin/main` or `origin/master` as usual.
 
 **General (all submodules):**
 1. Identify what changed: `git -C .sources/<repo> log --oneline <old-ref>..<new-ref>`

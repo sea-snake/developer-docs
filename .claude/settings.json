@@ -28,6 +28,7 @@
       "Write(.claude/settings.local.json)"
     ],
     "deny": [
+      "Bash(gh pr merge*)",
       "Bash(git push --force *)",
       "Bash(git push * refs/dolt*)",
       "Bash(git push * --delete refs/dolt*)",

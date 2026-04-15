@@ -409,11 +409,11 @@ Add enough context in the notes so the next agent (or human) understands the blo
 
 ```
 docs/                       # All documentation (.md only) — src/content/docs/ symlinks here
-├── index.md                # Landing page
-├── getting-started/        # Tutorials (4 pages)
-├── guides/                 # How-to guides (48 pages across 11 subsections)
+├── index.mdx               # Landing page
+├── getting-started/        # Tutorials
+├── guides/                 # How-to guides
 │   ├── backends/           # Backend development patterns
-│   ├── canister-calls/      # Candid interfaces, bindings, onchain and offchain calls
+│   ├── canister-calls/     # Candid interfaces, bindings, onchain and offchain calls
 │   ├── frontends/          # Frontend development
 │   ├── authentication/     # Auth integration
 │   ├── testing/            # Testing strategies
@@ -423,9 +423,9 @@ docs/                       # All documentation (.md only) — src/content/docs/
 │   ├── defi/               # Token and DeFi guides
 │   ├── governance/         # SNS and DAO guides
 │   └── tools/              # Developer tools
-├── concepts/               # Explanations (13 pages)
+├── concepts/               # Explanations
 ├── languages/              # Language-specific (Motoko synced, Rust hand-written)
-└── reference/              # Specifications and reference (13 pages)
+└── reference/              # Specifications and reference
 ```
 
 ## Source material repos (`.sources/`)

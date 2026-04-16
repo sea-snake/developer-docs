@@ -40,7 +40,7 @@ All tasks (content pages, infrastructure, tooling) are coordinated through [Bead
 ./scripts/setup.sh    # submodules, npm deps, Beads task DB, Dolt server, build check
 ```
 
-> **Running from Claude Code:** `setup.sh` starts the Dolt server (requires binding a TCP port). Run it with `dangerouslyDisableSandbox: true` — you will be prompted once for approval. All `bd` commands and `./scripts/setup.sh` are pre-approved (no permission prompts), but `bd dolt start` and `gh` still require `dangerouslyDisableSandbox: true` every session (`bd dolt start` binds a TCP port; `gh` needs macOS keychain). Claude Code remembers the sandbox bypass for the rest of the session after the first use.
+> **Running from Claude Code:** `setup.sh` starts the Dolt server (requires binding a TCP port). Run it with `dangerouslyDisableSandbox: true` — you will be prompted once. All `bd` commands and `gh` require `dangerouslyDisableSandbox: true` — `bd` connects to Dolt via TCP on localhost (the OS sandbox blocks this); `gh` needs the macOS keychain. One approval per session covers everything: Claude Code remembers the bypass for the rest of the session after the first use.
 
 Without `bd`/`dolt` you can still write docs — check `.docs-plan/migration-plan.md` for tasks manually.
 
@@ -144,26 +144,31 @@ This keeps review content off the parent's context entirely (no context bloat), 
 
 ### Session start
 
-> **Sandbox note:** All `bd` commands and `./scripts/setup.sh` are pre-approved (no permission prompts). `bd dolt start` and `gh` still require `dangerouslyDisableSandbox: true` every session — `bd dolt start` binds a TCP port; `gh` needs macOS keychain. Claude Code remembers the bypass for the rest of the session after the first use. All other `bd` commands connect to the already-running Dolt server on localhost and run within the sandbox without bypass.
+> **Sandbox note:** All `bd` commands and `./scripts/setup.sh` are pre-approved (no permission prompts). All `bd` commands and `gh` require `dangerouslyDisableSandbox: true` — `bd` connects to Dolt via TCP on localhost (the OS sandbox blocks this); `gh` needs the macOS keychain. One approval per session covers everything: Claude Code remembers the bypass for the rest of the session after the first use.
 
 **Step 1 — Fresh clone check:**
 
 ```bash
 ls .beads/dolt/.bd-dolt-ok 2>/dev/null || echo "FRESH CLONE"
 ```
-If **FRESH CLONE**: run `./scripts/setup.sh` (`dangerouslyDisableSandbox: true`) and wait for it to complete before proceeding. `setup.sh` starts Dolt and writes the port file — when Step 2 runs `bd dolt start`, the server is already running, so the output will say "already running" (no port number). That is expected; the port file is already correct.
+If **FRESH CLONE**: run `./scripts/setup.sh` (`dangerouslyDisableSandbox: true`) and wait for it to complete before proceeding. `setup.sh` starts Dolt and writes the port file — skip the `bd dolt start` in Step 2 (the guard below handles this) and go straight to `bd dolt pull`.
 
 **Step 2 — Start Dolt and sync:**
 
 ```bash
-# dangerouslyDisableSandbox — port binding; pre-approved, no permission prompt
-DOLT_OUT=$(bd dolt start 2>&1); echo "$DOLT_OUT"
-DOLT_PORT=$(echo "$DOLT_OUT" | grep -oE 'port [0-9]+' | grep -oE '[0-9]+$')
-[ -n "$DOLT_PORT" ] && printf '%s\n' "$DOLT_PORT" > .beads/dolt-server.port
+# dangerouslyDisableSandbox — all bd commands require it (TCP to localhost; OS sandbox blocks this)
+# Guard: skip bd dolt start if setup.sh just ran (port file already populated).
+# Calling bd dolt start while Dolt is already up attempts a second start, fails, and corrupts the port file.
+EXISTING_PORT=$(cat .beads/dolt-server.port 2>/dev/null | tr -d '[:space:]')
+if [ -z "$EXISTING_PORT" ] || [ "$EXISTING_PORT" = "0" ]; then
+  DOLT_OUT=$(bd dolt start 2>&1); echo "$DOLT_OUT"
+  DOLT_PORT=$(echo "$DOLT_OUT" | grep -oE 'port [0-9]+' | grep -oE '[0-9]+$')
+  [ -n "$DOLT_PORT" ] && printf '%s\n' "$DOLT_PORT" > .beads/dolt-server.port
+fi
 bd dolt pull
 ```
 
-> **Why capture the port?** `bd` 0.63.3 has a bug where `bd dolt start` does not write `.beads/dolt-server.port` automatically. Without the port file, `bd dolt status` shows "Expected port: 0" and all subsequent `bd` commands fail. The three lines above extract the port from stdout and write it manually.
+> **Why capture the port?** `bd` 0.63.3 has a bug where `bd dolt start` does not write `.beads/dolt-server.port` automatically. Without the port file, `bd dolt status` shows "Expected port: 0" and all subsequent `bd` commands fail. The capture lines extract the port from stdout and write it manually.
 
 > **Orphaned Dolt process:** If `bd dolt start` fails with "database is locked by another dolt process", a stale dolt process holds the lock. Fix: `pkill -9 -f dolt && bd dolt start` (both need `dangerouslyDisableSandbox`). Re-run the port-capture lines after the restart.
 

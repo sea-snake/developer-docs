@@ -68,7 +68,7 @@ For batch operations like addressing PR feedback across multiple PRs, Claude Cod
 ```bash
 git submodule update --init --depth 1
 ```
-The parent agent must include this as the mandatory first step in every worktree agent's prompt. This command is pre-approved in `.claude/settings.json` and runs automatically without user prompts in worktrees (`.git/` is sandbox-protected by design — the pre-approval is required and intentional).
+The parent agent must include this as the mandatory first step in every worktree agent's prompt. This command is pre-approved in the `allow` list in `.claude/settings.json` for tool permission, and runs sandboxed via `autoAllowBashIfSandboxed: true` — no `dangerouslyDisableSandbox` needed.
 
 **Worktree agent prompt structure:** Pass only minimal task context — worktree agents do their own full research using skills. **Do not pre-gather or summarize source material in the parent.** Passing summaries bypasses the skill research workflow and reduces content quality; agents must read primary sources directly.
 
@@ -128,11 +128,11 @@ rm <absolute-path-returned-by-worktree>   # clean up after posting
 ```
 This keeps review content off the parent's context entirely (no context bloat), and is robust to compaction — the file survives even if earlier messages are compressed.
 
-**If agents fail with permission errors:** Check that `.claude/settings.json` exists and the sandbox is active (run `/sandbox` in a session to verify). The shared settings file is the authoritative source — per-user `~/.claude/projects/` settings don't apply to worktree agents (different path). With the sandbox active, all sandboxed Bash commands are auto-approved via `autoAllowBashIfSandboxed`. `git submodule update --init` is additionally pre-approved for sandbox bypass. `bd dolt *` and `gh *` commands require OS sandbox bypass — worktree agents must never run these; only the parent runs `bd` and `gh`.
+**If agents fail with permission errors:** Check that `.claude/settings.json` exists and the sandbox is active (run `/sandbox` in a session to verify). The shared settings file is the authoritative source — per-user `~/.claude/projects/` settings don't apply to worktree agents (different path). With the sandbox active, all sandboxed Bash commands are auto-approved via `autoAllowBashIfSandboxed`. `git submodule update --init` is pre-approved in the allow list for tool permission and runs sandboxed — no bypass needed. `bd dolt *` and `gh *` commands require OS sandbox bypass — worktree agents must never run these; only the parent runs `bd` and `gh`.
 
 **Beads safety:** Worktree agents share the parent's `.beads/` directory and Dolt server. Concurrent `bd` commands can corrupt the Dolt journal.
 - **Only the parent agent** may run `bd` commands (claim, update, push, pull)
-- **Worktree agents must NEVER run `bd`** — they only write content, build, commit, and push
+- **Worktree agents must NEVER run `bd`** — they only write content, build, and commit (no push — SSH blocked in background agents)
 - **Serialize all `bd` calls** — never run `bd update` for multiple tasks in parallel; always wait for one to complete before starting the next
 - Auto-backup is enabled (`.beads/config.yaml`) — JSONL snapshots go to `.beads/backup/` every 15 min as a local safety net
 - **NEVER run `bd init --force`** without explicit user confirmation — this can destroy the database
@@ -394,14 +394,14 @@ Three outcomes:
      - **Apply your best judgment** on style/wording suggestions — you don't need permission for these
   4. Apply the fixes:
      - **Single PR:** check out the branch and apply directly in the main session (proceed to steps 7–10 below)
-     - **Multiple PRs:** launch parallel worktree agents — one per PR — with specific fix instructions. Each worktree agent does steps 7–8 only (verify, build, commit, push) then returns a summary. The parent does steps 9–10 for each PR after collecting results.
+     - **Multiple PRs:** launch parallel worktree agents — one per PR — with specific fix instructions. Each worktree agent does steps 7–8 only (verify, build, commit — no push) then returns a summary. The parent does steps 9–10 for each PR after collecting results.
   7. **Post-fix verification** — before pushing (done by the worktree agent if using worktrees, otherwise by the parent):
      1. Re-read the full page — does it still flow and make sense as a whole?
      2. `ls` any new or changed link targets to confirm they exist
      3. If the fix moves content elsewhere, confirm the target page covers it (or flag with `<!-- TODO -->`)
      4. **Update the `<!-- Upstream: -->` comment** if new source material was referenced
      5. Run `npm run build` — must pass before pushing
-  8. Commit and push to the existing branch (worktree agents stop here and return to parent)
+  8. **Single agent:** commit and push to the existing branch. **Worktree agents:** commit only (no push — SSH blocked), then return summary to parent. Parent pushes via `git -C <worktree-path> push`.
   9. **Update the PR description** — done by the parent (requires `gh`, blocked in worktrees). Use `gh pr edit <PR#> --body "..."` to update both the Summary and Sync recommendation to reflect the current state of the page.
   10. **Submit** — done by the parent only (requires `gh` and `bd`):
       ```bash
@@ -425,7 +425,7 @@ Three outcomes:
 
 ### Submitting
 
-> **Worktree agents:** These flows are for a **single agent** running in the main session. Worktree agents stop after `git push` and return to the parent — they never run `gh` or `bd`. The parent then runs the `gh pr create` / `gh pr comment` and `bd update` steps.
+> **Worktree agents:** These flows are for a **single agent** running in the main session. Worktree agents stop after committing (no push — SSH is blocked in background agents) and return to the parent. The parent pushes via `git -C <worktree-path> push`, then runs `gh pr create` / `gh pr comment` and `bd update`.
 
 **Fresh task (single agent):**
 ```bash

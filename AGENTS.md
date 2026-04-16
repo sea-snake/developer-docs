@@ -205,7 +205,7 @@ This starts Dolt with port capture and pulls the latest task state, skipping the
 gh auth status 2>/dev/null
 ```
 
-`gh` is pre-approved in `settings.json`. If this prompts, the session is the first to use `gh` — approve once and it won't prompt again this session.
+This call uses `dangerouslyDisableSandbox: true` and should be **silently auto-approved** by the PermissionRequest hook. If you are prompted, the hook has not loaded yet — approve this call, then open `/hooks` in the Claude Code UI to force a settings reload. All subsequent `gh`/`bd`/worktree calls will be silent after that. A prompt here is a signal to reload, not normal behavior.
 
 **Step 3 — Verify skills:**
 

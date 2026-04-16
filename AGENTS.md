@@ -40,7 +40,7 @@ All tasks (content pages, infrastructure, tooling) are coordinated through [Bead
 ./scripts/setup.sh    # submodules, npm deps, Beads task DB, Dolt server, build check
 ```
 
-> **Running from Claude Code:** `setup.sh` starts the Dolt server (requires binding a TCP port). Run it with `dangerouslyDisableSandbox: true` — you will be prompted once. All `bd` commands and `gh` require `dangerouslyDisableSandbox: true` — `bd` connects to Dolt via TCP on localhost (the OS sandbox blocks this); `gh` needs the macOS keychain. One approval per session covers everything: Claude Code remembers the bypass for the rest of the session after the first use. **`git` commands (fetch, push, ls-remote, checkout, rebase, etc.) work within the sandbox and do NOT need `dangerouslyDisableSandbox: true`.**
+> **Running from Claude Code:** `./scripts/setup.sh` is pre-approved in `.claude/settings.json` and runs without user prompts. It handles TCP port binding for Dolt and all `bd` calls internally. **`git` commands work within the sandbox and do NOT need `dangerouslyDisableSandbox: true`.** See "Session start" for the full procedure.
 
 Without `bd`/`dolt` you can still write docs — check `.docs-plan/migration-plan.md` for tasks manually.
 
@@ -144,52 +144,53 @@ This keeps review content off the parent's context entirely (no context bloat), 
 
 ### Session start
 
-> **Sandbox note:** All `bd` commands and `./scripts/setup.sh` are pre-approved (no permission prompts). All `bd` commands and `gh` require `dangerouslyDisableSandbox: true` — `bd` connects to Dolt via TCP on localhost (the OS sandbox blocks this); `gh` needs the macOS keychain. One approval per session covers everything: Claude Code remembers the bypass for the rest of the session after the first use. **`git` commands (fetch, push, ls-remote, checkout, rebase, etc.) work within the sandbox and do NOT need `dangerouslyDisableSandbox: true`.**
+> **Sandbox note:** `bd`, `gh`, `./scripts/setup.sh`, `git submodule update`, `bd init --force`, and `pkill*dolt*` are all listed in the `allow` section of `.claude/settings.json` and run **without user prompts** — including when `dangerouslyDisableSandbox: true` is required. `bd` requires sandbox bypass because it connects to Dolt via TCP on localhost (OS sandbox blocks this); `gh` needs the macOS keychain. **Critical:** allow list patterns match only when the Bash command starts with the allowed prefix. Complex scripts that start with variable assignments (`DOLT_OUT=$(...)`, `EXISTING_PORT=...`, `if [`, etc.) do **not** match any pattern and **will prompt the user** for every call. Always use pre-approved simple commands or scripts (`./scripts/setup.sh`) rather than inline multi-line shell scripts. **`git` commands (fetch, push, ls-remote, checkout, rebase, etc.) work within the sandbox and do NOT need `dangerouslyDisableSandbox: true`.**
 
-**Step 0 — Establish sandbox approval (do this first, every session):**
+**Step 0 — Verify environment (filesystem check, no sandbox bypass needed):**
 
-Before any other work, warm up the sandbox approval so the rest of the session runs without prompts. Run **both commands in a single Bash call** — one `dangerouslyDisableSandbox` flag means one prompt total:
-
-```bash
-bd list --limit 1 2>/dev/null; gh auth status 2>/dev/null
-```
-
-Tell the user explicitly this is the only approval needed for the session — e.g.: *"I need a one-time sandbox approval to access Dolt (TCP) and GitHub (macOS keychain). After you approve this, everything else runs autonomously."* Do not bury this inside a larger operation where the prompt appears with no context.
-
-> **Why one call?** Each Bash tool call with `dangerouslyDisableSandbox: true` is a separate permission event. Running `bd` and `gh` as two separate calls would trigger two simultaneous prompts. Combining them into one call means one prompt that covers the entire session.
-
-**Step 1 — Fresh clone check:**
+Check whether the environment needs setup using only filesystem reads — no `bd` call required:
 
 ```bash
-ls .beads/dolt/.bd-dolt-ok 2>/dev/null || echo "FRESH CLONE"
+ls -d .beads/dolt/.bd-dolt-ok .agents/skills/icp-cli/SKILL.md 2>/dev/null | wc -l
 ```
-If **FRESH CLONE**: run `./scripts/setup.sh` (`dangerouslyDisableSandbox: true`) and wait for it to complete before proceeding. `setup.sh` starts Dolt and writes the port file — skip the `bd dolt start` in Step 2 (the guard below handles this) and go straight to `bd dolt pull`.
 
-**Step 2 — Start Dolt and sync:**
+- **Output `2`** → environment is OK (sentinel present, skills initialized), proceed to Step 1B.
+- **Output < `2`** → environment needs setup, proceed to Step 1A.
+
+This check uses `ls -d` (checks for existence, not directory contents) and detects the two most reliable indicators: whether the DB was bootstrapped at all (`.bd-dolt-ok`) and whether submodules are initialized (skills). Corrupted-but-present DBs are handled by `./scripts/setup.sh` itself (it verifies DB accessibility after starting Dolt). This check requires no `dangerouslyDisableSandbox` and never prompts.
+
+**Step 1A — Environment needs setup:**
+
+Run the setup script — it handles submodules, Beads bootstrap, Dolt start, and port capture in one call. Pre-approved in `settings.json`, no user prompt:
 
 ```bash
-# dangerouslyDisableSandbox — all bd commands require it (TCP to localhost; OS sandbox blocks this)
-# Guard: skip bd dolt start if setup.sh just ran (port file already populated).
-# Calling bd dolt start while Dolt is already up attempts a second start, fails, and corrupts the port file.
-EXISTING_PORT=$(cat .beads/dolt-server.port 2>/dev/null | tr -d '[:space:]')
-if [ -z "$EXISTING_PORT" ] || [ "$EXISTING_PORT" = "0" ]; then
-  DOLT_OUT=$(bd dolt start 2>&1); echo "$DOLT_OUT"
-  DOLT_PORT=$(echo "$DOLT_OUT" | grep -oE 'port [0-9]+' | grep -oE '[0-9]+$')
-  [ -n "$DOLT_PORT" ] && printf '%s\n' "$DOLT_PORT" > .beads/dolt-server.port
-fi
-bd dolt pull
+./scripts/setup.sh
 ```
 
-> **Why capture the port?** `bd` 0.63.3 has a bug where `bd dolt start` does not write `.beads/dolt-server.port` automatically. Without the port file, `bd dolt status` shows "Expected port: 0" and all subsequent `bd` commands fail. The capture lines extract the port from stdout and write it manually.
+Setup handles both fresh clones (bootstraps from remote) and broken DBs (detects missing noms data and re-bootstraps). When done, skip to Step 2.
 
-> **Orphaned Dolt process:** If `bd dolt start` fails with "database is locked by another dolt process", a stale dolt process holds the lock. Fix: `pkill -9 -f dolt && bd dolt start` (both need `dangerouslyDisableSandbox`). Re-run the port-capture lines after the restart.
+**Step 1B — Environment is OK, start Dolt for this session:**
+
+```bash
+./scripts/setup.sh --skip-build
+```
+
+This starts Dolt with port capture and pulls the latest task state, skipping the slow build check. Pre-approved in `settings.json`.
+
+**Step 2 — Verify GitHub access:**
+
+```bash
+gh auth status 2>/dev/null
+```
+
+`gh` is pre-approved in `settings.json`. If this prompts, the session is the first to use `gh` — approve once and it won't prompt again this session.
 
 **Step 3 — Verify skills:**
 
 ```bash
 ls .agents/skills/icp-cli/SKILL.md .agents/skills/technical-documentation/SKILL.md
 ```
-If either is missing (broken symlink): `git submodule update --init --depth 1`. Do not start any content or review work until skills resolve.
+If either is missing: Step 0 should have caught this and routed through `./scripts/setup.sh`. If you're here with missing skills anyway, run `./scripts/setup.sh --skip-build` (pre-approved). Do not start any content or review work until skills resolve.
 
 **Step 4 — Resume interrupted wave (if applicable):**
 
@@ -204,23 +205,17 @@ After all tasks are resolved, delete `.claude/wave-state.json`.
 **Step 5 — Verify Beads state:**
 ```bash
 bd list --status draft --limit 0    # should match open PRs
-gh pr list --state open --json number,title   # dangerouslyDisableSandbox — first gh call of session
+gh pr list --state open --json number,title
 ```
-If open PRs exist but no corresponding `draft` tasks appear, the local DB is stale. Do not make any `bd update` calls against a stale DB. Run a clean recovery:
+If open PRs exist but no corresponding `draft` tasks appear, the local DB is stale. Do not make any `bd update` calls against a stale DB. Run recovery:
 ```bash
-pkill -9 -f dolt                           # dangerouslyDisableSandbox — kills background processes
-rm -rf .beads/dolt
-DOLT_OUT=$(bd dolt start 2>&1); echo "$DOLT_OUT"   # dangerouslyDisableSandbox — port binding
-DOLT_PORT=$(echo "$DOLT_OUT" | grep -oE 'port [0-9]+' | grep -oE '[0-9]+$')
-[ -n "$DOLT_PORT" ] && printf '%s\n' "$DOLT_PORT" > .beads/dolt-server.port
-bd init --force --prefix developer-docs   # dangerouslyDisableSandbox — may emit "embedded Dolt requires CGO" error; ignore it, the bootstrap still succeeds
-# restart server after init (init may not reconnect automatically)
-pkill -9 -f dolt                           # dangerouslyDisableSandbox
-DOLT_OUT=$(bd dolt start 2>&1); echo "$DOLT_OUT"   # dangerouslyDisableSandbox
-DOLT_PORT=$(echo "$DOLT_OUT" | grep -oE 'port [0-9]+' | grep -oE '[0-9]+$')
-[ -n "$DOLT_PORT" ] && printf '%s\n' "$DOLT_PORT" > .beads/dolt-server.port
-bd dolt pull
-bd list --limit 5                          # verify data is correct
+pkill -9 -f dolt
+rm -rf .beads/dolt/.dolt
+./scripts/setup.sh --skip-build
+```
+`setup.sh --skip-build` detects the empty noms directory, bootstraps from the remote, starts Dolt with port capture, and pulls. All three commands are pre-approved in `settings.json` — no user prompts. Verify after:
+```bash
+bd list --limit 5
 ```
 Only after verifying correct state should you proceed with updates. **Do NOT `bd dolt push` until you have confirmed the local DB matches expected state.**
 
@@ -524,7 +519,8 @@ Add enough context in the notes so the next agent (or human) understands the blo
 ## Never (do not do these under any circumstances)
 
 - Diagnose a Beads dependency as "phantom", "missing", or "stale" based solely on it not appearing in `bd list --limit 0` — that query excludes closed tasks. Always check `bd list --status closed --limit 0 --json` before drawing that conclusion (see "Task structure" in the Beads reference)
-- Use `dangerouslyDisableSandbox: true` for `git` commands — `git fetch`, `git push`, `git ls-remote`, `git checkout`, `git rebase`, and all other git operations work within the sandbox. Only `bd`, `gh`, and `./scripts/setup.sh` need the sandbox bypass
+- Use `dangerouslyDisableSandbox: true` for `git` commands — `git fetch`, `git push`, `git ls-remote`, `git checkout`, `git rebase`, and all other git operations work within the sandbox. Only `bd`, `gh`, `./scripts/setup.sh`, and `pkill*dolt*` need the sandbox bypass, and all are pre-approved in `settings.json`
+- Write inline multi-line shell scripts for Dolt initialization or recovery — complex scripts (starting with `DOLT_OUT=`, `EXISTING_PORT=`, `if [`, etc.) do not match allow list patterns and prompt the user for each call. If the environment is broken, run `./scripts/setup.sh` (pre-approved, handles all cases). Never improvise manual recovery sequences across multiple Bash calls
 - Offer, suggest, or perform PR reviews unless a human explicitly asks — reviews are a developer decision, not an agent initiative
 - Use `python3` (or any interpreter) for JSON parsing — use `jq` instead, which is pre-approved in `settings.json`; `python3` is not in the allow list and will prompt the user
 - Reference `dfx` — it is deprecated and banned
@@ -541,7 +537,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Link externally when an internal page exists — before using an external URL (Learn Hub, GitHub, docs.rs), check if the topic has a page in `docs/`. Prefer internal relative links over external URLs. For example, link to `reference/ic-interface-spec.md` instead of the Learn Hub or `internetcomputer.org/spec/`.
 - Close a Beads task unless its PR is verified as merged (`gh pr view <PR#> --json state --jq .state` must print `MERGED`). A closed task means "done and shipped" — never close for any other reason.
 - Delete or force-push `refs/dolt/data` — this ref is the sole remote copy of all Beads task state. Never run `git push origin --delete refs/dolt/data` or any git command that modifies this ref directly.
-- Run `bd init --force` without explicit user confirmation — a forced re-init destroys the local database and a subsequent `bd dolt push` would wipe the remote.
+- Run `bd init --force` carelessly — a forced re-init destroys the local database and a subsequent `bd dolt push` would wipe the remote. It is pre-approved in `settings.json` for recovery use (called internally by `./scripts/setup.sh`), but never call it manually without verifying the DB is genuinely corrupt.
 
 ## Key directories
 

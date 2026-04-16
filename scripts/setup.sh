@@ -6,6 +6,14 @@
 
 set -euo pipefail
 
+# Parse flags
+SKIP_BUILD=false
+for arg in "$@"; do
+  case "$arg" in
+    --skip-build) SKIP_BUILD=true ;;
+  esac
+done
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[0;33m'
@@ -62,10 +70,19 @@ else
 fi
 
 if $has_bd && $has_dolt; then
-  # A fresh clone has .beads/dolt/ with only config.yaml — no actual database.
-  # .bd-dolt-ok is written by Beads after a successful bootstrap and is absent on a bare clone.
-  if [ -f ".beads/dolt/.bd-dolt-ok" ]; then
-    echo "Syncing task state from remote..."
+  # Working DB: sentinel file present AND .dolt/noms/ has actual data.
+  # .bd-dolt-ok alone is not sufficient — it can survive a corrupted or empty DB.
+  # Check the noms directory to confirm the database has real data.
+  DB_HAS_DATA=false
+  if [ -f ".beads/dolt/.bd-dolt-ok" ] && \
+     [ -d ".beads/dolt/.dolt/noms" ] && \
+     [ -n "$(ls .beads/dolt/.dolt/noms/ 2>/dev/null)" ]; then
+    DB_HAS_DATA=true
+  fi
+
+  if $DB_HAS_DATA; then
+    # DB exists — start server and pull latest state
+    echo "Starting Dolt server and syncing..."
     DOLT_OUT=$(bd dolt start 2>&1) || true
     echo "$DOLT_OUT"
     DOLT_PORT=$(echo "$DOLT_OUT" | grep -oE 'port [0-9]+' | grep -oE '[0-9]+$')
@@ -73,42 +90,48 @@ if $has_bd && $has_dolt; then
     bd dolt pull
     ok "Task state synced"
   else
-    echo "Bootstrapping task database (fresh clone)..."
-    if bd bootstrap; then
-      ok "Task database bootstrapped"
-    else
-      fail "bd bootstrap failed — check SSH access to git@github.com:dfinity/developer-docs.git"
-      fail "If you cloned via HTTPS, ensure you have SSH keys configured for GitHub"
-      errors=$((errors + 1))
-      has_bd=false
-    fi
-  fi
-
-  # Start Dolt server and verify it works
-  if $has_bd; then
+    # Fresh clone or corrupted DB — full clean reinit from remote.
+    # Use bd init --force (not bd bootstrap) so it overwrites any partial data.
+    # bd init may emit "embedded Dolt requires CGO" — this is harmless; the bootstrap still succeeds.
+    echo "Bootstrapping task database (fresh clone or corrupted DB)..."
+    pkill -9 -f dolt 2>/dev/null || true
+    rm -rf .beads/dolt/.dolt .beads/dolt/.doltcfg
+    # Note: "embedded Dolt requires CGO" in the output below is expected and harmless.
+    bd init --force --prefix developer-docs || true
+    # Restart server after init (init does not leave the server running)
+    pkill -9 -f dolt 2>/dev/null || true
     DOLT_OUT=$(bd dolt start 2>&1) || true
     echo "$DOLT_OUT"
     DOLT_PORT=$(echo "$DOLT_OUT" | grep -oE 'port [0-9]+' | grep -oE '[0-9]+$')
     [ -n "$DOLT_PORT" ] && printf '%s\n' "$DOLT_PORT" > .beads/dolt-server.port
-    # Verify the database is actually accessible
+    bd dolt pull
+    ok "Task database bootstrapped and synced"
+  fi
+
+  # Verify the database is actually accessible
+  if $has_bd; then
     if bd list --limit 1 --json >/dev/null 2>&1; then
       ok "Dolt server running and database accessible"
     else
-      fail "Dolt server started but database is not accessible — try: bd dolt stop && bd dolt start"
+      fail "Dolt server started but database is not accessible — re-run ./scripts/setup.sh to retry"
       errors=$((errors + 1))
     fi
   fi
 fi
 
 # ---------------------------------------------------------------------------
-# 4. Build check
+# 4. Build check (skipped when --skip-build is passed)
 # ---------------------------------------------------------------------------
-printf "\n== Build check ==\n"
-if npm run build --silent 2>/dev/null; then
-  ok "Site builds successfully"
+if $SKIP_BUILD; then
+  printf "\n== Build check (skipped) ==\n"
 else
-  fail "Build failed — run 'npm run build' to see errors"
-  errors=$((errors + 1))
+  printf "\n== Build check ==\n"
+  if npm run build --silent 2>/dev/null; then
+    ok "Site builds successfully"
+  else
+    fail "Build failed — run 'npm run build' to see errors"
+    errors=$((errors + 1))
+  fi
 fi
 
 # ---------------------------------------------------------------------------

@@ -146,9 +146,17 @@ This keeps review content off the parent's context entirely (no context bloat), 
 
 > **Sandbox note:** `bd`, `gh`, `./scripts/setup.sh`, and `pkill*dolt*` require `dangerouslyDisableSandbox: true` and run **without user prompts** via a `PermissionRequest` hook in `.claude/settings.json` that auto-approves these specific commands. `git submodule update` is pre-approved in the `allow` list for sandbox bypass. **The allow list alone does not suppress sandbox bypass prompts** — the `PermissionRequest` hook is what makes them silent. `bd` requires sandbox bypass because it connects to Dolt via TCP on localhost (OS sandbox blocks this); `gh` needs the macOS keychain. **Critical:** allow list patterns match only when the Bash command starts with the allowed prefix. Complex scripts that start with variable assignments (`DOLT_OUT=$(...)`, `EXISTING_PORT=...`, `if [`, etc.) do **not** match the hook patterns and **will prompt the user** for every call. Always use pre-approved simple commands or scripts (`./scripts/setup.sh`) rather than inline multi-line shell scripts. **`git` commands (fetch, push, ls-remote, checkout, rebase, etc.) work within the sandbox and do NOT need `dangerouslyDisableSandbox: true`.**
 
-**Step 0 — Verify environment (filesystem check, no sandbox bypass needed):**
+**Step 0 — Navigate to main repo root and verify environment:**
 
-Check whether the environment needs setup using only filesystem reads — no `bd` call required:
+First, ensure your working directory is the main repo root — not a leftover worktree from a prior session. After compaction, the shell CWD may still be a worktree path. Always run this first:
+
+```bash
+cd "$(git worktree list | head -1 | awk '{print $1}')"
+```
+
+`git worktree list` always lists the main worktree first, so this navigates to the main repo root regardless of where you currently are (even from within a nested worktree).
+
+Then check whether the environment needs setup using only filesystem reads — no `bd` call required:
 
 ```bash
 ls -d .beads/dolt/.bd-dolt-ok .agents/skills/icp-cli/SKILL.md 2>/dev/null | wc -l

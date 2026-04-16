@@ -506,6 +506,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Read `.docs-plan/decisions.md` before proposing structural changes
 - **Ensure all required skills are accessible** before starting any work (see "Skills (required)" section). Skills are pre-installed as symlinks — if they appear broken, run `git submodule update --init --depth 1`. Do not start content or review work if skills are inaccessible.
 - Use icp-cli commands in all CLI examples — never `dfx`
+- Use `mo:core` for all Motoko standard library imports — never `mo:base`. `mo:base` is the legacy library; `mo:core` is its replacement. See `.sources/motoko/doc/md/12-base-core-migration.md` for the full mapping. Requires Motoko 0.15+ / icp-cli 0.28+.
 - Use `.md` by default; `.mdx` only for interactive components (e.g. `<Tabs syncKey="lang">`). Tab order: Motoko → Rust → others; Candid first for type-mapping tabs. See `.docs-plan/decisions.md` and `content-authoring.md` for conversion steps.
 - Include complete frontmatter (see CONTRIBUTING.md for schema)
 - Link to external docs instead of duplicating content (see `content-authoring.md` linking rules)
@@ -535,6 +536,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 - Offer, suggest, or perform PR reviews unless a human explicitly asks — reviews are a developer decision, not an agent initiative
 - Use `python3` (or any interpreter) for JSON parsing — use `jq` instead, which is pre-approved in `settings.json`; `python3` is not in the allow list and will prompt the user
 - Reference `dfx` — it is deprecated and banned
+- Use `mo:base` imports in Motoko code examples — `mo:base` is the legacy library. Use `mo:core` instead. Critical replacements: `Buffer` → `List`, `HashMap`/`TrieMap`/`Trie`/`RBTree` → `Map`, `Deque` → `Queue`, `OrderedMap` → `pure/Map`, `OrderedSet` → `pure/Set`. The `Random` module exists in `mo:core` but has a completely redesigned API (class-based: `Random.crypto()`, `await* random.bool()`, etc.)
 - Create `.mdx` files without a clear need for interactive components (tabs, etc.) — default to `.md`
 - Duplicate content that lives in external docs (icp-cli, JS SDK, icskills, Learn Hub)
 - Edit synced files directly (`docs/languages/motoko/`, `docs/guides/tools/migrating-from-dfx.md`)

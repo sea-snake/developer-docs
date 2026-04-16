@@ -81,9 +81,10 @@ For **content creation**, every worktree prompt must include:
 6. Instruction to read the stub file at `docs/<path>` — it contains `<!-- Source Material -->` comments listing exact portal pages and files to read
 7. Instruction to load the `technical-documentation` skill: `.agents/skills/technical-documentation/SKILL.md`
 8. Instruction to follow all rules in `CLAUDE.md`
-9. Instruction to run `npm run build` to verify the page builds, then **commit and push the branch** (`git push -u origin docs/<slug>`) — this is where the worktree's work ends. Return the branch name to the parent.
-10. **Never run `gh` commands** — parent handles `gh pr create` and all GitHub API calls
-11. **Never run `bd` commands** — parent handles all Beads operations
+9. Instruction to run `npm run build` to verify the page builds, then **commit the branch** — this is where the worktree's work ends. **Do NOT run `git push`** — SSH private key access is blocked in the sandbox; the parent handles the push. Return the branch name to the parent.
+10. **Never run `git push`** — parent pushes all branches using `git -C <worktree-path> push -u origin <branch>`
+11. **Never run `gh` commands** — parent handles `gh pr create` and all GitHub API calls
+12. **Never run `bd` commands** — parent handles all Beads operations
 
 **Mapping tasks to icskills** — the parent must identify the right skill before launching each worktree. Run `ls .agents/skills/` to see all available skills. Quick topic map:
 
@@ -433,10 +434,11 @@ git checkout main                     # return to main so the workspace is clean
 
 **Fresh task (worktree agent — stops here, parent handles the rest):**
 ```bash
-npm run build                         # must pass before pushing
+npm run build                         # must pass before committing
 git rebase origin/main
-git push -u origin docs/<slug>
-# Return branch name to parent. Parent runs: gh pr create + bd update
+git commit ...                        # commit the page
+# Do NOT run git push — SSH private key is blocked in sandbox
+# Return branch name to parent. Parent runs: git -C <worktree-path> push + gh pr create + bd update
 ```
 
 **Changes requested fix (single agent):**
@@ -456,9 +458,10 @@ git checkout main
 
 **Changes requested fix (worktree agent — stops here, parent handles the rest):**
 ```bash
-npm run build                         # must pass before pushing
-git push
-# Return summary of fixes to parent. Parent runs: gh pr comment + gh pr edit + bd update
+npm run build                         # must pass before committing
+git commit ...                        # commit the fixes
+# Do NOT run git push — SSH private key is blocked in sandbox
+# Return summary of fixes to parent. Parent runs: git -C <worktree-path> push + gh pr comment + gh pr edit + bd update
 ```
 
 **Rebase approved PR (Priority B):**

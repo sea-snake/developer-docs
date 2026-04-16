@@ -40,7 +40,7 @@ All tasks (content pages, infrastructure, tooling) are coordinated through [Bead
 ./scripts/setup.sh    # submodules, npm deps, Beads task DB, Dolt server, build check
 ```
 
-> **Running from Claude Code:** `setup.sh` starts the Dolt server (requires binding a TCP port). Run it with `dangerouslyDisableSandbox: true` — you will be prompted once. All `bd` commands and `gh` require `dangerouslyDisableSandbox: true` — `bd` connects to Dolt via TCP on localhost (the OS sandbox blocks this); `gh` needs the macOS keychain. One approval per session covers everything: Claude Code remembers the bypass for the rest of the session after the first use.
+> **Running from Claude Code:** `setup.sh` starts the Dolt server (requires binding a TCP port). Run it with `dangerouslyDisableSandbox: true` — you will be prompted once. All `bd` commands and `gh` require `dangerouslyDisableSandbox: true` — `bd` connects to Dolt via TCP on localhost (the OS sandbox blocks this); `gh` needs the macOS keychain. One approval per session covers everything: Claude Code remembers the bypass for the rest of the session after the first use. **`git` commands (fetch, push, ls-remote, checkout, rebase, etc.) work within the sandbox and do NOT need `dangerouslyDisableSandbox: true`.**
 
 Without `bd`/`dolt` you can still write docs — check `.docs-plan/migration-plan.md` for tasks manually.
 
@@ -144,7 +144,7 @@ This keeps review content off the parent's context entirely (no context bloat), 
 
 ### Session start
 
-> **Sandbox note:** All `bd` commands and `./scripts/setup.sh` are pre-approved (no permission prompts). All `bd` commands and `gh` require `dangerouslyDisableSandbox: true` — `bd` connects to Dolt via TCP on localhost (the OS sandbox blocks this); `gh` needs the macOS keychain. One approval per session covers everything: Claude Code remembers the bypass for the rest of the session after the first use.
+> **Sandbox note:** All `bd` commands and `./scripts/setup.sh` are pre-approved (no permission prompts). All `bd` commands and `gh` require `dangerouslyDisableSandbox: true` — `bd` connects to Dolt via TCP on localhost (the OS sandbox blocks this); `gh` needs the macOS keychain. One approval per session covers everything: Claude Code remembers the bypass for the rest of the session after the first use. **`git` commands (fetch, push, ls-remote, checkout, rebase, etc.) work within the sandbox and do NOT need `dangerouslyDisableSandbox: true`.**
 
 **Step 1 — Fresh clone check:**
 
@@ -512,6 +512,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 ## Never (do not do these under any circumstances)
 
 - Diagnose a Beads dependency as "phantom", "missing", or "stale" based solely on it not appearing in `bd list --limit 0` — that query excludes closed tasks. Always check `bd list --status closed --limit 0 --json` before drawing that conclusion (see "Task structure" in the Beads reference)
+- Use `dangerouslyDisableSandbox: true` for `git` commands — `git fetch`, `git push`, `git ls-remote`, `git checkout`, `git rebase`, and all other git operations work within the sandbox. Only `bd`, `gh`, and `./scripts/setup.sh` need the sandbox bypass
 - Offer, suggest, or perform PR reviews unless a human explicitly asks — reviews are a developer decision, not an agent initiative
 - Use `python3` (or any interpreter) for JSON parsing — use `jq` instead, which is pre-approved in `settings.json`; `python3` is not in the allow list and will prompt the user
 - Reference `dfx` — it is deprecated and banned

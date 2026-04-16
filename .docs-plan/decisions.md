@@ -4,6 +4,15 @@ Record decisions that constrain future work — things an agent needs to know th
 
 ---
 
+## 2026-04-16: PermissionRequest hooks replace allow-list for sandbox bypass approvals
+
+**Context:** `bd` and `gh` were in the `permissions.allow` list in `.claude/settings.json` and documented as running without user prompts. In practice they still prompted because the allow list only suppresses prompts for sandboxed commands — `dangerouslyDisableSandbox: true` is a separate security gate that the allow list does not reach. Users would be interrupted mid-session whenever the parent agent ran `bd update`, `bd dolt push`, or `gh pr create`.
+**Decision:** Added a `PermissionRequest` hook to `.claude/settings.json` that intercepts permission dialogs for `bd`, `gh`, `./scripts/setup.sh`, and `pkill*` commands and returns `allow` automatically. Also added a matching `Write` hook for `.claude/wave-state.json` which may prompt due to glob matching behaviour with hidden directories. Updated AGENTS.md sandbox note to reflect the correct mechanism.
+**Rationale:** The `PermissionRequest` hook fires before the permission dialog is shown to the user, allowing targeted auto-approval without weakening the sandbox for other commands. `Write(**)` in the allow list should cover `.claude/wave-state.json` in theory, but Claude Code's glob matching may not cover paths inside hidden directories — the hook is a safety net.
+**Alternatives considered:** `permissions.defaultMode: "bypassPermissions"` (bypasses all safety checks, too broad), network sandbox settings like `allowLocalBinding` (uncertain whether they cover outbound localhost TCP for Dolt), per-session approval (requires user presence, defeats autonomous operation)
+
+---
+
 ## 2026-03-11: Diataxis framework with 5 top-level sections
 **Context:** Need a clear information architecture for the new developer docs
 **Decision:** Use Diataxis with 5 sections: Getting Started (tutorials), Guides (how-to), Concepts (explanations), Languages (synced + hand-written), Reference (information)

@@ -13,6 +13,7 @@
       "Bash(./scripts/setup.sh*)",
       "Bash(bd *)",
       "Bash(gh *)",
+      "Bash(jq*)",
       "Bash(pkill*dolt*)",
       "Edit(**)",
       "Write(**)",

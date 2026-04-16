@@ -160,6 +160,10 @@ This keeps review content off the parent's context entirely (no context bloat), 
 >
 > **Glob caveat for native tools (Write/Edit/Read):** `Write(**)` and `Edit(**)` in the `allow` list do **not** match hidden directories (paths starting with `.`, e.g. `.claude/wave-state.json`). For `.claude/` writes, explicit rules like `Write(.claude/**)` are required — these are already in `settings.json`. The `PermissionRequest` hook is only relevant for Bash sandbox-bypass (`dangerouslyDisableSandbox: true`) — it never fires for native tool (Write/Edit) permission checks.
 
+**After in-session compaction (automatic):** The session process continues — the PermissionRequest hook, sandbox config, and permission lists all stay loaded. No re-approval is ever needed. Re-run Steps 0–4 to re-orient (CWD may have drifted, Dolt server may need a check, wave-state.json shows where to resume) — all of this is silent, no user intervention required.
+
+**After a new session started from a summary (manual restart):** Settings reload from disk. Hook should be active immediately, but run Step 2 (`gh auth status`) as the early-warning check — if it prompts, the hook hasn't loaded yet; open `/hooks` to force a reload, then continue silently.
+
 **Step 0 — Navigate to main repo root and verify environment:**
 
 First, ensure your working directory is the main repo root — not a leftover worktree from a prior session. After compaction, the shell CWD may still be a worktree path. Always run this first:

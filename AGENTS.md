@@ -119,6 +119,26 @@ For **PR reviews**, every worktree prompt must include:
 8. **Never run `bd` commands**
 9. **Never run `gh` commands** — `gh` requires macOS Security framework for TLS; blocked in sandbox background agents
 
+For **PR feedback addressing**, every worktree prompt must include:
+1. `git submodule update --init --depth 1` as the first command
+2. Branch name to check out and the page path (`docs/<path>`)
+3. The specific icskill to load — **parent determines this** (see "Mapping tasks to icskills" above) and passes it explicitly
+4. Instruction to load the `technical-documentation` skill: `.agents/skills/technical-documentation/SKILL.md`
+5. Instruction to read `.docs-plan/content-authoring.md` for authoring rules
+6. Instruction to read the full page at `docs/<path>` to understand its current state before touching anything
+7. **Instruction to read the raw feedback file** written by the parent to `pr-feedback.md` in the working directory. The file contains verbatim output from all three GitHub API endpoints (review bodies, top-level comments, inline review comments). **Treat this file as the sole authoritative source of feedback — do not rely on any description or summary in this prompt.**
+8. Instruction to follow all rules in `CLAUDE.md`
+9. Instruction to **independently** cross-check every feedback item against `.sources/` before acting:
+   - **Apply** items that are factually correct and improve the page
+   - **Skip** items that conflict with CLAUDE.md rules, source material, or project conventions
+   - **Apply judgment** on style/wording suggestions — no permission needed
+   - For each skipped item: record it with a one-line reason to include in the output summary
+10. Instruction to run `npm run build` before committing
+11. Instruction to commit fixes, then write a fix summary to `$(pwd)/.fix-output/pr-<PR#>.md` using `mkdir -p .fix-output` — include: (a) list of changes applied, (b) list of items skipped with reasons. **Return the absolute path** to the parent — do not return findings inline.
+12. **Never run `git push`** — parent pushes all branches
+13. **Never run `gh` commands** — parent handles all GitHub API calls
+14. **Never run `bd` commands** — parent handles all Beads operations
+
 **Batch limit for reviews: 8–10 per wave** — same as content. Review findings go to disk (not inline results), so per-worktree context cost is the same ~5–7k tokens. Use the same wave state file pattern as content batches (see above) for compaction-safe resumption between waves.
 
 **GitHub API in worktrees:** Worktree agents cannot use `gh` (Go binary, macOS Security framework required for TLS — blocked in sandbox). Worktrees write output to files; the parent reads them and calls `gh` in the main session. Review findings go to `<worktree-absolute-path>/.review-output/pr-<PR#>.md`; the worktree returns the absolute path, and the parent posts with:
@@ -307,10 +327,10 @@ Concrete procedure:
 
 If unaddressed feedback exists, treat it the same as a formal "changes requested" review.
 
-**Automated reviewer feedback (Copilot, bots):** Treat automated review comments (e.g., GitHub Copilot) as suggestions worth investigating, not as authoritative. Do NOT blindly accept or blindly ignore them. For each automated comment:
+**Automated reviewer feedback (Copilot, bots):** Treat automated review comments (e.g., GitHub Copilot) as suggestions worth investigating, not as authoritative. Do NOT blindly accept or blindly ignore them. The **worktree agent** evaluates these the same way it evaluates human feedback — by cross-checking against `.sources/`. For each automated comment:
 1. **Verify the claim** — check `.sources/`, the codebase, or upstream docs. Is the comment factually correct?
 2. **Assess the impact** — even if technically correct, is the suggestion meaningful? Pedantic or stylistic nitpicks can be skipped.
-3. **Include in your feedback summary** — present automated feedback alongside human feedback when summarizing for the user, clearly labeled as automated. Let the user decide.
+3. **Include in the fix summary** — label automated feedback clearly in the `.fix-output/pr-<PR#>.md` file alongside human feedback, so it is visible in the PR comment.
 
 Common patterns where Copilot is often right: factual inaccuracies (wrong API names, incorrect behavior descriptions), internal inconsistencies within a page, misleading implications. Common patterns where Copilot is often wrong or unhelpful: style preferences, over-qualifying already-clear statements, suggesting changes that conflict with project conventions.
 
@@ -391,33 +411,31 @@ Three outcomes:
      bd update <id> --status in_progress && bd dolt push
      bd show <id> --json | jq -r .status   # MUST print "in_progress"
      ```
-  2. Read all feedback from **all three sources** (see Priority A above): review body, top-level comments, and inline review comments. Do not start fixing until you have read all three.
-  3. **Evaluate and apply autonomously** — cross-check every claim against `.sources/` and the current page:
-     - **Apply** items that are factually correct and improve the page
-     - **Skip** items that conflict with CLAUDE.md rules, source material, or project conventions — add an `<!-- agent-note: skipped "<quote>" because <reason> -->` HTML comment in the PR comment so reviewers know why
-     - **Apply your best judgment** on style/wording suggestions — you don't need permission for these
-  4. Apply the fixes:
-     - **Single PR:** check out the branch and apply directly in the main session (proceed to steps 7–10 below)
-     - **Multiple PRs:** launch parallel worktree agents — one per PR — with specific fix instructions. Each worktree agent does steps 7–8 only (verify, build, commit — no push) then returns a summary. The parent does steps 9–10 for each PR after collecting results.
-  7. **Post-fix verification** — before pushing (done by the worktree agent if using worktrees, otherwise by the parent):
-     1. Re-read the full page — does it still flow and make sense as a whole?
-     2. `ls` any new or changed link targets to confirm they exist
-     3. If the fix moves content elsewhere, confirm the target page covers it (or flag with `<!-- TODO -->`)
-     4. **Update the `<!-- Upstream: -->` comment** if new source material was referenced
-     5. Run `npm run build` — must pass before pushing
-  8. **Single agent:** commit and push to the existing branch. **Worktree agents:** commit only (no push — SSH blocked), then return summary to parent. Parent pushes via `git -C <worktree-path> push`.
-  9. **Update the PR description** — done by the parent (requires `gh`, blocked in worktrees). Use `gh pr edit <PR#> --body "..."` to update both the Summary and Sync recommendation to reflect the current state of the page.
-  10. **Submit** — done by the parent only (requires `gh` and `bd`):
-      ```bash
-      gh pr comment <PR#> --body "$(cat <<'EOF'
-      <!-- feedback-addressed -->
-      Feedback addressed:
-      - <bullet list of what was fixed>
-      EOF
-      )"
-      bd update <id> --status draft && bd dolt push
-      bd show <id> --json | jq -r .status   # MUST print "draft"
-      ```
+  2. **Fetch raw feedback and write to file** — fetch all three feedback sources for each PR and write the verbatim API output to `pr-feedback.md` in the worktree directory. **Do not interpret, evaluate, or summarize the feedback** — the worktree agent is the decision-maker; the parent is a data fetcher only.
+     ```bash
+     mkdir -p .claude/worktrees/agent-<id>
+     gh api repos/{owner}/{repo}/pulls/<PR#>/reviews \
+       >> .claude/worktrees/agent-<id>/pr-feedback.md
+     gh pr view <PR#> --json comments \
+       >> .claude/worktrees/agent-<id>/pr-feedback.md
+     gh api repos/{owner}/{repo}/pulls/<PR#>/comments \
+       >> .claude/worktrees/agent-<id>/pr-feedback.md
+     ```
+  3. **Determine the icskill** for each PR from the page topic (see "Mapping tasks to icskills" above). This is the only judgment the parent makes before launching.
+  4. **Launch worktree agents** — one per PR. Pass only: branch name, page path, icskill, and absolute path to `pr-feedback.md`. **Do not describe, summarize, or characterize the feedback in the prompt** — the worktree reads the file directly and makes all decisions independently (what to apply, what to skip, and why). See "Worktree agent prompt structure — PR feedback addressing" above for the full prompt checklist.
+     - **Single PR:** may be done directly in the main session (skip the worktree; read `pr-feedback.md` yourself and apply the same independent evaluation process)
+     - **Multiple PRs:** launch parallel worktree agents — one per PR. Each agent reads the raw feedback, cross-checks against `.sources/`, applies fixes, builds, commits, writes a fix summary to `.fix-output/pr-<PR#>.md`, and returns the absolute path to the parent.
+  5. **Collect fix summaries** — the parent reads each `.fix-output/pr-<PR#>.md` returned by the worktrees. Do not act on the summaries beyond posting them as PR comments.
+  6. **Push each branch** via `git -C <worktree-path> push -u origin <branch>` (requires `dangerouslyDisableSandbox: true`).
+  7. **Update the PR description** — use `gh pr edit <PR#> --body "..."` to update the Summary and Sync recommendation to reflect the current state of the page.
+  8. **Submit** — done by the parent only (requires `gh` and `bd`). Use the fix summary written by the worktree:
+     ```bash
+     gh pr comment <PR#> --body-file <absolute-path-to-fix-summary>
+     rm <absolute-path-to-fix-summary>   # clean up after posting
+     bd update <id> --status draft && bd dolt push
+     bd show <id> --json | jq -r .status   # MUST print "draft"
+     ```
+     The fix summary must begin with `<!-- feedback-addressed -->` so the "how to tell if feedback needs attention" logic in Priority A can detect it. The worktree writes this header; verify it is present before posting.
 
 ### Reviewing PRs
 

@@ -505,6 +505,7 @@ Add enough context in the notes so the next agent (or human) understands the blo
 ## Never (do not do these under any circumstances)
 
 - Offer, suggest, or perform PR reviews unless a human explicitly asks — reviews are a developer decision, not an agent initiative
+- Use `python3` (or any interpreter) for JSON parsing — use `jq` instead, which is pre-approved in `settings.json`; `python3` is not in the allow list and will prompt the user
 - Reference `dfx` — it is deprecated and banned
 - Create `.mdx` files without a clear need for interactive components (tabs, etc.) — default to `.md`
 - Duplicate content that lives in external docs (icp-cli, JS SDK, icskills, Learn Hub)

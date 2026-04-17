@@ -576,7 +576,7 @@ export default function agentDocs() {
               }
               if (!date) return match;
               lastmodCount++;
-              return `<url><loc>${url}</loc><lastmod>${date.split("T")[0]}</lastmod></url>`;
+              return `<url><loc>${url}</loc><lastmod>${new Date(date).toISOString().split("T")[0]}</lastmod></url>`;
             }
           );
           fs.writeFileSync(sitemapPath, modified);

@@ -213,3 +213,10 @@ Record decisions that constrain future work — things an agent needs to know th
 **Rationale:** The blanket `"Bash"` allow was false security — it looked like bash was controlled but actually everything was pre-approved. The new model: sandboxed commands run silently (low risk, OS-isolated), pre-approved bypass commands cover the specific cases that need it (submodule init, Dolt), and `bd init --force` still prompts (it destroys local DB state). Pre-gathering source material in the parent before launching worktrees was producing lower-quality content because it bypassed the skill research workflow; worktrees reading primary sources directly produces better output.
 **Alternatives considered:** Keep blanket `"Bash"` (no user visibility into bypasses), require user approval for `bd dolt push` (too noisy — fires on every status update), have parent collect review findings and present to user before posting (intentional pause, now removed for full autonomy)
 
+## 2026-04-17: og-image.svg has a hardcoded domain
+
+**Context:** `public/og-image.svg` contains the site URL in its footer text (`DFINITY Foundation  ·  beta-docs.internetcomputer.org`). The build plugin converts the SVG to `og-image.png` at build time, so the hardcoded URL ends up baked into the PNG served as the social share preview.
+**Decision:** Keep the SVG as a static file (the domain changes at most once). When the site moves to its final domain, update the URL in `public/og-image.svg` alongside `astro.config.mjs` (`site`) and the og:image/twitter:image meta tags.
+**Rationale:** Dynamic SVG generation in the build plugin adds ~30 lines of complexity for a one-time change. Static is simpler and good enough.
+**Alternatives considered:** Generate SVG dynamically in `plugins/astro-agent-docs.mjs` using `siteUrl` from Astro config (more robust, but over-engineered for a single domain change)
+

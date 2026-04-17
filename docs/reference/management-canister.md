@@ -392,6 +392,10 @@ Signs a message using threshold Schnorr. The corresponding public key can be obt
 
 For practical usage of chain-key signing in Bitcoin and Ethereum workflows, see the [Bitcoin guide](../guides/chain-fusion/bitcoin.md) and [Ethereum guide](../guides/chain-fusion/ethereum.md).
 
+### Offline public key derivation
+
+If you only need a public key — to derive a blockchain address or verify a signature — the management canister call can be avoided entirely. ICP's key derivation algorithm is deterministic and uses only public parameters, so derivation can be performed offline without cycles or a network connection. See the [offline key derivation guide](../guides/chain-fusion/offline-key-derivation.md) for TypeScript and Rust libraries.
+
 ## vetKD (Verifiable Encrypted Threshold Key Derivation)
 
 ### `vetkd_public_key`

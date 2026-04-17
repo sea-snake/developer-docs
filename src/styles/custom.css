@@ -229,6 +229,25 @@
 	background: rgba(0, 0, 0, 0.1);
 }
 
+/* ── External LinkCard indicator ─────────────────────────── */
+
+/* Replace → with ↗ for LinkCards that open in a new tab (external URLs) */
+.sl-link-card:has(a[target="_blank"]) .icon {
+	display: none;
+}
+
+.sl-link-card:has(a[target="_blank"])::after {
+	content: '↗';
+	color: var(--sl-color-gray-3);
+	font-size: 1.333em;
+	line-height: 1;
+	align-self: center;
+}
+
+.sl-link-card:has(a[target="_blank"]):hover::after {
+	color: var(--sl-color-white);
+}
+
 /* ── Agent signaling ──────────────────────────────────────── */
 
 /* Visually hidden but present in DOM for HTML-to-markdown converters.

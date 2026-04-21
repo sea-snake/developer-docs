@@ -24,10 +24,13 @@ jobs:
       - name: Get latest Motoko release tag
         id: latest
         run: |
-          LATEST=$(gh release view --repo caffeinelabs/motoko --json tagName -q .tagName)
-          # Normalize: ensure v prefix for consistency with VERSIONS file
-          [[ "$LATEST" == v* ]] || LATEST="v${LATEST}"
-          echo "tag=$LATEST" >> $GITHUB_OUTPUT
+          RAW=$(gh release view --repo caffeinelabs/motoko --json tagName -q .tagName)
+          # git_tag: raw tag as it appears on the remote (no v prefix)
+          GIT_TAG="${RAW#v}"
+          # versions_tag: v-prefixed form used in VERSIONS file and PR titles
+          [[ "$RAW" == v* ]] && VERSIONS_TAG="$RAW" || VERSIONS_TAG="v${RAW}"
+          echo "git_tag=$GIT_TAG" >> $GITHUB_OUTPUT
+          echo "versions_tag=$VERSIONS_TAG" >> $GITHUB_OUTPUT
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,7 +43,7 @@ jobs:
       - name: Check if update needed
         id: check
         run: |
-          LATEST="${{ steps.latest.outputs.tag }}"
+          LATEST="${{ steps.latest.outputs.versions_tag }}"
           CURRENT="${{ steps.current.outputs.version }}"
           BRANCH="infra/bump-motoko-${LATEST}"
 
@@ -58,11 +61,12 @@ jobs:
       - name: Bump submodule to new release
         if: steps.check.outputs.needed == 'true'
         run: |
-          TAG="${{ steps.latest.outputs.tag }}"
-          git -C .sources/motoko fetch --depth 1 origin "refs/tags/${TAG}:refs/tags/${TAG}" || \
-            git -C .sources/motoko fetch --unshallow origin
-          git -C .sources/motoko checkout "$TAG" 2>/dev/null || \
-            git -C .sources/motoko checkout "tags/${TAG}"
+          TAG="${{ steps.latest.outputs.git_tag }}"
+          # Fetch the specific tag shallowly; fall back to fetching all tags if that fails
+          if ! git -C .sources/motoko fetch --depth 1 origin "refs/tags/${TAG}:refs/tags/${TAG}"; then
+            git -C .sources/motoko fetch --unshallow --tags origin
+          fi
+          git -C .sources/motoko checkout "tags/${TAG}"
 
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         if: steps.check.outputs.needed == 'true'
@@ -89,7 +93,7 @@ jobs:
       - name: Update VERSIONS file
         if: steps.check.outputs.needed == 'true'
         run: |
-          NEW_TAG="${{ steps.latest.outputs.tag }}"
+          NEW_TAG="${{ steps.latest.outputs.versions_tag }}"
           NEW_HASH=$(git -C .sources/motoko rev-parse --short HEAD)
           sed -i "s|^motoko .*|motoko                ${NEW_TAG}                                                     ${NEW_HASH}|" .sources/VERSIONS
 
@@ -112,17 +116,17 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          BRANCH="infra/bump-motoko-${{ steps.latest.outputs.tag }}"
+          BRANCH="infra/bump-motoko-${{ steps.latest.outputs.versions_tag }}"
           git checkout -b "$BRANCH"
           git add .sources/motoko .sources/VERSIONS docs/languages/motoko/
-          git commit -m "chore: bump Motoko to ${{ steps.latest.outputs.tag }}"
+          git commit -m "chore: bump Motoko to ${{ steps.latest.outputs.versions_tag }}"
           git push -u origin "$BRANCH"
 
           WARNINGS="${{ steps.warnings.outputs.body }}"
           {
             echo "## Summary"
             echo ""
-            echo "Automated bump of \`.sources/motoko\` from \`${{ steps.current.outputs.version }}\` to \`${{ steps.latest.outputs.tag }}\`."
+            echo "Automated bump of \`.sources/motoko\` from \`${{ steps.current.outputs.version }}\` to \`${{ steps.latest.outputs.versions_tag }}\`."
             echo ""
             echo "- Ran \`npm run sync:motoko\` — synced docs from the new release"
             echo "- Build passed ✓"
@@ -136,7 +140,7 @@ jobs:
             echo "## Checklist"
             echo ""
             echo "- [ ] Review synced content for breaking changes"
-            echo "- [ ] Check [release notes](https://github.com/caffeinelabs/motoko/releases/tag/${{ steps.latest.outputs.tag }}) for API or syntax changes that affect hand-written docs"
+            echo "- [ ] Check [release notes](https://github.com/caffeinelabs/motoko/releases/tag/${{ steps.latest.outputs.git_tag }}) for API or syntax changes that affect hand-written docs"
             echo "- [ ] Verify any new sections or renamed files are handled correctly"
             echo ""
             echo "## Sync recommendation"
@@ -145,7 +149,7 @@ jobs:
           } > /tmp/pr-body.md
 
           gh pr create \
-            --title "chore: bump Motoko to ${{ steps.latest.outputs.tag }}" \
+            --title "chore: bump Motoko to ${{ steps.latest.outputs.versions_tag }}" \
             --body-file /tmp/pr-body.md
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -101,12 +101,14 @@ function processFile(filePath) {
   const relPath = filePath.replace(ROOT + '/', '');
   let changed = false;
 
-  // Expand Docusaurus file-embed blocks: ```lang file=<relative-path>
+  // Expand Docusaurus file-embed blocks: ```lang [attrs...] file=<path>[#L<start>-L<end>]
   // The path is relative to the source file's original location in the submodule.
   // After flattening, that depth information is lost, so we probe at increasing
   // subdirectory depths (0, 1, 2) until the file resolves.
-  const fileEmbedRe = /^```\s*(\w+) file=([^\n]+)\n```/gm;
-  content = content.replace(fileEmbedRe, (match, lang, filePath) => {
+  // Handles extra meta attributes (e.g. "no-repl") between the language and file=.
+  // Handles line ranges: file=path.mo#L10-L20 extracts lines 10–20 (1-indexed, inclusive).
+  const fileEmbedRe = /^```[ \t]*(\w+)[^\n]*?\bfile=([^\s\n#]+)(?:#L(\d+)-L(\d+))?[^\n]*\n```/gm;
+  content = content.replace(fileEmbedRe, (match, lang, filePath, lineStart, lineEnd) => {
     const sectionMatch = relPath.match(/docs\/languages\/motoko\/([^/]+)\//);
     const section = sectionMatch ? sectionMatch[1] : 'reference';
     const fp = filePath.trim();
@@ -117,10 +119,17 @@ function processFile(filePath) {
       if (existsSync(candidate)) { abs = candidate; break; }
     }
     if (abs) {
+      let fileContent = readFileSync(abs, 'utf-8');
+      if (lineStart && lineEnd) {
+        const lines = fileContent.split('\n');
+        const start = parseInt(lineStart, 10);
+        const end = parseInt(lineEnd, 10);
+        fileContent = lines.slice(start - 1, end).join('\n');
+      }
       changed = true;
-      return `\`\`\`${lang}\n${readFileSync(abs, 'utf-8').trim()}\n\`\`\``;
+      return `\`\`\`${lang}\n${fileContent.trim()}\n\`\`\``;
     }
-    console.warn(`  FILE-EMBED UNRESOLVED: ${filePath} in ${relPath}`);
+    console.warn(`  FILE-EMBED UNRESOLVED: ${fp}${lineStart ? `#L${lineStart}-L${lineEnd}` : ''} in ${relPath}`);
     return match;
   });
 

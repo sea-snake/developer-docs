@@ -18,14 +18,34 @@ Moreover, with [enhanced orthogonal persistence](/languages/motoko/fundamentals/
 
 The following is a simple example of how to declare a stateful counter:
 
-``` motoko no-repl file=../../examples/count-v1.mo
+```motoko
+import Debug "mo:core/Debug";
+
+persistent actor Counter_v1 {
+  var state : Nat = 0; // implicitly `stable`
+
+  public func increment() : async () {
+    state += 1;
+    Debug.print(debug_show (state));
+  };
+};
 ```
 
 Importantly, in this example, when the counter is upgraded, its state is preserved and the counter will resume from its last value before the upgrade.
 This is because actor variables are by default `stable`, meaning their state is persisted across upgrades.
 The above actor is equivalent to using an explicit `stable` declaration:
 
-``` motoko no-repl file=../../examples/count-v1stable.mo
+```motoko
+import Debug "mo:core/Debug";
+
+persistent actor Counter_v1 {
+  stable var state : Nat = 0; // explicitly `stable`
+
+  public func increment() : async () {
+    state += 1;
+    Debug.print(debug_show (state));
+  };
+};
 ```
 
 Sometime, you won't want an actor field to be preserved, either because it contains a value tied to the current version (say the version number), or
@@ -33,7 +53,17 @@ because it has a non-`stable` type that cannot be stored in stable field (an obj
 In that case, you can declare the field transient:
 
 
-``` motoko no-repl file=../../examples/count-v0transient.mo
+```motoko
+import Debug "mo:core/Debug";
+
+persistent actor Counter_v0 {
+  transient var state : Nat = 0;
+
+  public func increment() : async () {
+    state += 1;
+    Debug.print(debug_show (state));
+  };
+};
 ```
 
 With the `transient` declaration, the state will always restart from `0`, even after an upgrade.
@@ -42,7 +72,17 @@ With the `transient` declaration, the state will always restart from `0`, even a
 
 Changing counter from `Nat` to `Int` is a compatible change in stable declarations. The counter value is retained during the upgrade.
 
-``` motoko no-repl file=../../examples/count-v2.mo
+```motoko
+import Debug "mo:core/Debug";
+
+persistent actor Counter_v2 {
+  var state : Int = 0; // promoted from `Nat` to `Int`, implicitly stable
+
+  public func increment() : async () {
+    state += 1;
+    Debug.print(debug_show (state));
+  };
+};
 ```
 
 ## Stable type signatures
@@ -52,19 +92,42 @@ You can think of this as the interior interface of the actor, that it presents t
 
 For example, `v1`'s stable types:
 
-``` motoko no-repl file=../../examples/count-v1.most
+```motoko
+// Version: 1.0.0
+actor {
+  stable var state : Nat
+};
 ```
 
 An upgrade from `v1` to `v2`'s stable types consumes a [`Nat`](https://mops.one/core/docs/Nat) as an [`Int`](https://mops.one/core/docs/Nat), which is valid because `Nat <: Int`, that is,  `Nat` is a subtype of `Int`.
 
-``` motoko no-repl file=../../examples/count-v2.most
+```motoko
+// Version: 1.0.0
+actor {
+  stable var state : Int
+};
 ```
 
 ## Evolving the Candid interface
 
 In this extension of the interface, old clients remain satisfied, while new ones get extra features such as the `decrement` function and the `read` query in this example.
 
-``` motoko no-repl file=../../examples/count-v3.mo
+```motoko
+persistent actor Counter_v3 {
+  var state : Int = 0; // implicitly `stable`
+
+  public func increment() : async () {
+    state += 1;
+  };
+
+  public func decrement() : async () {
+    state -= 1;
+  };
+
+  public query func read() : async Int {
+    return state;
+  };
+};
 ```
 
 ## Dual interface evolution
@@ -84,7 +147,11 @@ service : {
 }
 ```
 
-``` motoko no-repl file=../../examples/count-v0.most
+```motoko
+// Version: 1.0.0
+actor {
+  
+};
 ```
 
 Version `v1` with Candid interface `v1.did` and stable type interface `v1.most`,
@@ -95,7 +162,11 @@ service : {
 }
 ```
 
-``` motoko no-repl file=../../examples/count-v1.most
+```motoko
+// Version: 1.0.0
+actor {
+  stable var state : Nat
+};
 ```
 
 Version `v2` with Candid interface `v2.did` and stable type interface `v2.most`,
@@ -106,7 +177,11 @@ service : {
 }
 ```
 
-``` motoko no-repl file=../../examples/count-v2.most
+```motoko
+// Version: 1.0.0
+actor {
+  stable var state : Int
+};
 ```
 
 Version `v3` with Candid interface `v3.did` and stable type interface `v3.most`:
@@ -119,14 +194,35 @@ service : {
 }
 ```
 
-``` motoko no-repl file=../../examples/count-v3.most
+```motoko
+// Version: 1.0.0
+actor {
+  stable var state : Int
+};
 ```
 
 ## Incompatible upgrade
 
 Let's take a look at another example where the counter's type is again changed, this time from [`Int`](https://mops.one/core/docs/Int) to [`Float`](https://mops.one/core/docs/Float):
 
-``` motoko no-repl file=../../examples/count-v4.mo
+```motoko
+import Float "mo:core/Float";
+
+persistent actor Counter_v4 {
+  var state : Float = 0.0; // implicitly `stable`
+
+  public func increment() : async () {
+    state += 0.5;
+  };
+
+  public func decrement() : async () {
+    state -= 0.5;
+  };
+
+  public query func read() : async Float {
+    return state;
+  };
+};
 ```
 
 This version is neither compatible to stable type declarations, nor to the Candid interface.
@@ -167,7 +263,30 @@ For this purpose, a user-instructed migration can be done in three steps:
 
     While the previous attempt of changing state from [`Int`](https://mops.one/core/docs/Int) to [`Nat`](https://mops.one/core/docs/Nat) was invalid, you now can realize the desired change as follows:
 
-``` motoko no-repl file=../../examples/count-v5.mo
+```motoko
+import Runtime "mo:core/Runtime";
+import Float "mo:core/Float";
+
+persistent actor Counter_v5 {
+  var state : Int = 0; // implicitly `stable`
+  var newState : Float = Float.fromInt(state); // implicitly `stable`
+
+  public func increment() : async () {
+    newState += 0.5;
+  };
+
+  public func decrement() : async () {
+    newState -= 0.5;
+  };
+
+  public query func read() : async Int {
+    Runtime.trap("No longer supported: Use `readFloat`");
+  };
+
+  public query func readFloat() : async Float {
+    return newState;
+  };
+};
 ```
 
 To also keep the Candid interface, the `readFloat` has been added, while the old `read` is retired by keeping its declaration and raising a trap internally.
@@ -176,12 +295,61 @@ To also keep the Candid interface, the `readFloat` has been added, while the old
 
 In versions of Motoko prior to 0.14.6, you could simply remove the old variable or keep it but change the type to `Any`, implying that the variable is no longer useful.
 
-``` motoko no-repl file=../../examples/count-v6.mo
+```motoko
+import Runtime "mo:core/Runtime";
+import Float "mo:core/Float";
+
+persistent actor Counter_v6 {
+  var newState : Float = 0.0; // implicitly `stable`
+
+  public func increment() : async () {
+    newState += 0.5;
+  };
+
+  public func decrement() : async () {
+    newState -= 0.5;
+  };
+
+  public query func read() : async Int {
+    Runtime.trap("No longer supported: Use `readFloat`");
+  };
+
+  public query func readFloat() : async Float {
+    return newState;
+  };
+};
 ```
 
 For added safety, since version 0.14.6 you can only discard data or promote it to a lossy supertype such as `Any`, using a migration function:
 
-``` motoko no-repl file=../../examples/count-v6b.mo
+```motoko
+import Runtime "mo:core/Runtime";
+import Float "mo:core/Float";
+
+(with migration =
+  func (_ : {var state : Int}) : {} { // discard old state
+   {}
+  }
+)
+persistent actor Counter_v6 {
+  var newState : Float = 0.0; // implicitly `stable`
+
+  public func increment() : async () {
+    newState += 0.5;
+  };
+
+  public func decrement() : async () {
+    newState -= 0.5;
+  };
+
+  public query func read() : async Int {
+    Runtime.trap("No longer supported: Use `readFloat`");
+  };
+
+  public query func readFloat() : async Float {
+    return newState;
+  };
+};
 ```
 
 ### Explicit migration using a migration function
@@ -213,7 +381,35 @@ by running the initialization expression in the field's declaration.
 The migration function, when required, is declared
 using a parenthetical expression immediately preceding the actor or actor class declaration, for example:
 
-``` motoko no-repl file=../../examples/count-v7.mo
+```motoko
+import Runtime "mo:core/Runtime";
+import Float "mo:core/Float";
+
+(with migration =
+  // an explicit migration function
+  func (old : { var state : Int }) : { var newState : Float } {
+    { var newState = Float.fromInt(old.state) };
+  })
+persistent actor Counter_v7 {
+
+  var newState : Float = 0.0; // implicitly `stable`
+
+  public func increment() : async () {
+    newState += 0.5;
+  };
+
+  public func decrement() : async () {
+    newState -= 0.5;
+  };
+
+  public query func read() : async Int {
+    Runtime.trap("No longer supported: Use `readFloat`");
+  };
+
+  public query func readFloat() : async Float {
+    return newState;
+  };
+};
 ```
 
 The syntax employs Motoko's new parenthetical expressions to modify ugrade behaviour.
@@ -225,12 +421,46 @@ just before upgrade.
 Employing a migration function offers another advantage: it lets you re-use the name of an
 existing field, even when its type has changed:
 
-``` motoko no-repl file=../../examples/count-v8.mo
+```motoko
+import Runtime "mo:core/Runtime";
+import Float "mo:core/Float";
+import {migration} "Migration";
+
+(with migration) // declare the migration function (using field punning)
+persistent actor Counter_v8 {
+
+  var state : Float = 0.0; // implicitly `stable`
+
+  public func increment() : async () {
+    state += 0.5;
+  };
+
+  public func decrement() : async () {
+    state -= 0.5;
+  };
+
+  public query func read() : async Int {
+    Runtime.trap("No longer supported: Use `readFloat`");
+  };
+
+  public query func readFloat() : async Float {
+    return state;
+  };
+};
 ```
 
 Here, the migration code is in a separate library:
 
-``` motoko no-repl file=../../examples/Migration.mo
+```motoko
+import Float "mo:core/Float";
+
+module Migration {
+
+  public func migration(old : { var state : Int }) : { var state : Float } {
+    { var state = Float.fromInt(old.state) };
+  }
+
+}
 ```
 
 The migration function can be selective and only consume or produce a subset of the old and new stable variables. Other stable variables can be declared as usual.
@@ -238,7 +468,43 @@ The migration function can be selective and only consume or produce a subset of 
 For example, here, with the same migration function, you can also declare a new stable variable, `lastModified` that records the time of the last update,
 without having to mention that field in the migration function:
 
-``` motoko no-repl file=../../examples/count-v9.mo
+```motoko
+import Runtime "mo:core/Runtime";
+import Float "mo:core/Float";
+import Time "mo:core/Time";
+import {migration} "Migration";
+
+(with migration) // use the imported migration function
+persistent actor
+  Counter_v9 {
+
+  var state : Float = 0.0; // expicitly migrated
+
+  var lastModified : Time.Time = Time.now(); // implicitly migrated
+
+  public func increment() : async () {
+    lastModified := Time.now();
+    state += 0.5;
+  };
+
+  public func decrement() : async () {
+    lastModified := Time.now();
+    state -= 0.5;
+  };
+
+  public query func read() : async Int {
+    Runtime.trap("No longer supported: Use `readFloat`");
+  };
+
+  public query func readFloat() : async Float {
+    return state;
+  };
+
+  public query func lastAccess() : async Time.Time {
+    return lastModified;
+  };
+
+};
 ```
 
 The stable signature of an actor with a migration function now consists of two ordinary stable signatures, the pre-signature (before the upgrade), and the post-signature (after the upgrade).
@@ -246,7 +512,15 @@ The stable signature of an actor with a migration function now consists of two o
 
 For example, this is the combined signature of the previous example:
 
-``` motoko no-repl file=../../examples/count-v9.most
+```motoko
+// Version: 3.0.0
+actor ({
+  stable var lastModified : Int;
+  in var state : Int
+}, {
+  stable var lastModified : Int;
+  stable var state : Float
+}) ;
 ```
 
 The second signature is determined solely by the actor's stable variable declarations.
@@ -266,12 +540,24 @@ Motoko uses three versions of the stable signature format, each corresponding to
 
 **Version 1.0.0 — Single.** The original format, listing the actor's stable fields. Used when the actor has no migration function.
 
-```motoko no-repl file=../../examples/count-v1.most
+```motoko
+// Version: 1.0.0
+actor {
+  stable var state : Nat
+};
 ```
 
 **Version 3.0.0 — Pre/Post.** Used when the actor declares a single migration function via `(with migration = ...)`. The signature contains a pre-signature (the fields the migration function consumes from the old actor) and a post-signature (the new actor's stable fields):
 
-```motoko no-repl file=../../examples/count-v9.most
+```motoko
+// Version: 3.0.0
+actor ({
+  stable var lastModified : Int;
+  in var state : Int
+}, {
+  stable var lastModified : Int;
+  stable var state : Float
+}) ;
 ```
 
 Fields marked `in` are required inputs that must be present in the previous actor. Fields marked `stable` are carried through or newly declared.
@@ -394,12 +680,27 @@ A common, real-world example of an incompatible upgrade can be found [on the for
 
 In that example, a user was attempting to add a field to the record payload of an array, by upgrading from stable type interface:
 
-``` motoko no-repl file=../../examples/Card-v0.mo
+```motoko
+persistent actor {
+  type Card = {
+    title : Text;
+  };
+
+  var map : [(Nat32, Card)] = [];
+};
 ```
 
 to *incompatible* stable type interface:
 
-``` motoko no-repl file=../../examples/Card-v1.mo
+```motoko
+persistent actor {
+  type Card = {
+    title : Text;
+    description : Text;
+  };
+
+  var map : [(Nat32, Card)] = [];
+};
 ```
 
 ### Problem
@@ -433,13 +734,40 @@ There are two solutions: using a sequence of simple upgrades, or the second, rec
 2. You can introduce a new variable `newMap` and copy the old state to the new one, initializing the new field as needed.
 3. Then, upgrade to this new version.
 
-``` motoko no-repl file=../../examples/Card-v1a.mo
+```motoko
+import Array "mo:core/Array";
+
+persistent actor {
+  type OldCard = {
+    title : Text;
+  };
+
+  type NewCard = {
+    title : Text;
+    description : Text;
+  };
+
+  var map : [(Nat32, OldCard)] = [];
+
+  var newMap : [(Nat32, NewCard)] = Array.map<(Nat32, OldCard), (Nat32, NewCard)>(
+    map,
+    func(key, { title }) { (key, { title; description = "<empty>" }) },
+  );
+};
 ```
 
 4. **After** you have successfully upgraded to this new version, you can upgrade once more to a version, that drops the old `map`.
 
 
-``` motoko no-repl file=../../examples/Card-v1b.mo
+```motoko
+persistent actor {
+  type Card = {
+    title : Text;
+    description : Text;
+  };
+
+  var newMap : [(Nat32, Card)] = [];
+};
 ```
 
 `dfx` will issue a warning that `map` will be dropped.
@@ -460,19 +788,65 @@ Instead of the previous two step solution, you can upgrade in one step using a m
 1. Define a migration module and function that transforms the old stable variable, at its current type, into the new stable variable at its new type.
 
 
-``` motoko no-repl file=../../examples/CardMigration.mo
+```motoko
+// CardMigration.mo
+import Array "mo:core/Array";
+
+module CardMigration {
+  type OldCard = {
+    title : Text;
+  };
+
+  type NewCard = {
+    title : Text;
+    description : Text;
+  };
+
+  // our migration function
+  public func migration(old : {
+      var map : [(Nat32, OldCard)] // old type
+    }) :
+    {
+      var map : [(Nat32, NewCard)] // new type
+    } {
+    { var map : [(Nat32, NewCard)] =
+        Array.map<(Nat32, OldCard), (Nat32, NewCard)>(
+          old.map,
+          func(key, { title }) { (key, { title; description = "<empty>" }) }) }
+  }
+
+}
 ```
 
 2. Specify the migration function as the migration expression of your actor declaration:
 
 
-``` motoko no-repl file=../../examples/Card-v1c.mo
+```motoko
+import {migration} "CardMigration";
+
+(with migration) // Declare the migration function
+persistent actor {
+  type Card = {
+    title : Text;
+    description : Text;
+  };
+
+  var map : [(Nat32, Card)] = []; // Initialized by migration on upgrade
+};
 ```
 
 **After** you have successfully upgraded to this new version, you can also upgrade once more to a version that drops the migration code.
 
 
-``` motoko no-repl file=../../examples/Card-v1d.mo
+```motoko
+persistent actor {
+  type Card = {
+    title : Text;
+    description : Text;
+  };
+
+  var map : [(Nat32, Card)] = [];
+};
 ```
 
 However, removing or adjusting the migration code can also be delayed to the next, proper upgrade that fixes bugs or extends functionality.

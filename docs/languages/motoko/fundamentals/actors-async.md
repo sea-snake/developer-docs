@@ -68,7 +68,35 @@ A trap will only revoke changes made since the last commit point. In particular,
 
 Consider the following stateful `Atomicity` actor:
 
-``` motoko no-repl file=../../examples/atomicity.mo
+```motoko
+persistent actor Atomicity {
+
+  transient var s = 0;
+  transient var pinged = false;
+
+  public func ping() : async () {
+    pinged := true;
+  };
+
+  // an atomic method
+  public func atomic() : async () {
+    s := 1;
+    ignore ping();
+    ignore 0/0; // trap!
+  };
+
+  // a non-atomic method
+  public func nonAtomic() : async () {
+    s := 1;
+    let f = ping(); // this will not be rolled back!
+    s := 2;
+    await f;
+    s := 3; // this will not be rolled back!
+    await f;
+    ignore 0/0; // trap!
+  };
+
+};
 ```
 
 Calling the shared function `atomic()` results in an error because it traps before completing. Since the trap happens before any `await` or return, all changes are discarded. The variable `s` stays at 0, and `pinged` remains false. Even though `atomic()` calls `ping()`, that message is only queued and never sent because no commit point is reached.

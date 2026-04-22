@@ -10,8 +10,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "validate": "node scripts/validate.js --all",
-    "sync:motoko": "./scripts/sync-motoko.sh",
-    "fetch:plantuml": "node scripts/fetch-plantuml.mjs"
+    "sync:motoko": "./scripts/sync-motoko.sh"
   },
   "dependencies": {
     "@astrojs/starlight": "^0.38.1",

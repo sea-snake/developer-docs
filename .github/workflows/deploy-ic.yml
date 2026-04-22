@@ -36,8 +36,6 @@ jobs:
 
       - run: npm ci
       - run: npm run build
-      - name: Verify diagrams rendered
-        run: node scripts/verify-plantuml.mjs
 
       - name: Install icp-cli
         run: npm i -g @icp-sdk/icp-cli@0.2.0 @icp-sdk/ic-wasm

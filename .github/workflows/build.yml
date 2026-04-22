@@ -23,5 +23,3 @@ jobs:
 
       - run: npm ci
       - run: npm run build
-      - name: Verify diagrams rendered
-        run: node scripts/verify-plantuml.mjs

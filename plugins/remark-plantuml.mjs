@@ -4,6 +4,7 @@ import { deflateRawSync } from "node:zlib";
 const ALPHABET =
   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz-_";
 const SERVER = "https://www.plantuml.com/plantuml/svg";
+const MAX_RETRIES = 3;
 
 function encode(data) {
   let r = "";
@@ -27,15 +28,38 @@ function toUrl(source) {
   return `${SERVER}/${encode(compressed)}`;
 }
 
+async function fetchSvg(url) {
+  for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+    const response = await fetch(url);
+    if (response.ok) {
+      const text = await response.text();
+      if (!text.includes("<svg")) {
+        throw new Error(`plantuml.com returned non-SVG content (HTTP ${response.status})`);
+      }
+      // Strip XML declaration so the SVG can be safely inlined in HTML.
+      return text.replace(/<\?xml[^?]*\?>\s*/i, "");
+    }
+    if (attempt < MAX_RETRIES) {
+      await new Promise((r) => setTimeout(r, 1000 * attempt));
+    } else {
+      throw new Error(
+        `plantuml.com returned HTTP ${response.status} for ${url} after ${MAX_RETRIES} attempts`
+      );
+    }
+  }
+}
+
 export default function remarkPlantUML() {
-  return (tree) => {
+  return async (tree) => {
+    const nodes = [];
     visit(tree, "code", (node, index, parent) => {
-      if (node.lang !== "plantuml") return;
-      const url = toUrl(node.value);
-      parent.children[index] = {
-        type: "html",
-        value: `<img src="${url}" alt="PlantUML diagram" />`,
-      };
+      if (node.lang === "plantuml") nodes.push({ node, index, parent });
     });
+
+    for (const { node, index, parent } of nodes) {
+      const url = toUrl(node.value);
+      const svg = await fetchSvg(url);
+      parent.children[index] = { type: "html", value: svg };
+    }
   };
 }

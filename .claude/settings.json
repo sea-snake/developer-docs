@@ -8,7 +8,18 @@
       "WebFetch",
       "Bash(git submodule update*)",
       "Bash(npm *)",
-      "Bash(gh *)"
+      "Bash(gh *)",
+      "Bash(icp * --help)",
+      "Bash(icp --help)",
+      "Bash(unzip -p *)",
+      "Bash(unzip -l *)",
+      "Bash(unzip -t *)",
+      "Bash(gunzip -c *)",
+      "Bash(tar -xOf *)",
+      "Bash(tar -tzf *)",
+      "Bash(sed -n *)",
+      "Bash(cargo audit*)",
+      "Bash(cargo check*)"
     ]
   }
 }

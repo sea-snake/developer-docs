@@ -40,7 +40,7 @@ This is where most developers start after the quickstart. The backend guides cov
 - [Randomness](../guides/backends/randomness.md): generate unpredictable values onchain
 - [Calling other canisters](../guides/canister-calls/onchain-calls.md): compose functionality across canisters
 
-## Full-stack applications
+## Fullstack applications
 
 **You want to:** Build a web application with a frontend that talks to your canister.
 

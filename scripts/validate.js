@@ -118,7 +118,7 @@ const fileArgs = args.filter(a => !a.startsWith('--'));
 
 let files;
 if (useAll) {
-  files = globSync('docs/**/*.md', { cwd: ROOT, absolute: true });
+  files = globSync('docs/**/*.{md,mdx}', { cwd: ROOT, absolute: true });
 } else if (fileArgs.length > 0) {
   files = fileArgs.map(f => path.isAbsolute(f) ? f : path.resolve(ROOT, f));
 } else {

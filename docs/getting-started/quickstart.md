@@ -5,7 +5,7 @@ sidebar:
   order: 1
 ---
 
-Deploy a full-stack app to a local Internet Computer network in under 10 minutes.
+Deploy a fullstack app to a local Internet Computer network in under 10 minutes.
 
 ## Prerequisites
 
@@ -48,7 +48,7 @@ icp new my-project --subfolder hello-world \
   --define network_type=Default && cd my-project
 ```
 
-This creates a full-stack project from the `hello-world` template with a Motoko backend and React frontend. The `--define` flags skip interactive prompts. Without them, `icp new` asks you to choose a template, language, and network type.
+This creates a fullstack project from the `hello-world` template with a Motoko backend and React frontend. The `--define` flags skip interactive prompts. Without them, `icp new` asks you to choose a template, language, and network type.
 
 > **Prefer Rust?** Use `--define backend_type=rust` instead. You'll need Rust installed with the WASM target: `rustup target add wasm32-unknown-unknown`.
 

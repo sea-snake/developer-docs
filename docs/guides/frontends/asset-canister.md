@@ -58,7 +58,7 @@ The key fields are:
 - **`dir`:** the directory containing your build output. This is `dist` for Vite-based projects, `out` for Next.js static exports, or `build` for Create React App. The contents of this directory (not the directory itself) are uploaded to the canister.
 - **`build`:** shell commands that icp-cli runs before uploading. If omitted, icp-cli uploads whatever is already in `dir` without building.
 
-For a full-stack project with a backend canister, list both in the same `icp.yaml`:
+For a fullstack project with a backend canister, list both in the same `icp.yaml`:
 
 ```yaml
 canisters:

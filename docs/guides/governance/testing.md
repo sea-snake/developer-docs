@@ -242,9 +242,9 @@ quill sns \
   --pem-file "$PEM_FILE" \
   make-proposal \
   --proposal "(record {
-    title=\"Register dapp canisters with SNS.\";
+    title=\"Register app canisters with SNS.\";
     url=\"https://example.com/\";
-    summary=\"This proposal registers dapp canisters with SNS.\";
+    summary=\"This proposal registers app canisters with SNS.\";
     action=opt variant {RegisterDappCanisters = record {
       canister_ids=vec {principal\"$CID\"}
     }}

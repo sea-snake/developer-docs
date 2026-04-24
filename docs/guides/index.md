@@ -28,4 +28,4 @@ Practical how-to guides organized by development stage. Each guide solves a spec
 
 ## Developer tools
 
-- **[Tools](tools/ai-coding-agents.md)**: AI coding agents with ICP skills, developer tools, and migrating from dfx.
+- **[Tools](tools/overview.md)**: Developer toolchain overview, icp-cli, CDKs, and AI coding agents with ICP skills.

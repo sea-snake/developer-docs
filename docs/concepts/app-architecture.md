@@ -59,7 +59,7 @@ Separate canisters handle distinct responsibilities. The two-canister setup (fro
 - Request and response payloads are limited to 2 MiB per call.
 - Cross-subnet calls add one consensus round of latency compared to same-subnet calls.
 
-For implementation details and common pitfalls, see [Onchain calls](../guides/canister-calls/onchain-calls.md).
+For implementation details and common pitfalls, see [Inter-canister calls](../guides/canister-calls/inter-canister-calls.md).
 
 ### Canister-per-subnet
 
@@ -101,7 +101,7 @@ Start with the simplest architecture that meets your requirements. You can alway
 ## Next steps
 
 - [Quickstart](../getting-started/quickstart.md): deploy your first application
-- [Onchain calls](../guides/canister-calls/onchain-calls.md): inter-canister communication patterns
+- [Inter-canister calls](../guides/canister-calls/inter-canister-calls.md): inter-canister communication patterns
 - [Asset canister](../guides/frontends/asset-canister.md): frontend deployment
 - [Canisters](canisters.md): canister internals
 

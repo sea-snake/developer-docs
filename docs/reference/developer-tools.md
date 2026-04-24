@@ -82,7 +82,7 @@ Community CDKs are maintained independently of DFINITY. Check each project's doc
 
 ## Client libraries
 
-Client libraries handle the protocol details of calling canisters from outside the network: constructing and signing ingress messages, encoding Candid, and verifying responses. For setup and usage patterns, see [Offchain calls](../guides/canister-calls/offchain-calls.md).
+Client libraries handle the protocol details of calling canisters from outside the network: constructing and signing ingress messages, encoding Candid, and verifying responses. For setup and usage patterns, see [Calling from clients](../guides/canister-calls/calling-from-clients.md).
 
 ### JavaScript / TypeScript
 

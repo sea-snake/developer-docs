@@ -1,5 +1,5 @@
 ---
-title: "Onchain Calls"
+title: "Inter-canister Calls"
 description: "Call functions on other canisters from your canister code"
 sidebar:
   order: 2
@@ -27,7 +27,7 @@ There are two types of canister methods, and the choice affects latency, cost, a
 
 **Use update calls** when modifying state, transferring cycles, or when the caller needs a consensus-backed guarantee that the call was executed correctly.
 
-To make query responses verifiable without the cost of update calls, see [Certified Variables](../backends/certified-variables.md). For running multiple query calls in parallel, see [Parallel Calls and Composite Queries](parallel-calls.md).
+To make query responses verifiable without the cost of update calls, see [Certified Variables](../backends/certified-variables.md). For running multiple query calls in parallel, see [Parallel inter-canister calls](parallel-inter-canister-calls.md).
 
 ## Making calls
 
@@ -398,7 +398,7 @@ Calls between canisters on the same subnet complete within a single round. Cross
 
 ## Next steps
 
-- [Parallel Calls and Composite Queries](parallel-calls.md): make multiple calls concurrently and use composite queries for efficient read patterns
+- [Parallel inter-canister calls](parallel-inter-canister-calls.md): make multiple calls concurrently and use composite queries for efficient read patterns
 - [Candid](candid.md): define the interface your canister exposes for inter-canister calls
 - [Certified Variables](../backends/certified-variables.md): make query responses verifiable without update call overhead
 - [Inter-Canister Call Security](../security/inter-canister-calls.md): reentrancy guards, async safety patterns, and trust considerations

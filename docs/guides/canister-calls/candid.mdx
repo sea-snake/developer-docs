@@ -291,7 +291,7 @@ console.log(greeting); // "Hello, World!"
 
 ### From another canister
 
-When one canister calls another, Candid handles the argument encoding and response decoding transparently. See [Onchain calls](onchain-calls.md) for how to make inter-canister calls in Motoko and Rust.
+When one canister calls another, Candid handles the argument encoding and response decoding transparently. See [Inter-canister calls](inter-canister-calls.md) for how to make inter-canister calls in Motoko and Rust.
 
 ## Safe interface upgrades
 
@@ -420,7 +420,7 @@ async fn invoke_callee() {
 }
 ```
 
-The `.dynamic_callee("PUBLIC_CANISTER_ID:callee")` mode reads the canister ID from a canister environment variable at runtime. The same `PUBLIC_CANISTER_ID:<name>` variables that `icp deploy` injects (see [canister discovery](onchain-calls.md#canister-discovery)). For canisters with fixed IDs, use `.static_callee(principal)` instead.
+The `.dynamic_callee("PUBLIC_CANISTER_ID:callee")` mode reads the canister ID from a canister environment variable at runtime. The same `PUBLIC_CANISTER_ID:<name>` variables that `icp deploy` injects (see [canister discovery](inter-canister-calls.md#canister-discovery)). For canisters with fixed IDs, use `.static_callee(principal)` instead.
 {/* Needs human verification: the upstream ic-cdk-bindgen README uses ICP_CANISTER_ID: in its example, but icp-cli sets PUBLIC_CANISTER_ID:. We use PUBLIC_CANISTER_ID: here to match icp-cli. An issue has been filed on dfinity/cdk-rs to align the upstream README. */}
 
 For type selector configuration and advanced options, see the [`ic-cdk-bindgen` documentation](https://crates.io/crates/ic-cdk-bindgen).
@@ -443,8 +443,8 @@ For type selector configuration and advanced options, see the [`ic-cdk-bindgen` 
 
 ## Next steps
 
-- [Onchain calls](onchain-calls.md): make inter-canister calls using Candid interfaces
-- [Offchain calls](offchain-calls.md): call canisters from JavaScript frontends and agents
+- [Inter-canister calls](inter-canister-calls.md): make inter-canister calls using Candid interfaces
+- [Calling from clients](calling-from-clients.md): call canisters from JavaScript frontends and agents
 - [Candid specification](../../reference/candid-spec.md): full type reference and subtyping rules
 
 {/* Upstream: informed by dfinity/portal docs/building-apps/interact-with-canisters/candid/ (3 files), docs/building-apps/developer-tools/cdks/rust/generating-candid.mdx, icp-cli concepts/binding-generation.md, ic-cdk-bindgen README, and @icp-sdk/bindgen. Type mappings verified against .sources/candid (spec), .sources/motoko (IDL-Motoko.md), and .sources/cdk-rs. */}

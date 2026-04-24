@@ -476,8 +476,8 @@ Before shipping any canister that makes inter-canister calls:
 
 ## Next steps
 
-- [Onchain calls](../canister-calls/onchain-calls.md): Basic inter-canister call patterns and the `Call` API
-- [Parallel calls](../canister-calls/parallel-calls.md): Running multiple calls concurrently and handling partial failures
+- [Inter-canister calls](../canister-calls/inter-canister-calls.md): Basic inter-canister call patterns and the `Call` API
+- [Parallel inter-canister calls](../canister-calls/parallel-inter-canister-calls.md): Running multiple calls concurrently and handling partial failures
 - [Security concepts](../../concepts/security.md): IC security model and threat landscape
 
 <!-- Upstream: informed by dfinity/icskills — canister-security/SKILL.md, multi-canister/SKILL.md -->

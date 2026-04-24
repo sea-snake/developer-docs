@@ -38,7 +38,7 @@ This is where most developers start after the quickstart. The backend guides cov
 - [HTTPS outcalls](../guides/backends/https-outcalls.md): call external APIs from your canister
 - [Timers](../guides/backends/timers.md): schedule recurring tasks
 - [Randomness](../guides/backends/randomness.md): generate unpredictable values onchain
-- [Calling other canisters](../guides/canister-calls/onchain-calls.md): compose functionality across canisters
+- [Calling other canisters](../guides/canister-calls/inter-canister-calls.md): compose functionality across canisters
 
 ## Fullstack applications
 

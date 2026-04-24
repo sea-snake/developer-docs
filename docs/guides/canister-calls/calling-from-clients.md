@@ -1,8 +1,8 @@
 ---
-title: "Offchain Calls"
+title: "Calling from Clients"
 description: "Call canister functions from frontends, scripts, and backend services using IC agent libraries"
 sidebar:
-  order: 3
+  order: 4
 ---
 
 An **agent** is a client-side library that constructs ingress messages, signs them with a cryptographic identity, and sends them to ICP boundary nodes. Agents handle the protocol details (CBOR encoding, request IDs, certificate verification) so your application code works with native language types.
@@ -314,7 +314,7 @@ const agent = await HttpAgent.create({
 ## Next steps
 
 - [Candid and binding generation](candid.md): generate typed clients from `.did` files
-- [Onchain calls](onchain-calls.md): canister-to-canister calls from within the IC
+- [Inter-canister calls](inter-canister-calls.md): canister-to-canister calls from within the IC
 - [Internet Identity](../authentication/internet-identity.md): adding user authentication to offchain calls
 - [Asset canister](../frontends/asset-canister.md): deploying the frontend that makes these calls
 

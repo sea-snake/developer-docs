@@ -68,7 +68,7 @@ SNS governance comes with built-in proposal types. Below are the most common one
 
 ### Motion
 
-A motion proposal has no on-chain effect: it does not call any method. Use it for opinion polls, governance signaling, or gathering community consensus before a technical proposal.
+A motion proposal has no effect on network state: it does not call any method. Use it for opinion polls, governance signaling, or gathering community consensus before a technical proposal.
 
 ```bash
 quill sns \

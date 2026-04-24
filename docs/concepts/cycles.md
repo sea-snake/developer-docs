@@ -75,7 +75,7 @@ These responsibilities can be automated. Tools like [CycleOps](https://cycleops.
 
 The XDR peg and flat per-resource pricing make ICP costs predictable:
 
-- **No surge pricing**: cycle prices are set by the [NNS](../concepts/governance.md) (ICP's on-chain governance system) and change infrequently. There are no congestion fees.
+- **No surge pricing**: cycle prices are set by the [NNS](../concepts/governance.md) (ICP's governance system) and change infrequently. There are no congestion fees.
 - **No per-transaction fees for users**: apps absorb all costs, like SaaS businesses absorb server bills.
 
 The tradeoff is that developers must forecast and fund usage upfront rather than letting users pay as they go.

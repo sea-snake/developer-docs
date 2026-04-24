@@ -19,7 +19,7 @@ For plain ICRC-1/ICRC-2 transfers without the minting/withdrawal flows, see [Tok
 
 The ckBTC and ckETH minter canisters hold real BTC and ETH in addresses they control through [chain-key cryptography](../../concepts/chain-key-cryptography.md). The minters use threshold signatures to sign Bitcoin and Ethereum transactions. No private key exists anywhere; signing requires cooperation from the subnet's nodes.
 
-When a user deposits BTC, the minter mints exactly the same amount of ckBTC. When a user withdraws ckBTC, the minter burns the tokens and sends BTC on-chain. The peg holds by design: every ckBTC in circulation corresponds to exactly one satoshi of BTC held by the minter. The ckBTC checker canister publishes a public audit of reserves.
+When a user deposits BTC, the minter mints exactly the same amount of ckBTC. When a user withdraws ckBTC, the minter burns the tokens and sends BTC to the Bitcoin network. The peg holds by design: every ckBTC in circulation corresponds to exactly one satoshi of BTC held by the minter. The ckBTC checker canister publishes a public audit of reserves.
 
 This means ckBTC and ckETH are not wrapped tokens in the traditional sense. They are ICP tokens whose supply is cryptographically enforced by the minter canister.
 

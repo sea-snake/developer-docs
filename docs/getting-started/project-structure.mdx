@@ -168,7 +168,7 @@ When you build or deploy, `icp` creates a `.icp/` directory in your project root
 | Directory | Commit? | Why |
 |-----------|---------|-----|
 | `.icp/cache/` | No | Rebuilt automatically. Add to `.gitignore`. |
-| `.icp/data/` | Yes | Contains mainnet canister ID mappings. Deleting means `icp` won't know which canisters you've deployed (though the canisters still exist on-chain). |
+| `.icp/data/` | Yes | Contains mainnet canister ID mappings. Deleting means `icp` won't know which canisters you've deployed (though the canisters still exist on the network). |
 
 The hello-world template's `.gitignore` already excludes `.icp/cache/` and tracks `.icp/data/`.
 

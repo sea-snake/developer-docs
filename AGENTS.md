@@ -147,6 +147,7 @@ git checkout main
 - Offer, suggest, or perform PR reviews unless a human explicitly asks
 - Write em-dashes (`—`) anywhere — including inside code string literals, comments, or log messages. Use a colon, period, or parentheses instead
 - Rename Candid field names, management canister API identifiers, or example/repository names to satisfy jargon rules — these are protocol-level identifiers that must match the actual interface (e.g. `dapps`, `RegisterDappCanisters`, `encrypted-notes-dapp-vetkd`)
+- Remove domain-specific technical terms that are standard vocabulary in their context: "DeFi" and "smart contract" in DeFi/token guides, "DAO" and "decentralized autonomous organization" in governance guides, "smart contracts on other chains" in chain fusion guides. These terms must stay because the target audience uses them and alternatives would be less precise.
 
 ## Key directories
 

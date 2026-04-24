@@ -108,7 +108,7 @@ git checkout main
 ## Always (do these without asking)
 
 - Read `.docs-plan/decisions.md` before proposing structural changes
-- **Load skills before writing** — `technical-documentation` + the relevant icskill + `icp-brand-guidelines`. Run `git submodule update --init --depth 1` if skills appear as broken symlinks.
+- **Load skills before writing** — `technical-documentation` + the relevant icskill + `icp-brand-voice` + `icp-brand-design`. Run `git submodule update --init --depth 1` if skills appear as broken symlinks.
 - Use `icp` CLI commands in all examples — never `dfx`
 - Use `mo:core` for all Motoko standard library imports — never `mo:base`. See `.sources/motoko/doc/md/12-base-core-migration.md` for the full mapping.
 - Use `.md` by default; `.mdx` only for interactive components (e.g. `<Tabs syncKey="lang">`). Tab order: Motoko → Rust → others.
@@ -213,7 +213,8 @@ For current release hashes, see `.sources/VERSIONS`.
 | `.sources/papi` | `dfinity/papi` | latest release | PAPI (payment API) — cycle payment interface used by the Chain Fusion Signer |
 | `.sources/ic-pub-key` | `dfinity/ic-pub-key` | latest release | `@dfinity/ic-pub-key` CLI tool for deriving public keys via the Chain Fusion Signer |
 | `.sources/dotskills` | `vincentkoc/dotskills` | `main` | Technical documentation skill (AGPL-3.0 — kept as submodule to avoid license mixing) |
-| `.agents/skills/icp-brand-guidelines` | n/a — lives directly in this repo | n/a | ICP / DFINITY brand guidelines: colors, typography, voice, component patterns |
+| `.agents/skills/icp-brand-voice` | n/a — lives directly in this repo | n/a | ICP / DFINITY brand voice: positioning, vocabulary, banned terms, voice attributes |
+| `.agents/skills/icp-brand-design` | n/a — lives directly in this repo | n/a | ICP / DFINITY brand design: color tokens, typography, layout, components, accessibility |
 | `.sources/internetidentity` | `dfinity/internet-identity` | `main` | Internet Identity spec (`docs/ii-spec.mdx`), Candid interface (`src/internet_identity/internet_identity.did`) |
 
 ### Submodule initialization
@@ -353,7 +354,7 @@ ls .agents/skills/icp-cli/SKILL.md .agents/skills/technical-documentation/SKILL.
 
 If no skill matches, use `technical-documentation` only. Topics with no dedicated icskill yet: on-chain AI, randomness/VRF, timers, Candid, chain-key tokens.
 
-**For all content writing** — load `icp-brand-guidelines` alongside `technical-documentation`. It is the authoritative source for banned jargon, preferred framing, and voice rules. For design work (CSS, copy, UI components, docs styling, marketing copy), it is the primary skill.
+**For all content writing** — load `icp-brand-voice` alongside `technical-documentation`. It is the authoritative source for banned jargon, preferred framing, and voice rules. For design work (CSS, copy, UI components, docs styling, marketing copy), also load `icp-brand-design`.
 
 ## Frontmatter schema
 

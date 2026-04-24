@@ -5,7 +5,7 @@ sidebar:
   order: 4
 ---
 
-An **agent** is a client-side library that constructs ingress messages, signs them with a cryptographic identity, and sends them to ICP boundary nodes. Agents handle the protocol details (CBOR encoding, request IDs, certificate verification) so your application code works with native language types.
+An **agent** is a client-side library that constructs ingress messages, signs them with a cryptographic identity, and sends them to ICP boundary nodes. Agents handle the protocol details (CBOR encoding, request IDs, certificate verification) so your application code works with native language types. An **actor** is a typed proxy for a specific canister, generated from its Candid interface and built on top of an agent. You interact with canisters through actors; the agent handles the underlying transport.
 
 ## How agents work
 

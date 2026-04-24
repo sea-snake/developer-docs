@@ -43,6 +43,8 @@ For advanced users, icp-cli supports authoring custom recipes and project templa
 - [Creating recipes](https://cli.internetcomputer.org/guides/creating-recipes): encode build conventions as reusable Handlebars templates
 - [Creating templates](https://cli.internetcomputer.org/guides/creating-templates): scaffold new projects with `icp new`
 
+Coming from dfx? See the [migration guide](migrating-from-dfx.md) for a command mapping and configuration conversion reference.
+
 #### Telemetry opt-out
 
 `icp` collects anonymous usage data (command names, platform, version, success/failure) to help prioritize features. No personally identifiable information, project names, file paths, or canister IDs are collected.
@@ -147,7 +149,6 @@ Resources:
 ## Next steps
 
 - **Start building:** [Quickstart](../../getting-started/quickstart.md): deploy your first canister with icp-cli
-- **Migrating from the legacy CLI?** [Migration guide](migrating-from-dfx.md): command mapping and configuration changes
 - **Rust development:** [Rust language guide](../../languages/rust/index.md)
 - **Motoko development:** [Motoko language guide](../../languages/motoko/index.md)
 

@@ -38,24 +38,6 @@ This flow replaces the traditional web stack. There is no separate web server, a
 
 The key difference: ICP applications are self-contained. You deploy code and data to canisters, and the network provides compute, storage, and serving. There is no infrastructure to provision or maintain.
 
-## Coming from Ethereum
-
-If you have built on Ethereum or other EVM chains, here is how ICP concepts map:
-
-| Ethereum | ICP | Key difference |
-|----------|-----|----------------|
-| Smart contract | [Canister](canisters.md) | Canisters hold GiBs of state, serve HTTP, run Wasm |
-| EVM bytecode | WebAssembly | Wasm runs general-purpose code at near-native speed |
-| Solidity / Vyper | Motoko, Rust (official); TypeScript, Python (community) | Multiple language options, full standard libraries |
-| Block time (~12s) | Finality (~1–2s) | Update calls typically finalize in 1–2 seconds |
-| Fee (user pays) | [Cycles](cycles.md) (canister pays) | Users interact for free; developers fund computation |
-| No HTTP serving | Built-in HTTP serving | Canisters serve web pages directly |
-| Offchain storage (IPFS, etc.) | Onchain stable memory | Up to 500 GiB per canister, no external storage needed |
-| Bridges / oracles | [Chain-key signing](chain-fusion.md) | Canisters sign transactions on other chains natively |
-| Immutable by default | Upgradeable by default | Canisters can be upgraded while preserving state |
-
-The biggest shift: on Ethereum, smart contracts are minimal programs that rely on offchain infrastructure for anything beyond basic state transitions. On ICP, a canister can be an entire application (frontend, backend, database, and scheduled jobs) all onchain.
-
 ## Architectural patterns
 
 As your application grows, you can choose from several patterns. Start simple and evolve as needed: over-architecting from the start is a common mistake.

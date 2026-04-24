@@ -17,6 +17,26 @@ If you prefer to learn the concepts before diving into guides, the [Concepts](..
 - [Cycles](../concepts/cycles.md): why users don't pay to interact with apps
 - [Chain-key cryptography](../concepts/chain-key-cryptography.md): the cryptographic foundation enabling chain fusion
 
+## Coming from Ethereum
+
+**You know:** Solidity, EVM, smart contracts.
+
+Here is how Ethereum concepts map to ICP:
+
+| Ethereum | ICP | Key difference |
+|----------|-----|----------------|
+| Smart contract | [Canister](../concepts/canisters.md) | Canisters hold GiBs of state, serve HTTP, run Wasm |
+| EVM bytecode | WebAssembly | Wasm runs general-purpose code at near-native speed |
+| Solidity / Vyper | Motoko, Rust (official); TypeScript, Python (community) | Multiple language options, full standard libraries |
+| Block time (~12s) | Finality (~1–2s) | Update calls typically finalize in 1–2 seconds |
+| Fee (user pays) | [Cycles](../concepts/cycles.md) (canister pays) | Users interact for free; developers fund computation |
+| No HTTP serving | Built-in HTTP serving | Canisters serve web pages directly |
+| Offchain storage (IPFS, etc.) | Onchain stable memory | Up to 500 GiB per canister, no external storage needed |
+| Bridges / oracles | [Chain-key signing](../concepts/chain-fusion.md) | Canisters sign transactions on other chains natively |
+| Immutable by default | Upgradeable by default | Canisters can be upgraded while preserving state |
+
+The biggest shift: on Ethereum, smart contracts are minimal programs that rely on offchain infrastructure. On ICP, a canister can be an entire application (frontend, backend, database, and scheduled jobs) all onchain.
+
 ## Coding with agents
 
 **You want to:** Use AI coding agents to build on ICP.

@@ -9,17 +9,6 @@ Canisters are the compute units of the Internet Computer. Each canister bundles 
 
 Unlike programs on most other blockchains, canisters can serve web pages over HTTP, store gigabytes of data, make calls to external APIs, sign transactions on other chains, and run scheduled tasks autonomously, all without external infrastructure.
 
-## How canisters differ from traditional smart contracts
-
-Canisters share the core properties of smart contracts: their execution is governed by protocol consensus, their state is tamperproof, and their behavior is auditable. But they go further:
-
-- **Upgradeable code.** A canister's Wasm module can be replaced with a new version while preserving its data. This lets you ship bug fixes and new features without redeploying from scratch.
-- **HTTP serving.** Canisters handle HTTP requests directly, so a single canister can serve a full web application (frontend and backend) with no servers in between.
-- **Large state.** Canisters can hold up to 500 GiB of stable memory, far beyond what most blockchains allow per contract.
-- **Outbound calls.** Canisters make HTTPS requests to external services (see [HTTPS outcalls](https-outcalls.md)) and sign transactions on other blockchains using chain-key cryptography (see [Chain Fusion](chain-fusion.md)).
-- **Autonomous execution.** Timers let canisters schedule their own work without any external trigger.
-- **Canisters fund themselves.** Canisters pay for their own compute and storage using [cycles](cycles.md), so end users don't need tokens to interact with them.
-
 ## Execution model
 
 Canisters are WebAssembly module instances. You write code in Motoko or Rust (the official CDKs), or community-supported languages like TypeScript and Python: any language that compiles to Wasm works. The network runs your code in a sandboxed Wasm virtual machine.

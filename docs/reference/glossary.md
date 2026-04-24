@@ -338,7 +338,7 @@ messages are different from user-initiated [ingress messages](#ingress-message).
 
 #### Internet Computer Protocol (ICP)
 
-The **Internet Computer Protocol** (ICP) is a decentralized blockchain that
+The **Internet Computer Protocol** (ICP) is a tamperproof, sovereign network that
 provides scalable compute capacity for running
 [canisters](#canister) through independent [node providers](#node-provider) running [nodes](#node)
 in geographically distributed [data centers](#data-center).

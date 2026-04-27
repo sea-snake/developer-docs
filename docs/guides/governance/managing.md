@@ -1,6 +1,6 @@
 ---
 title: "Managing an SNS"
-description: "Operate a live SNS: proposals, cycles, asset updates, and neuron management"
+description: "Everything you need to run a live SNS: submit proposals, upgrade canisters, manage the treasury, and govern neurons."
 sidebar:
   order: 3
 ---

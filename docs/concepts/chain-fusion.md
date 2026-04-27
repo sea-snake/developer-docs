@@ -113,7 +113,7 @@ Chain Fusion enables application patterns that are difficult or impossible with 
 
 - **Trustless cronjob service.** A canister monitors an Ethereum contract via the EVM RPC canister and triggers loan liquidations or batch settlements automatically using timers. No Gelato or Chainlink Keepers needed.
 - **Multichain wallet.** A single canister controls addresses on Bitcoin, Ethereum, and Solana simultaneously. Users interact through a web frontend served from ICP without installing chain-specific wallets.
-- **Onchain frontend.** An immutable or DAO-governed frontend for an Ethereum smart contract, hosted on ICP as a certified asset. Users interact with the Ethereum contract through the ICP-hosted UI.
+- **Tamperproof frontend.** An immutable or DAO-governed frontend for an Ethereum smart contract, hosted on ICP as a certified asset. Users interact with the Ethereum contract through the ICP-hosted UI.
 - **Cross-chain lending.** A lending protocol that accepts Bitcoin as collateral (held in a canister-controlled BTC address) and issues stablecoins as ICRC-2 tokens.
 - **Data relay.** A canister fetches real-world data via HTTPS outcalls and posts it to a smart contract on another chain: replacing centralized oracle networks.
 

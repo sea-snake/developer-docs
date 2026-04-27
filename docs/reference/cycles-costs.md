@@ -18,9 +18,9 @@ You can use the [pricing calculator](https://3d5wy-5aaaa-aaaag-qkhsq-cai.icp0.io
 | M            | Million  | 1_000_000         | 0.000001  | ~$0.00000135      |
 | k            | Thousand | 1_000             | 10⁻⁹      | ~$0.00000000135   |
 
-## Subnet replication factors
+## Replication factors
 
-Costs scale with the number of nodes in the subnet. The base cost tables below assume a **13-node application subnet**. For a 34-node (fiduciary) subnet, costs scale as `34 * (cost / 13)`:
+Costs scale with the number of nodes in the [subnet](subnet-types.md). The base cost tables below assume a **13-node application subnet**. For a 34-node (fiduciary) subnet, costs scale as `34 * (cost / 13)`:
 
 - **13-node subnet**: Standard application subnets. No scaling needed: costs are as listed.
 - **34-node subnet**: Fiduciary subnets (higher security for financial applications). Costs are approximately **2.6×** the 13-node cost.

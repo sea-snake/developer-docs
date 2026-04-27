@@ -11,21 +11,9 @@ Canisters on ICP pay for compute and storage using **cycles**. Cycles are paid b
 
 This guide covers everything you need to manage cycles in production: acquiring them, monitoring balances, setting thresholds, and deploying to mainnet.
 
-## How cycles work
-
-Cycles are priced in XDR (Special Drawing Rights), a stable international reserve asset. **1 trillion cycles (1T) costs approximately 1 XDR**, which is roughly 1.3 USD as of 2025. This pricing is enforced by the Cycles Minting Canister (CMC) and updated via NNS governance proposals, so the cycle cost of a given operation stays stable even as ICP's price fluctuates.
-
-Canisters are charged continuously for:
-- **Storage**: bytes held in stable memory and heap
-- **Compute**: CPU cycles consumed by update and query calls
-- **Messages**: ingress and inter-canister calls
-- **Special operations**: HTTPS outcalls, threshold signatures, Bitcoin API calls
-
-See [Cycles costs reference](../../reference/cycles-costs.md) for exact cost tables by subnet size.
-
-### Local vs mainnet cycles
-
+:::note[Local vs mainnet cycles]
 Local development uses fabricated cycles: canisters on a local network start with a large balance and never actually run out. Code that works locally can fail on mainnet if the canister is underfunded. Always test with realistic cycle amounts before deploying.
+:::
 
 ## Acquiring cycles
 

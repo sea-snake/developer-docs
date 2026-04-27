@@ -1,6 +1,6 @@
 ---
 title: "Offline public key derivation"
-description: "Derive canister threshold public keys and network addresses offline: no management canister call or cycles required."
+description: "Derive canister threshold public keys and network addresses offline, without any network calls or costs."
 sidebar:
   order: 6
 ---

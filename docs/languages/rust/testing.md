@@ -563,7 +563,7 @@ fn test_upgrade_preserves_state() {
 }
 ```
 
-## Setting up NNS and system subnets
+## Testing with NNS and system canisters
 
 If your canister calls system canisters (NNS governance, ledger, etc.), configure PocketIC with the appropriate
 subnets:

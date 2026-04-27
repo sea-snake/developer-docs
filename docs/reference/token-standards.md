@@ -100,7 +100,7 @@ type TransferError = variant {
 | `icrc1:decimals` | `Nat` | `8` |
 | `icrc1:fee` | `Nat` | `10000` |
 
-For a few well-known ledger canister IDs and index canisters, see [Token ledgers](../guides/defi/token-ledgers.md#well-known-token-ledgers). For a broader overview of tokens on ICP, see the [ICP Dashboard token list](https://dashboard.internetcomputer.org/tokens).
+For a few well-known ledger canister IDs and index canisters, see [Token ledgers](../guides/digital-assets/token-ledgers.md#well-known-token-ledgers). For a broader overview of tokens on ICP, see the [ICP Dashboard token list](https://dashboard.internetcomputer.org/tokens).
 
 [Read the full ICRC-1 standard](https://github.com/dfinity/ICRC-1/tree/main/standards/ICRC-1)
 
@@ -338,13 +338,13 @@ The ICRC signer standards define how wallets interact with apps on ICP. They use
 
 These standards are distinct from delegation-based authentication (such as Internet Identity). The signer model requires per-action user approval and does not create sessions or delegated identities.
 
-For implementation details and code examples, see the [wallet integration guide](../guides/defi/wallet-integration.md).
+For implementation details and code examples, see the [wallet integration guide](../guides/digital-assets/wallet-integration.md).
 
 ## Next steps
 
-- [Token ledgers guide](../guides/defi/token-ledgers.md): deploy and interact with ICRC-1/ICRC-2 ledgers
-- [Chain-key tokens guide](../guides/defi/chain-key-tokens.md): work with ckBTC, ckETH, and other chain-key tokens
-- [Wallet integration guide](../guides/defi/wallet-integration.md): integrate wallet signer standards into your app
+- [Token ledgers guide](../guides/digital-assets/token-ledgers.md): deploy and interact with ICRC-1/ICRC-2 ledgers
+- [Chain-key tokens guide](../guides/digital-assets/chain-key-tokens.md): work with ckBTC, ckETH, and other chain-key tokens
+- [Wallet integration guide](../guides/digital-assets/wallet-integration.md): integrate wallet signer standards into your app
 - [ICRC-1 standard specification](https://github.com/dfinity/ICRC-1/tree/main/standards/ICRC-1): full specification on GitHub
 - [ICRC-7 standard specification](https://github.com/dfinity/ICRC/blob/main/ICRCs/ICRC-7/ICRC-7.md): full NFT specification on GitHub
 

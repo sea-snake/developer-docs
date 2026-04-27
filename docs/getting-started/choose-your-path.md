@@ -53,7 +53,7 @@ ICP can serve web assets directly from canisters, giving you a tamperproof appli
 - [Framework integration](../guides/frontends/frameworks.md): use React, Vue, Svelte, or other frameworks
 - [Custom domains](../guides/frontends/custom-domains.md): serve your app from your own domain name
 - [Internet Identity](../guides/authentication/internet-identity.md): add passwordless authentication
-- [Wallet integration](../guides/defi/wallet-integration.md): connect user wallets
+- [Wallet integration](../guides/digital-assets/wallet-integration.md): connect user wallets
 
 ## Coming from Ethereum
 
@@ -95,12 +95,12 @@ Chain fusion lets your canister hold native assets, sign transactions, and inter
 
 ICP has a standard token framework (ICRC) and chain-key tokens that represent assets from other chains. These guides cover the ledger APIs and token patterns you need for DeFi.
 
-**Start with:** [Token ledgers](../guides/defi/token-ledgers.md): understand ICRC token standards and interact with ledger canisters.
+**Start with:** [Token ledgers](../guides/digital-assets/token-ledgers.md): understand ICRC token standards and interact with ledger canisters.
 
 **Then explore:**
 
-- [Chain-key tokens](../guides/defi/chain-key-tokens.md): work with ckBTC, ckETH, and other wrapped assets
-- [Rosetta API](../guides/defi/rosetta.md): integrate with exchanges and wallets using the Rosetta standard
+- [Chain-key tokens](../guides/digital-assets/chain-key-tokens.md): work with ckBTC, ckETH, and other wrapped assets
+- [Rosetta API](../guides/digital-assets/rosetta.md): integrate with exchanges and wallets using the Rosetta standard
 
 ## Decentralized governance
 

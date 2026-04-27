@@ -64,7 +64,7 @@ export const sidebar = [
       {
         label: "Digital Assets",
         collapsed: true,
-        autogenerate: { directory: "guides/defi" },
+        autogenerate: { directory: "guides/digital-assets" },
       },
       {
         label: "Governance",

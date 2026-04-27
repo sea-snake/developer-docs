@@ -148,7 +148,7 @@ The Dogecoin canister is controlled by the [Network Nervous System](../../concep
 - [Chain fusion overview](../../concepts/chain-fusion.md): understand how ICP integrates with external blockchains
 - [Bitcoin integration](bitcoin.md): the same UTXO-based integration with complete code examples
 - [Chain-key cryptography](../../concepts/chain-key-cryptography.md): how threshold ECDSA signatures work
-- [Chain-key tokens](../defi/chain-key-tokens.md): ckBTC, ckETH, and upcoming ckDOGE
+- [Chain-key tokens](../digital-assets/chain-key-tokens.md): ckBTC, ckETH, and upcoming ckDOGE
 - [Build on Dogecoin book](https://dfinity.github.io/dogecoin-canister): full tutorial for building Dogecoin apps on ICP
 
 <!-- Upstream: informed by dfinity/portal — docs/building-apps/chain-fusion/dogecoin/overview.mdx, docs/building-apps/chain-fusion/supported-chains.mdx; dfinity/examples — rust/basic_dogecoin/README.md; learn.internetcomputer.org — Dogecoin integration overview (https://learn.internetcomputer.org/hc/en-us/articles/46782835018516) -->

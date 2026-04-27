@@ -5,7 +5,7 @@ sidebar:
   order: 6
 ---
 
-The Internet Computer is composed of independent **subnets**: each an autonomous blockchain that hosts a set of canisters. Subnets differ in node count, replication factor, costs, geographic distribution, and what canisters they accept. This page lists all subnet types and their properties.
+The Internet Computer is composed of independent [**subnets**](../concepts/network-overview.md#subnets): each an autonomous blockchain that hosts a set of canisters. Subnets differ in node count, replication factor, costs, geographic distribution, and what canisters they accept. This page lists all subnet types and their properties.
 
 For guidance on choosing a subnet for deployment, see [Subnet selection](../guides/canister-management/subnet-selection.md). For per-operation cycle costs, see [Cycles costs](cycles-costs.md).
 

@@ -277,7 +277,7 @@ EOF
 
 | Submodule | Extra checks on bump |
 |---|---|
-| `portal` | Follow the `ic.did` checklist in "Synced files from submodules" below |
+| `portal` | Follow the full portal checklist in "Synced files from submodules" below |
 | `motoko` | **Automated** — `.github/workflows/sync-motoko.yml` opens a PR with the submodule bump, synced docs, and VERSIONS update already committed. Review the content diff and merge. Also check for changed/removed API signatures — grep all Motoko code blocks in docs. |
 | `motoko-core` | Check for changed/removed API signatures — grep all Motoko code blocks in docs |
 | `cdk-rs` | Check `ic-cdk`, `ic-cdk-timers`, `ic-cdk-macros` API changes — grep all Rust code blocks |
@@ -300,12 +300,34 @@ EOF
 | Local file | Source | Affects |
 |-----------|--------|---------|
 | `public/reference/ic.did` | `.sources/portal/docs/references/_attachments/ic.did` | Management canister reference — new/changed methods require updating `docs/reference/management-canister.md` |
+| `docs/reference/ic-interface-spec.md` | `.sources/portal/docs/references/ic-interface-spec.md` | Full IC interface spec — apply portal diff as a patch on every bump |
+| `docs/reference/http-gateway-spec.md` | `.sources/portal/docs/references/http-gateway-protocol-spec.md` | HTTP Gateway spec — apply portal diff as a patch on every bump |
 
-**Portal bump checklist for `ic.did`:**
+**Portal bump checklist (run on every portal bump):**
+
+**Step 1 — `ic.did`:**
 1. `diff public/reference/ic.did .sources/portal/docs/references/_attachments/ic.did`
 2. If changed: `cp .sources/portal/docs/references/_attachments/ic.did public/reference/ic.did`
 3. Review diff for new/changed/removed methods
 4. Update `docs/reference/management-canister.md` and any affected guides
+
+**Step 2 — `ic-interface-spec.md`:** For every commit in the bump range that touched `docs/references/ic-interface-spec.md`:
+1. `git -C .sources/portal show <commit> -- docs/references/ic-interface-spec.md > /tmp/patch.diff`
+2. `patch -F 5 -p1 --input=/tmp/patch.diff docs/reference/ic-interface-spec.md`
+3. Resolve any rejects manually (our file has intentional diffs: Astro frontmatter, internal link fixes)
+4. Verify new methods/fields are reflected in `docs/reference/management-canister.md` if they touch the management canister
+
+**Step 3 — `http-gateway-spec.md`:** For every commit in the bump range that touched `docs/references/http-gateway-protocol-spec.md`:
+1. `git -C .sources/portal show <commit> -- docs/references/http-gateway-protocol-spec.md > /tmp/patch.diff`
+2. `patch -F 5 -p1 --input=/tmp/patch.diff docs/reference/http-gateway-spec.md`
+3. Resolve any rejects manually
+
+**Finding which commits touched which files:**
+```bash
+git -C .sources/portal log --oneline <old-ref>..<new-ref> -- docs/references/ic-interface-spec.md
+git -C .sources/portal log --oneline <old-ref>..<new-ref> -- docs/references/http-gateway-protocol-spec.md
+git -C .sources/portal log --oneline <old-ref>..<new-ref> -- docs/references/_attachments/ic.did
+```
 
 ## Planning artifacts (`.docs-plan/`)
 

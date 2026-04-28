@@ -147,14 +147,59 @@ h1, h2, h3, h4, h5, h6 {
 /* ── Landing page hero ───────────────────────────────────── */
 
 .hero {
-  padding-block: clamp(2rem, 6vmin, 4rem) !important;
+  padding-block-start: clamp(2rem, 6vmin, 4rem) !important;
+  padding-block-end: 1.5rem !important;
 }
 
-.hero h1 {
-  font-size: clamp(var(--sl-text-3xl), calc(0.25rem + 4vw), var(--sl-text-5xl)) !important;
+/* ── Landing action cards (three boxes under hero) ────────── */
+
+.landing-actions {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin-block: 0 2.5rem;
 }
 
-/* ── Skills banner ─────────────────────────────────────────── */
+@media (max-width: 50rem) {
+  .landing-actions {
+    grid-template-columns: 1fr;
+  }
+}
+
+.landing-action-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  background: var(--icp-bg-elev);
+  border: 1px solid var(--icp-rule);
+  border-radius: 8px;
+  padding: 1.25rem 1.5rem;
+  font-weight: 500;
+  font-size: var(--sl-text-base);
+  color: var(--icp-fg);
+  text-decoration: none;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.landing-action-card:hover {
+  border-color: var(--icp-accent);
+  background: var(--icp-accent-dim);
+  color: var(--icp-fg);
+}
+
+.landing-action-card::after {
+  content: '→';
+  opacity: 0.5;
+  flex-shrink: 0;
+}
+
+.landing-action-card[href^="http"]::after {
+  content: '↗';
+  opacity: 1;
+}
+
+/* ── ICP Skills banner ─────────────────────────────────────── */
 
 .skills-banner {
   background: var(--icp-bg-elev);
@@ -182,7 +227,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.6;
 }
 
-.skills-banner .skills-actions {
+.skills-actions {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -190,7 +235,9 @@ h1, h2, h3, h4, h5, h6 {
   flex-wrap: wrap;
 }
 
-.skills-banner .skills-primary {
+/* ── ICP Skills action buttons ─────────────────────────────── */
+
+.skills-primary {
   display: inline-flex;
   align-items: center;
   gap: 0.625rem;
@@ -206,18 +253,18 @@ h1, h2, h3, h4, h5, h6 {
   transition: filter 0.15s ease;
 }
 
-.skills-banner .skills-primary:hover {
+.skills-primary:hover {
   filter: brightness(1.1);
 }
 
-.skills-banner .skills-primary svg {
+.skills-primary svg {
   width: 1rem;
   height: 1rem;
   flex-shrink: 0;
   opacity: 0.7;
 }
 
-.skills-banner .skills-cta {
+.skills-cta {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
@@ -232,12 +279,12 @@ h1, h2, h3, h4, h5, h6 {
   transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.skills-banner .skills-cta:hover {
+.skills-cta:hover {
   background: var(--icp-accent-dim);
   border-color: var(--icp-accent);
 }
 
-.skills-banner .skills-cta .arrow-icon {
+.skills-cta .arrow-icon {
   width: 0.85rem;
   height: 0.85rem;
 }

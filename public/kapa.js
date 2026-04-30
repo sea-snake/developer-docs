@@ -38,13 +38,20 @@
     dark:  '#kapa-widget-root{--mantine-color-body:#1b1812;--mantine-color-default:#221e18;--mantine-color-default-border:#2d2820;--mantine-color-text:#f0ebe0;--mantine-color-placeholder:#a29a8d;}',
   };
 
+  // _schemeObserver is set once #kapa-widget-root exists and guards against Kapa
+  // resetting data-mantine-color-scheme on every modal open/render cycle.
+  var _schemeObserver = null;
+
   function sync() {
     var c = document.getElementById('kapa-widget-container');
     if (!c || !c.shadowRoot) return false;
     var r = c.shadowRoot.querySelector('#kapa-widget-root');
     if (!r) return false;
     var scheme = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light';
-    r.setAttribute('data-mantine-color-scheme', scheme);
+    // Only write the attribute when it differs — prevents observer re-entry loops.
+    if (r.getAttribute('data-mantine-color-scheme') !== scheme) {
+      r.setAttribute('data-mantine-color-scheme', scheme);
+    }
     var st = c.shadowRoot.querySelector('#kapa-icp-tokens');
     if (!st) {
       st = document.createElement('style');
@@ -52,6 +59,12 @@
       c.shadowRoot.appendChild(st);
     }
     st.textContent = TOKENS[scheme];
+    // Arm the attribute observer on first successful sync so future resets by
+    // Kapa's React re-renders are caught immediately without a theme toggle.
+    if (!_schemeObserver) {
+      _schemeObserver = new MutationObserver(sync);
+      _schemeObserver.observe(r, { attributes: true, attributeFilter: ['data-mantine-color-scheme'] });
+    }
     return true;
   }
 
@@ -61,8 +74,19 @@
       var added = mutations[i].addedNodes;
       for (var j = 0; j < added.length; j++) {
         if (added[j].id === 'kapa-widget-container') {
+          bodyObserver.disconnect();
+          var c = added[j];
           // Give kapa's React one tick to finish rendering the shadow root.
-          setTimeout(function () { if (sync()) bodyObserver.disconnect(); }, 0);
+          setTimeout(function () {
+            if (sync()) return;
+            // #kapa-widget-root not rendered yet (modal hasn't opened).
+            // Observe the shadow root's subtree so sync() fires the moment it appears.
+            if (!c.shadowRoot) return;
+            var shadowObserver = new MutationObserver(function () {
+              if (sync()) shadowObserver.disconnect();
+            });
+            shadowObserver.observe(c.shadowRoot, { childList: true, subtree: true });
+          }, 0);
           return;
         }
       }

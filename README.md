@@ -8,7 +8,7 @@ This repo is a ground-up rewrite of the ICP developer docs: a flat Diataxis stru
 
 ## Current state
 
-Most pages are content-complete. A small number of pages remain as stubs (vetkeys, encryption).
+All core documentation sections are content-complete. Open tasks and future pages are tracked as [GitHub Issues](https://github.com/dfinity/developer-docs/issues).
 
 ## Content areas
 

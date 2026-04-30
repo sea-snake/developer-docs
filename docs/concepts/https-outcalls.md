@@ -1,19 +1,21 @@
 ---
 title: "HTTPS Outcalls"
-description: "How canisters make HTTP requests to external services with consensus on responses"
+description: "How canisters call external APIs and web services directly, without oracles or intermediaries."
 sidebar:
   order: 8
 ---
 
-Canisters on the Internet Computer can make HTTP requests to any public web server (fetching API data, posting to webhooks, or querying offchain services) without relying on oracles or other intermediaries. This capability is called **HTTPS outcalls**.
+Canisters on the Internet Computer can make HTTP requests to any public web server — fetching API data, posting to webhooks, or querying external services — without relying on oracles or other intermediaries. This capability is called **HTTPS outcalls**.
 
-What makes this unusual for a blockchain is that every replica in a subnet executes the same code independently. When a canister makes an HTTPS outcall, all replicas in the subnet send the same request to the external server, each receives its own response, and the subnet must reach consensus on a single response to return to the canister. This mechanism preserves the replicated state machine guarantees that make canisters trustworthy while enabling direct communication with the conventional web.
+ICP runs every canister on a subnet where all replicas execute the same code independently and must reach consensus. Outbound HTTP requests are non-trivial in this model: each replica independently contacts the server and typically receives a slightly different response — timestamps, headers, or field ordering vary — which would cause replicas to diverge. The traditional workaround is **oracles**: third-party services that fetch external data and relay it to the network, at the cost of extra complexity, fees, and a trust assumption. HTTPS outcalls solve the problem directly: the subnet reaches consensus over the response internally, so canisters call external APIs without a middleman.
 
-## Why HTTPS outcalls exist
+## Replicated and non-replicated mode
 
-Traditional blockchains cannot make outbound HTTP requests. Smart contracts are deterministic state machines: if different nodes received different responses from an external server, their state would diverge and consensus would break. The standard workaround is **oracles**: trusted third-party services that fetch offchain data and submit it onchain.
+HTTPS outcalls have two modes controlled by the `is_replicated` field:
 
-Oracles work, but they add complexity, cost, and trust assumptions. You must choose an oracle provider, pay their fees, and trust that they relay data honestly. With HTTPS outcalls, canisters call external APIs directly. The IC protocol handles the consensus problem internally, so you get the same result (reliable offchain data onchain) without the middleman.
+**Replicated mode** (default) is what the consensus mechanism below describes: all replicas independently fetch the URL, a transform function normalizes the responses, and the subnet agrees on a single result. This provides the strongest integrity guarantee — the response is confirmed by a supermajority of nodes, making it extremely difficult for any single party to tamper with it. The tradeoff is that all replicas (typically 13) send the same request to the external server within milliseconds of each other, which can trigger API rate limits.
+
+**Non-replicated mode** (`is_replicated = false`) has a single replica make the request. No consensus is needed, so there is no transform function requirement and no rate-limit pressure on the external server. The tradeoff is trust: the single replica that handles the request could theoretically observe or modify the response before returning it to the canister. This mode is appropriate when the endpoint is idempotent, rate limits are a concern, or you're making POST requests where duplicate submissions would cause problems.
 
 ## How outcalls reach consensus
 
@@ -100,9 +102,8 @@ HTTPS outcalls can replace oracles for most use cases: price feeds, API queries,
 
 ## Future extensions
 
-Two extensions are under consideration that may affect architecture decisions:
+One extension is under consideration that may affect architecture decisions:
 
-- **Flexible quorum:** A canister could specify that only a single replica (instead of all replicas) makes the request. This would solve the idempotency problem for POST requests and reduce rate-limit pressure on external servers.
 - **Multiple responses:** Instead of consensus on a single response, the canister could receive all individual replica responses and resolve differences in application logic: useful for fast-moving data like price feeds.
 
 ## Next steps

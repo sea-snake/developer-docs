@@ -119,7 +119,7 @@ git checkout main
 
 ## Ask first (confirm with the user before doing these)
 
-- Creating new top-level sections (getting-started, guides, concepts, languages, reference)
+- Creating new top-level sections (getting-started, guides, concepts, languages, references)
 - Adding new pages not in the migration plan
 - Removing existing pages from the structure
 - Changing a page's sync recommendation from hand-written to synced (or vice versa)
@@ -145,7 +145,7 @@ git checkout main
 - Link to internal pages that don't exist — every `[text](path.md)` must resolve to an actual file. Run `ls <target>` before linking. Links to `.mdx` pages use `.md` extension (Astro resolves both).
 - Link externally when an internal page exists — check `docs/` before using an external URL
 - Offer, suggest, or perform PR reviews unless a human explicitly asks
-- Write em-dashes (`—`) or use `--` as an em-dash substitute in prose. These are banned in all content: body text, bullet descriptions, "Further reading" links, and inline comments. Use a colon, semicolon, period, comma, or parentheses instead. (`--` is only acceptable inside fenced code blocks as a code comment or CLI flag.)
+- Write em-dashes (`—`) or use `--` as an em-dash substitute in prose. These are banned in all content: body text, bullet descriptions, link label text (including "Next steps", "Further reading", and "See also" sections), and inline comments. Use a colon, semicolon, period, comma, or parentheses instead. (`--` is only acceptable inside fenced code blocks as a code comment or CLI flag.)
 - Rename Candid field names, management canister API identifiers, or example/repository names to satisfy jargon rules — these are protocol-level identifiers that must match the actual interface (e.g. `dapps`, `RegisterDappCanisters`, `encrypted-notes-dapp-vetkd`)
 - Remove domain-specific technical terms that are standard vocabulary in their context: "DeFi" and "smart contract" in DeFi/token guides, "DAO" and "decentralized autonomous organization" in governance guides, "smart contracts on other chains" in chain fusion guides. These terms must stay because the target audience uses them and alternatives would be less precise.
 
@@ -182,7 +182,7 @@ docs/                       # All documentation (.md only) — src/content/docs/
 │   └── tools/              # Developer tools
 ├── concepts/               # Explanations
 ├── languages/              # Language-specific (Motoko synced, Rust hand-written)
-└── reference/              # Specifications and reference
+└── references/             # Specifications and reference
 ```
 
 ## Source material repos (`.sources/`)
@@ -290,18 +290,27 @@ EOF
 | `candid` | Check for spec changes affecting the Candid reference or type-mapping examples |
 | `response-verification` | Check for API changes affecting certified variables patterns |
 | `dotskills` | Check if the `technical-documentation` skill changed in ways that affect review criteria |
-| `internetidentity` | Check for spec changes in `docs/ii-spec.mdx`; re-sync `internet-identity-spec.md`. Re-copy Candid interface from `src/internet_identity/internet_identity.did` if changed |
+| `internetidentity` | Check for spec changes in `docs/ii-spec.mdx`; re-sync `internet-identity-spec.md` (see link adaptation note below). Re-copy Candid interface from `src/internet_identity/internet_identity.did` if changed |
 | `chain-fusion-signer` | Check for changed canister IDs, API methods, or key derivation patterns |
 | `papi` | Check for changed payment interface or cycle cost model |
 | `ic-pub-key` | Check for changed CLI flags or commands |
+
+**Link adaptation for `internet-identity-spec.md`:** The upstream source (`docs/ii-spec.mdx`) uses absolute `internetcomputer.org` URLs pointing to the IC interface spec. Our file uses relative paths into the split `ic-interface-spec/` directory. After every re-sync, run:
+```bash
+grep -n "ic-interface-spec" docs/references/internet-identity-spec.md
+```
+Any link of the form `internetcomputer.org/.../ic-interface-spec#<anchor>` or `./ic-interface-spec.md#<anchor>` must be converted. Use the anchor-to-file mapping at the bottom of `docs/references/internet-identity-spec.md` as the authoritative guide. If a new anchor appears that is not in the comment, find its file with:
+```bash
+grep -r "{#<anchor>}" docs/references/ic-interface-spec/
+```
 
 ### Synced files from submodules
 
 | Local file | Source | Affects |
 |-----------|--------|---------|
-| `public/reference/ic.did` | `.sources/portal/docs/references/_attachments/ic.did` | Management canister reference — new/changed methods require updating `docs/reference/management-canister.md` |
-| `docs/reference/ic-interface-spec.md` | `.sources/portal/docs/references/ic-interface-spec.md` | Full IC interface spec — apply portal diff as a patch on every bump |
-| `docs/reference/http-gateway-spec.md` | `.sources/portal/docs/references/http-gateway-protocol-spec.md` | HTTP Gateway spec — apply portal diff as a patch on every bump |
+| `public/reference/ic.did` | `.sources/portal/docs/references/_attachments/ic.did` | Management canister reference — new/changed methods require updating `docs/references/management-canister.md` |
+| `docs/references/ic-interface-spec/` | `.sources/portal/docs/references/ic-interface-spec.md` | IC interface spec split into 7 focused pages — apply portal diffs by section (see checklist below) |
+| `docs/references/http-gateway-spec.md` | `.sources/portal/docs/references/http-gateway-protocol-spec.md` | HTTP Gateway spec — apply portal diff as a patch on every bump |
 
 **Portal bump checklist (run on every portal bump):**
 
@@ -309,22 +318,47 @@ EOF
 1. `diff public/reference/ic.did .sources/portal/docs/references/_attachments/ic.did`
 2. If changed: `cp .sources/portal/docs/references/_attachments/ic.did public/reference/ic.did`
 3. Review diff for new/changed/removed methods
-4. Update `docs/reference/management-canister.md` and any affected guides
+4. Update `docs/references/management-canister.md` and any affected guides
 
-**Step 2 — `ic-interface-spec.md`:** For every commit in the bump range that touched `docs/references/ic-interface-spec.md`:
-1. `git -C .sources/portal show <commit> -- docs/references/ic-interface-spec.md > /tmp/patch.diff`
-2. `patch -F 5 -p1 --input=/tmp/patch.diff docs/reference/ic-interface-spec.md`
-3. Resolve any rejects manually (our file has intentional diffs: Astro frontmatter, internal link fixes)
-4. Verify new methods/fields are reflected in `docs/reference/management-canister.md` if they touch the management canister
+**Step 2 — `ic-interface-spec/`:** The spec is now split into 7 files under `docs/references/ic-interface-spec/`. Each file maps to a section of the portal source:
+
+| File | Portal section (## heading) |
+|---|---|
+| `index.md` | Introduction, Pervasive concepts, The system state tree |
+| `https-interface.md` | HTTPS Interface |
+| `canister-interface.md` | Canister module format, Canister interface (System API) |
+| `management-canister.md` | The IC management canister, The IC Bitcoin API, The IC Provisional API |
+| `certification.md` | Certification, The HTTP Gateway protocol |
+| `abstract-behavior.md` | Abstract behavior |
+| `changelog.md` | `.sources/portal/docs/references/_attachments/interface-spec-changelog.md` (NOT `ic-interface-spec.md`) |
+
+For every commit in the bump range that touched `docs/references/ic-interface-spec.md`:
+1. `git -C .sources/portal show <commit> -- docs/references/ic-interface-spec.md > /tmp/spec.diff`
+2. Inspect the diff: identify which section(s) changed
+3. Apply the relevant hunks manually to the corresponding file(s) in `docs/references/ic-interface-spec/`
+4. Update any cross-file anchor links (`(./other.md#anchor)`) if headings were added or removed
+5. Verify new methods/fields are reflected in `docs/references/management-canister.md` if they touch the management canister
+
+For every commit in the bump range that touched `docs/references/_attachments/interface-spec-changelog.md`:
+1. `git -C .sources/portal show <commit> -- docs/references/_attachments/interface-spec-changelog.md > /tmp/changelog.diff`
+2. Apply the new version entries to `docs/references/ic-interface-spec/changelog.md`
 
 **Step 3 — `http-gateway-spec.md`:** For every commit in the bump range that touched `docs/references/http-gateway-protocol-spec.md`:
 1. `git -C .sources/portal show <commit> -- docs/references/http-gateway-protocol-spec.md > /tmp/patch.diff`
-2. `patch -F 5 -p1 --input=/tmp/patch.diff docs/reference/http-gateway-spec.md`
-3. Resolve any rejects manually
+2. `patch -F 5 -p1 --input=/tmp/patch.diff docs/references/http-gateway-spec.md`
+3. Resolve any rejects manually (see note below on link adaptation)
+4. Run `grep -n "ic-interface-spec" docs/references/http-gateway-spec.md` and convert any newly introduced links
+
+**Link adaptation for `http-gateway-spec.md`:** The portal source uses absolute `/references/ic-interface-spec#anchor` URLs. Our file uses relative paths into the split `ic-interface-spec/` directory. After every sync, any link of the form `/references/ic-interface-spec#<anchor>` or `./ic-interface-spec.md#<anchor>` must be converted. Use the anchor-to-file mapping at the bottom of `docs/references/http-gateway-spec.md` as the authoritative guide. If a new anchor appears that is not in the comment, find its file with:
+```bash
+grep -r "{#<anchor>}" docs/references/ic-interface-spec/
+```
 
 **Finding which commits touched which files:**
 ```bash
 git -C .sources/portal log --oneline <old-ref>..<new-ref> -- docs/references/ic-interface-spec.md
+git -C .sources/portal show <commit> -- docs/references/ic-interface-spec.md | grep "^[+-]## " | head -20  # identify which sections changed
+git -C .sources/portal log --oneline <old-ref>..<new-ref> -- docs/references/_attachments/interface-spec-changelog.md
 git -C .sources/portal log --oneline <old-ref>..<new-ref> -- docs/references/http-gateway-protocol-spec.md
 git -C .sources/portal log --oneline <old-ref>..<new-ref> -- docs/references/_attachments/ic.did
 ```

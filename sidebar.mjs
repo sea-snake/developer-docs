@@ -78,7 +78,7 @@ export const sidebar = [
     collapsed: true,
     autogenerate: { directory: "concepts" },
   },
-  { slug: "reference/developer-tools", label: "Developer Tools" },
+  { slug: "references/developer-tools", label: "Developer Tools" },
   {
     label: "Languages",
     items: [
@@ -116,8 +116,28 @@ export const sidebar = [
     ],
   },
   {
-    label: "Reference",
+    label: "References",
     collapsed: true,
-    autogenerate: { directory: "reference" },
+    items: [
+      { slug: "references/management-canister" },
+      { slug: "references/system-canisters" },
+      { slug: "references/protocol-canisters" },
+      { slug: "references/application-canisters" },
+      { slug: "references/icrc-standards" },
+      { slug: "references/digital-asset-standards" },
+      { slug: "references/chain-key-canister-ids" },
+      { slug: "references/cycles-costs" },
+      { slug: "references/subnet-types" },
+      { slug: "references/execution-errors" },
+      { slug: "references/http-gateway-spec" },
+      { slug: "references/candid-spec" },
+      { slug: "references/internet-identity-spec" },
+      {
+        label: "IC Interface Spec",
+        collapsed: true,
+        autogenerate: { directory: "references/ic-interface-spec" },
+      },
+      { slug: "references/glossary" },
+    ],
   },
 ];

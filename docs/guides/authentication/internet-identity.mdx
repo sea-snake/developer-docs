@@ -315,7 +315,24 @@ async fn protected_async_action() -> String {
 
 ### Read identity attributes
 
-When the frontend wraps an identity with `AttributesIdentity`, every call carries a verified attribute bundle. Read it on the backend with `msg_caller_info_data` (Rust) or `Prim.callerInfoData` (Motoko). Always verify the signer first: by itself the bundle is signed by *some* canister, and any canister could have signed an arbitrary one. Trust it only when the signer is the Internet Identity backend (`rdmx6-jaaaa-aaaaa-aaadq-cai`).
+When the frontend wraps an identity with `AttributesIdentity`, every call carries a verified attribute bundle. The IC checks that the bundle is signed; it does not check *who* signed it, and any canister could have signed an arbitrary one. Trust the bundle only when the signer is the Internet Identity backend (`rdmx6-jaaaa-aaaaa-aaadq-cai`).
+
+How that check is wired depends on the language:
+
+- **Motoko (mo:core >= 2.5.0)**: `CallerAttributes.getAttributes<system>()` from `mo:core/CallerAttributes` returns the bundle as `?Blob` and traps when the signer is not listed in the canister's `trusted_attribute_signers` environment variable. Configure the env var in your `icp.yaml` (see below) and the trusted-signer check happens automatically.
+- **Rust (ic-cdk >= 0.20.1)**: `ic_cdk::api::msg_caller_info_data() -> Vec<u8>` returns the raw bundle and `ic_cdk::api::msg_caller_info_signer() -> Option<Principal>` returns the signer. There is no CDK wrapper for the trusted-signer check yet, so check the signer explicitly before reading the data.
+
+For Motoko, declare the trusted signer in your `icp.yaml`. The value is a comma-separated list of principal texts, so list both your local and mainnet II principals if your tests run against a locally deployed II:
+
+```yaml
+canisters:
+  - name: backend
+    settings:
+      environment_variables:
+        trusted_attribute_signers: "rdmx6-jaaaa-aaaaa-aaadq-cai"
+```
+
+If the env var is unset, `getAttributes` traps. That is the correct behavior: an unconfigured canister should not trust any attribute bundles.
 
 The bundle is Candid-encoded as an [ICRC-3 Value](../../references/internet-identity-spec.md) `Map` with three implicit fields plus the keys you requested:
 
@@ -328,13 +345,11 @@ The bundle is Candid-encoded as an [ICRC-3 Value](../../references/internet-iden
 <TabItem label="Motoko">
 
 ```motoko
-import Prim "mo:prim";
+import CallerAttributes "mo:core/CallerAttributes";
 import Principal "mo:core/Principal";
 import Runtime "mo:core/Runtime";
 
 persistent actor {
-  let iiPrincipal = Principal.fromText("rdmx6-jaaaa-aaaaa-aaadq-cai");
-
   type Icrc3Value = {
     #Nat : Nat;
     #Int : Int;
@@ -353,13 +368,10 @@ persistent actor {
     null;
   };
 
-  // Returns the verified attribute map, trapping if the signer is not II.
+  // Returns the verified attribute map. Traps when the signer is not
+  // listed in the canister's trusted_attribute_signers env var.
   func iiAttributes() : [(Text, Icrc3Value)] {
-    let signer = Prim.callerInfoSigner<system>();
-    if (signer.size() == 0 or Principal.fromBlob(signer) != iiPrincipal) {
-      Runtime.trap("Untrusted attribute signer");
-    };
-    let data = Prim.callerInfoData<system>();
+    let ?data = CallerAttributes.getAttributes<system>() else Runtime.trap("no trusted attributes");
     let ?value : ?Icrc3Value = from_candid (data) else Runtime.trap("invalid attribute bundle");
     let #Map(entries) = value else Runtime.trap("expected attribute map");
     entries
@@ -538,7 +550,7 @@ For full details, see the [Internet Identity specification](../../references/int
 - **Using `shouldFetchRootKey: true` in browser code**: pass `rootKey: canisterEnv?.IC_ROOT_KEY` from `safeGetCanisterEnv()` instead. `shouldFetchRootKey: true` fetches the root key from the replica at runtime, which lets a man-in-the-middle substitute a fake key on mainnet. For Node.js scripts targeting a local replica only, `await agent.fetchRootKey()` is acceptable: but never on mainnet.
 - **Creating multiple `AuthClient` instances**: create one on page load and reuse it. Multiple instances cause race conditions with session storage.
 - **Generating the attribute nonce on the frontend**: a frontend-generated nonce defeats the anti-replay guarantee. The nonce passed to `requestAttributes` must come from a backend canister call so the canister can later verify that the bundle's `implicit:nonce` matches an action it actually started.
-- **Reading attribute data without verifying the signer**: `msg_caller_info_data` (`Prim.callerInfoData` in Motoko) returns whatever bundle the caller provided. The IC system checks the signature, not the identity of the signer. If you skip the `msg_caller_info_signer` check (or compare it against the wrong principal), any canister can mint its own bundle and your method will read attacker-controlled values. Verify the signer matches `rdmx6-jaaaa-aaaaa-aaadq-cai` (Internet Identity) before trusting the bundle.
+- **Reading attribute data without verifying the signer**: the IC checks the signature, not the identity of the signer, so any canister can produce a valid bundle. The trusted signer for II is `rdmx6-jaaaa-aaaaa-aaadq-cai`. In Motoko, use `CallerAttributes.getAttributes<system>()` from `mo:core/CallerAttributes` and configure the `trusted_attribute_signers` env var in `icp.yaml`: the wrapper traps when an untrusted signer is detected. In Rust, there is no CDK wrapper yet, so always check `msg_caller_info_signer()` against the trusted issuer before reading `msg_caller_info_data()`.
 
 ## Next steps
 
@@ -550,4 +562,4 @@ For full details, see the [Internet Identity specification](../../references/int
 
 {/* TODO: Add Unity native app integration via deep links: see portal native-apps/unity_ii_* */}
 
-{/* Upstream: informed by dfinity/portal (docs/building-apps/authentication/overview.mdx, docs/building-apps/authentication/integrate-internet-identity.mdx, docs/building-apps/authentication/alternative-origins.mdx); dfinity/icskills (skills/internet-identity/SKILL.md); dfinity/icp-js-sdk-docs (public/auth/latest.zip api/client/ — AuthClient, scopedKeys, SignedAttributes, AuthClientCreateOptions; public/core/latest.zip libs/identity/api.md — AttributesIdentity); dfinity/cdk-rs (ic-cdk/src/api.rs); caffeinelabs/motoko (src/prelude/prim.mo callerInfoData/Signer, test/run-drun/caller-info/caller-info.mo) */}
+{/* Upstream: informed by dfinity/portal (docs/building-apps/authentication/overview.mdx, docs/building-apps/authentication/integrate-internet-identity.mdx, docs/building-apps/authentication/alternative-origins.mdx); dfinity/icskills (skills/internet-identity/SKILL.md); dfinity/icp-js-sdk-docs (public/auth/latest.zip api/client/ — AuthClient, scopedKeys, SignedAttributes, AuthClientCreateOptions; public/core/latest.zip libs/identity/api.md — AttributesIdentity); dfinity/cdk-rs (ic-cdk/src/api.rs); caffeinelabs/motoko-core (src/CallerAttributes.mo getAttributes wrapper); caffeinelabs/motoko (src/prelude/prim.mo callerInfoData/Signer, test/run-drun/caller-info/caller-info.mo); dfinity/icp-cli (docs/reference/canister-settings.md#environment_variables) */}
